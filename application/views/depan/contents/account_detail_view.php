@@ -7,6 +7,14 @@ $name=isset($userlogin['name'])&&$userlogin['name']!=''?$userlogin['name']:'User
 $account_detail = $this->account->detail($accountid,'accountid') ;
 $balance=isset($account_detail['balance'])?$account_detail['balance'] :array();
 $summary=isset($account_detail['summary'])?$account_detail['summary'] :array();
+
+$type_member = isset($account_detail['type'])?$account_detail['type']:'Member.';
+if($type_member==''){
+    $type_member='Member';
+}
+else{
+    $type_member = ucfirst(strtolower($type_member));
+}
 ?>
 
   <div class="container">
@@ -59,13 +67,13 @@ $summary=isset($account_detail['summary'])?$account_detail['summary'] :array();
                   <tbody>
                     <tr class="active">
                       <td>Account (Main)</td>
-                      <td class="text-right">
-					  <?=$accountid;?>
-					  </td>
+                      <td>:</td> <td class="text-right">
+                        <?=$accountid;?>
+                      </td>
                     </tr>
                     <tr>
-                      <td>Name:</td>
-                      <td class="text-right">
+                      <td>Name </td>
+                      <td>:</td> <td class="text-right">
 						<?=$name;?>
 					</td>
                     </tr>
@@ -75,38 +83,37 @@ $summary=isset($account_detail['summary'])?$account_detail['summary'] :array();
                     </tr-->
                     <tr>
                       <td>Account Type</td>
-                      <td class="text-right">
-					  <?=isset($account_detail['type'])?$account_detail['type']:'MEMBER.'; ?>
-					  </td>
+                      <td>:</td> <td class="text-right">
+                      <?=$type_member; ?>
+                      </td>
                     </tr>
                     <tr class="active">
                       <td>Account Status</td>
-                      <td class="text-right">Active</td>
+                      <td>:</td> <td class="text-right">Active</td>
                     </tr>
                     <tr >
                       <td>Phone Number</td>
-                      <td class="text-right">
-					  <?=isset($userlogin['phone'])?$userlogin['phone']:' ';?>
-					  </td>
+                      <td>:</td> <td class="text-right">
+                      <?=isset($userlogin['phone'])?$userlogin['phone']:' ';?>
+                      </td>
                     </tr>
                     <tr class="active">
-                      <td colspan=2>Address</td>
-                    </tr>
-                    <tr>
-                      <td colspan=2><?=isset($userlogin['address'])?nl2br($userlogin['address']):'&nbsp; ';?></td>
+                      <td colspan=1>Address</td>
+                      <td>:</td>  
+                      <td colspan=1><?=isset($userlogin['address'])?nl2br($userlogin['address']):'&nbsp; ';?></td>
                     </tr>
                     <tr >
                       <td>Withdrawal</td>
-                      <td class="text-right">
-					   <?=isset($summary['TotalWithdrawal'])?number_format($summary['TotalWithdrawal'],2):0;?>
-					  </td>
+                      <td>:</td> <td class="text-right">
+                       <?=isset($summary['TotalWithdrawal'])?number_format($summary['TotalWithdrawal'],2):0;?>
+                      </td>
                     </tr>
                     <tr class="active">
                       <td colspan=1>Deposit</td>
-                     
+                     <td>:</td> 
                       <td class="text-right">
-					  <?=isset($summary['TotalDeposit'])?number_format($summary['TotalDeposit'],2):0;?>
-					  </td>
+                      <?=isset($summary['TotalDeposit'])?number_format($summary['TotalDeposit'],2):0;?>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -116,55 +123,57 @@ $summary=isset($account_detail['summary'])?$account_detail['summary'] :array();
                   <tbody>
 					<tr class="active">
                       <td>Balance</td>
-                      <td class="text-right">
+                      <td>:</td> <td class="text-right">
 					  <?=isset($balance['Balance'])?number_format($balance['Balance'],2):0;?>
 					  </td>
                     </tr>
                     <tr>
-                      <td>Credit:</td>
-                      <td class="text-right">
+                      <td>Credit</td> 
+                     <td>:</td> <td class="text-right">
 					  <?=isset($balance['Credit'])?number_format($balance['Credit'],2):0;?>
 					  </td>
                     </tr>
                     <tr class="active">
-                      <td>Equity:</td>
-                      <td class="text-right">
+                      <td>Equity</td> 
+                      <td>:</td> <td class="text-right">
 					  <?=isset($balance['Equity'])?number_format($balance['Equity'],2):0;?>
 					  </td>
                     </tr>
+                    
                     <tr>
-                      <td>Free Margin:</td>
-                      <td class="text-right">
+                      <td>Free Margin</td> 
+                      <td>:</td> <td class="text-right">
 					  <?=isset($balance['FreeMargin'])?number_format($balance['FreeMargin'],2):0;?>
 					  </td>
                     </tr>
+                    
                     <tr class="active">
-                      <td>Total Open Transaction:</td>
-                      <td class="text-right">
+                      <td>Total Open Transaction</td> 
+                      <td>:</td> <td class="text-right">
 					  <?=isset($summary['TotalOpennedTransactions'])?number_format($summary['TotalOpennedTransactions'],2):0;?>
 					  </td>
                     </tr>
                     <tr>
-                      <td>Total Floating Transaction:</td>
-                      <td class="text-right">
+                      <td>Total Floating Transaction</td> 
+                      <td>:</td> <td class="text-right">
 					  <?=isset($summary['TotalFloatingTransactions'])?number_format($summary['TotalFloatingTransactions'],2):0;?>
 					  </td>
                     </tr>
                     <tr>
-                      <td>Total Close Transaction:</td>
-                      <td class="text-right">
+                      <td>Total Close Transaction</td> 
+                      <td>:</td> <td class="text-right">
 					  <?=isset($summary['TotalClosedTransactions'])?number_format($summary['TotalClosedTransactions'],2):0;?>
 					  </td>
                     </tr>
                     <tr class="active">
-                      <td>Total Open Volume Transaction:</td>
-                      <td class="text-right">
+                      <td>Total Open Volume Transaction</td> 
+                      <td>:</td> <td class="text-right">
 					  <?=isset($summary['TotalOpennedVolumeTransaction'])?number_format($summary['TotalOpennedVolumeTransaction']/100,2):0;?>
 					  </td>
                     </tr>
                     <tr>
-                      <td>Total Close Volume Transaction:</td>
-                      <td class="text-right">
+                      <td>Total Close Volume Transaction</td> 
+                      <td>:</td> <td class="text-right">
 					  <?=isset($summary['TotalClosedVolumeTransaction'])?number_format($summary['TotalClosedVolumeTransaction']/100,2):0;?>
 					  </td>
                     </tr>

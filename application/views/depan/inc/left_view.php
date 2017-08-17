@@ -1,5 +1,6 @@
 <?php
-$name=isset($userlogin['name'])?$userlogin['name']:'';
+
+$email = $userlogin['email'];
 $reg_id = dbId();
 //$userlogin['firstname']." ".$userlogin['lastname'];
 //$userlogin['detail']['firstname']." ".$userlogin['detail']['lastname'];
@@ -18,18 +19,25 @@ if(isset($accounts)){
 	}
 }
 $account_id=$accountid=isset($accounts[0]['accountid'])?$accounts[0]['accountid']:'-';
-if(isset($userlogin['document']['profile_pic'])){
-$profile_pic=$userlogin['document']['profile_pic']!=''?site_url('member/show_profile/'.$userlogin['document']['id'].'/100'):false;
+
+
+//===========================
+$raw= _localApi( 'users','detail',array($email));
+$detail = $raw['data'];
+$name=isset($detail['name'])?$detail['name']:'';
+//echo_r($detail);
+if(isset($detail['document']['profile_pic'])){
+    $profile_pic=$detail['document']['profile_pic']!=''?site_url('member/show_profile/'.$detail['document']['id'].'/100'):false;
 }
 else{
-	$profile_pic='';
+    $profile_pic='';
 }
 ?>
       <div class="main-left col-md-3">
         <div class="panel dark">
           <div class="row user-profile">
             <div class="col-xs-3">
-			<?=$profile_pic?'<img class="profile_pic" src="'.$profile_pic.'" alt="">':'';?></div>
+                <?=$profile_pic?'<img class="profile_pic" src="'.$profile_pic.'" alt="">':'.';?></div>
             <div class="col-xs-9">
               <p class="text-large"><span class="text-small block">Hello,</span> <?=$name;?> </p>
               <div class="btn-group user-options clearfix"> <a class="btn btn-xs btn-transparent-grey dropdown-toggle" data-toggle="dropdown" href="#"> <span class=" text-extra-small"> <?=$account_id;?> (main) </span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i> </a>

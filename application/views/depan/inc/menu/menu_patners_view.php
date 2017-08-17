@@ -1,7 +1,7 @@
 <?php
-		$showAgentMenu0=isset($userlogin['type'])&&$userlogin['type']=='agent'?true:false;
-		$showAgentMenu1=isset($userlogin['patner'])&&$userlogin['patner']!=0?true:false;
-		$showAgentMenu=$showAgentMenu0||$showAgentMenu1?true:false;
+    $showAgentMenu0=isset($userlogin['type'])&&$userlogin['type']=='agent'?true:false;
+    $showAgentMenu1=isset($userlogin['patner'])&&$userlogin['patner']!=0?true:false;
+    $showAgentMenu=$showAgentMenu0||$showAgentMenu1?true:false;
 $listAcc=array();
 if(isset($accounts)){
 	$debug=array();
@@ -44,7 +44,7 @@ else{
 <?php
 $txt='';
 foreach($listAcc as $row){
-	$url=site_url('partner/account_list/'.$row[0]);
+	$url=site_url('partner/account_id/'.$row[0]);
 	$type=$row[2];
 	if($row[1]!='') $url.="?agent=".$row[1];
 					//echo_r($row1);

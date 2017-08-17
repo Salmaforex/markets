@@ -1,6 +1,9 @@
 <?php
 $username=isset($userlogin['accountid'])?$userlogin['accountid']:'';
 if((int)$username < 70000)$username=isset($userlogin['username'])?$userlogin['username']:'-';
+$raw= _localApi( 'users','detail',array($email));
+$detail = $raw['data'];
+
 ?>
     		<div class="main-left col-md-4">
             	<div class="box green-box">

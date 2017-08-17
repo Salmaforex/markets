@@ -242,7 +242,7 @@ if(defined('LOCAL')){?>
                     
                     </tbody>
                   </table>
-                    <?php echo_r($detail);?>
+
                 </form>
               </div>
             </div>

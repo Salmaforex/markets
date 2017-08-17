@@ -73,6 +73,9 @@ $detail = $raw['data'];
 //echo_r($detail);
 	$html=form_hidden('email',$email) ;
 //	unset($detail['name']);
+if(isset($detail['name'])&&$detail['name']=='salmaforex'){
+    unset($detail['name']);
+}
 	$disable=isset($detail['name'])&&$detail['name']!=''?true:false;
 	$html.=bsInput('Name','detail[name]', isset($detail['name'])?$detail['name']:'' ,'full name',$disable);
         

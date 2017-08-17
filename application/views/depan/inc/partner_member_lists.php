@@ -1,5 +1,5 @@
 <?php
-$res= _localApi('account','list_simple',array($session['username']));
+$res= _localApi('account','list_simple',array($userlogin['email']));
 //echo_r($res);
 $account =   isset($res['data'])?$res['data']:array();
 ?>
@@ -38,11 +38,11 @@ $account =   isset($res['data'])?$res['data']:array();
                         <th>Equity</th>
                         <th>Credits</th>
 
-                        <th>Free<br/>Margin</th>
+                        <!--th>Free<br/>Margin</th-->
                         <th class="hidden-xs">Depo<br/>WD</th>
                         <th>Lots</th>
-                        <th class="hidden-xs">Other</th>
-                        <th class="center"><?=$controller_main!='partner'?"Action":"Commis sion";?></th>
+                        <!--th class="hidden-xs">Other</th-->
+                        <th class="center"><?=$controller_main!='partner'?"Action":"Commission";?></th>
                         </tr>
                 </thead>
               <tbody>
@@ -82,21 +82,22 @@ $account =   isset($res['data'])?$res['data']:array();
 			  
 			  <td class="right_number"><?=!isset($balance['Credit'])?0:number_format($balance['Credit'],3);?><!--i class='fa fa-spinner fa-spin'></i--></td>
 			  
-			  <td class="right_number"><?=!isset($balance['FreeMargin'])?0:number_format($balance['FreeMargin'],3);?><!--i class='fa fa-spinner fa-spin'></i--></td>
+			  <!--td class="right_number"><?=!isset($balance['FreeMargin'])?0:number_format($balance['FreeMargin'],3);?><!--i class='fa fa-spinner fa-spin'></i-->
+                          </td-->
 			  
 			  <td class="right_number">Deposit: <?=!isset($summary['TotalDeposit'])?0:number_format($summary['TotalDeposit'],2);?>
 			  <br/>WD: <?=!isset($summary['TotalWithdrawal'])?0:number_format($summary['TotalWithdrawal'],2);?><!--i class='fa fa-spinner fa-spin'></i--></td>
 			  
 			  <td class="right_number"><?=!isset($summary['TotalVolume'])?0:number_format($summary['TotalVolume'],2);?><!--i class='fa fa-spinner fa-spin'></i--></td>
 			  
-			  <td>
+			  <!--td>
 			  Profit: <?=!isset($summary['TotalProfit'])?0: number_format($summary['TotalProfit'],2);?>
 			  <br/>Trans: <?=!isset($summary['TotalTransactions'])?0: number_format($summary['TotalTransactions'],2);?>
 			  <br/>Open| Float| Close :
 			  <?=!isset($summary['TotalOpennedTransactions'])?0: number_format($summary['TotalOpennedTransactions'],2);?>|
 			  <?=!isset($summary['TotalFloatingTransactions'])?0: number_format($summary['TotalFloatingTransactions'],2);?>|
 			  <?=!isset($summary['TotalClosedVolumeTransaction'])?0: number_format($summary['TotalClosedVolumeTransaction'],2);?>
-			  </td>
+			  </td-->
 			  <td class="center">
 	<?php
 //===========================

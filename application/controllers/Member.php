@@ -877,8 +877,8 @@ Daftar Fungsi Yang Tersedia :
     function show_profile($userid=null){
             $data=$this->users_model->document($userid,'id');
             //echo'<pre>';var_dump($data);die();
-            header('content-type:'.$data['profile_type']);
-            header('Content-Disposition: attachment; filename="'.url_title($data['udoc_email']).'"');
+            //header('content-type:'.$data['profile_type']);
+            //header('Content-Disposition: attachment; filename="'.url_title($data['udoc_email']).'"');
 
             $txt=file_get_contents( $data['profile_pic']);
             echo $txt;

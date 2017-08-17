@@ -958,6 +958,7 @@ Daftar Fungsi Yang Tersedia :
 
 	public function account_id($accountid=0){
 		$this->checkLogin();
+                $get=$this->input->get();
 //======BALANCE
 		$array=array('accountid'=>$accountid);		
 		$account_detail = $this->account->detail($accountid,'accountid') ;
@@ -965,12 +966,18 @@ Daftar Fungsi Yang Tersedia :
 		$array['summary']=isset($account_detail['summary'])?$account_detail['summary']:array();
 		$this->param['userlogin']['accountid']=$accountid;
 		//$array['balance']
+                $balance0 = isset($this->param['userlogin']['balance'])?$this->param['userlogin']['balance']:0;
 
 //		$session=$this->param['session'];echo_r($session);echo_r($array);exit;
-		if( $this->param['userlogin']['balance'] != $array['balance'] ||$this->param['userlogin']['summary'] != $array['summary']  ){
+		if( $balance0 != $array['balance'] ||$this->param['userlogin']['summary'] != $array['summary']  ){
 		//	$this->param['userlogin']['balance']=$array['balance'];
 			$this->session->set_userdata($array);
-			redirect('partner/account_id/'.$accountid.'?act=save_balance&d='.date("his"));
+                    if(!isset($get['act'])){
+                        redirect('partner/account_id/'.$accountid.'?act=save_balance&d='.date("his"));
+                    }
+                    else{
+                        
+                    }
 		}
 		else{
 			$session=$this->param['session'];
