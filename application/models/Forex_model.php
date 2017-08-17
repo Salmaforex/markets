@@ -1013,8 +1013,11 @@ from mujur_account a left join mujur_accountdocument ad on a.email=ad.email wher
 			return true;
 		}
 //=======================CURRENCRY
-	function currency_list(){
-		$sql="select * from `{$this->tableCurrency}`";
+	function currency_list($approve_only=true){
+		$sql="select * from `{$this->tableCurrency}` ";
+                if($approve_only){
+                    $sql.="where approved=1";
+                }
 		return dbFetch($sql);
 	}
 	
@@ -1022,6 +1025,25 @@ from mujur_account a left join mujur_accountdocument ad on a.email=ad.email wher
 		$sql="select * from `{$this->tableCurrency}` where code like '{$code}'";
 		return dbFetchOne($sql);
 	}
+        
+        function currency_new($data){
+            $data['deleted']=0;
+            $data['created']=date("Y-m-d H:i:s");
+            $data['approved']=0;
+            return dbInsert($this->tableCurrency,$data);
+        }
+        
+        function currency_approve($code){
+            $sql="update `{$this->tableCurrency}` set approved='1' where code='$code'";
+            dbQuery($sql);
+            return true;
+        }
+        
+        function currency_disable($code){
+            $sql="update `{$this->tableCurrency}` set approved='0' where code='$code'";
+            dbQuery($sql);
+            return true;
+        }
 /*
 ALTER TABLE `mujur_price` CHANGE `price` `price` FLOAT(11) NOT NULL;
 

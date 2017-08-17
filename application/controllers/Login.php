@@ -50,10 +50,16 @@ Daftar Fungsi Yang Tersedia :
             // Code jika sukses
             //echo 'CAPTCHA OK';
             $response = $this->valid();
-            $login = $this->localApi( 'users','token',array($post['username']));
-        //    echo_r($response);echo_r($post);echo_r($login);exit;
+           
+            if($response['status']===false){
+                js_goto( site_url('login/member')."?err=".$response['code'] );
+            }
+             $login = $this->localApi( 'users','token',array($post['username']));
+           // echo_r($response);echo_r($post);echo_r($login);exit;
             $data_login = $login['data']['token'];
             $this->session->set_userdata('login', $data_login);
+           // echo_r( $login);//exit;
+            //$this->session->set_userdata('username', $post['username']);
             
             $type = $login['data']['typeMember'];
             

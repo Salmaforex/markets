@@ -2,7 +2,7 @@
 $name=isset($userlogin['name'])&&$userlogin['name']!=''?$userlogin['name']:'User Forex';//$name=$userlogin['detail']['firstname']." ".$userlogin['detail']['lastname'];
 //=========currency
 $currency=array();
-$currency_list = $this->forex->currency_list();
+$currency_list = $this->forex->currency_list(false);
 foreach($currency_list as $row){
     $currency[$row['code']]=$row['name'].' ( '.$row['symbol'].' )';
 
@@ -56,6 +56,7 @@ foreach($currency_list as $row){
 					 <th>Created</th> 
 					<th>Currency</th>
 					<th>Detail</th>
+					<th>Aksi</th>
 				   
 				</tr>
 			</thead>
@@ -66,6 +67,9 @@ foreach($currency_list as $row){
             $s.='<td>'.$row['modified'].'</td>';
             $s.="<td>{$row['code']}<br/>{$row['symbol']}</td>";
             $s.="<td>{$row['name']}<hr/> {$row['detail']}</td>";
+            $s.="<td>";
+            $s.=$row['approved']==1?anchor(site_url("admin/currency/disable/".$row['code']),'disable'):anchor(site_url("admin/currency/approved/".$row['code']),'approved');
+            $s.="</td>";
             $s.='</tr>';
             echo $s;
         }
@@ -77,13 +81,14 @@ foreach($currency_list as $row){
 					 <th>Created</th> 
 					<th>Currency</th>
 					<th>Detail</th>
+					<th>Aksi</th>
 				   
 				</tr>
 			</tfooter>
 	</table>
 	</div>
 <?php 
-echo_r($currency_list);
+//echo_r($currency_list);
 ?>
 <script>
 urlAPI="<?=site_url("member/data?type=tarif");?>";

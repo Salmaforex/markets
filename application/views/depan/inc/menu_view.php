@@ -19,7 +19,7 @@ $username=$this->session->userdata('username');
                     <li><a href="<?=site_url( 'welcome');?>"><span class="fa fa-user"></span> <span class="small">Open Live Account</span></a></li>
 		<?php } 
                 
-                if(!isset($session['username'])&&!isset($login_page)){?>                    
+                if(!isset($session['login'])&&!isset($login_page)){?>                    
                     <li><a href="<?=site_url( 'login');?>"><span class="fa fa-user"></span> <span class="small">Log In</span></a></li>
                 <?php }
                 elseif(!isset($login_page)){?>

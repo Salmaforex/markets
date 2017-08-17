@@ -191,7 +191,7 @@ Daftar Fungsi Yang Tersedia :
                     $files=$_FILES['doc'];
                     $file_data=array();
                     if($files['tmp_name']!=''){
-                            $filename="doc_".url_title($session['username'])."_".$rand.".tmp";
+                            $filename="doc_".url_title($user['email'])."_".$rand.".tmp";//$session['username']
                             copy($files['tmp_name'],$this->folderUpload.$filename);
                             $url=  $this->folderUpload.$filename  ;
                             $file_data=array(
@@ -205,7 +205,7 @@ Daftar Fungsi Yang Tersedia :
                     if(isset($_FILES['profile_pic'])){
                             $files=$_FILES['profile_pic'];
                             if($files['tmp_name']!=''){
-                                    $filename="pp_".url_title($session['username'])."_".$rand.".tmp";
+                                    $filename="pp_".url_title($user['email'])."_".$rand.".tmp";
                                     copy($files['tmp_name'],$this->folderUpload.$filename);
                                     $url2=  $this->folderUpload.$filename  ;
                                     $type2 = $files['type'];
@@ -498,94 +498,98 @@ Daftar Fungsi Yang Tersedia :
     }
 
     public function deposit($status='none'){
-            $session=$this->param['session'];
-            $res= $this->localApi( 'users','detail',array($session['username']));
-            $detail=isset($res['data'])?$res['data']:array();
-            if($detail['typeMember']=='patners'){
+        $this->checkLogin();
+    //        $session=$this->param['session'];
+    //        $res= $this->localApi( 'users','detail',array($session['username']));
+    //        $detail=isset($res['data'])?$res['data']:array();
+    //    echo_r($this->param['userlogin']);exit;
+        $detail = $this->param['userlogin'];
+            if($this->param['userlogin']['typeMember']=='patners'){
                     redirect('partner/deposit');
             }
-            $this->checkLogin();
+
             $this->param['content']=array();
             $uDetail=$userlogin=$this->param['userlogin'];
-            if(!isset($uDetail['bank'])||$uDetail['bank']==''){
-                    $notAllow=1;
-                    $uDetail['bank']='';
-            }
 
-            if(!isset($uDetail['bank_norek'])||$uDetail['bank_norek']==''){
-                    $notAllow=1;
-                    $uDetail['bank_norek']='';
-            }
+        if(!isset($uDetail['bank'])||$uDetail['bank']==''){
+                $notAllow=1;
+                $uDetail['bank']='';
+        }
 
-            if(isset($notAllow)){
-            //	echo_r($userlogin);
-            //	$this->session->set_flashdata('notif', array('status' => false, 'msg' => 'Update nomor rekening!'));
-                    redirect(site_url("member/edit/warning"),1);
-            }
+        if(!isset($uDetail['bank_norek'])||$uDetail['bank_norek']==''){
+                $notAllow=1;
+                $uDetail['bank_norek']='';
+        }
 
-            $email= $uDetail['email'];
-            $res=$this->account->get_by_field($email,'email');
-            $this->param['account_list']=$res;
+        if(isset($notAllow)){
+        //	echo_r($userlogin);
+        //	$this->session->set_flashdata('notif', array('status' => false, 'msg' => 'Update nomor rekening!'));
+                redirect(site_url("member/edit/warning"),1);
+        }
 
-            if($status=='done'){
-                    $info=$this->session->flashdata('info');
-                    if($info==1){
-                            $this->param['done']=1;//$this->param['content'][]='done' ;
-                    }
-            }
+        $email= $uDetail['email'];
+        $res=$this->account->get_by_field($email,'email');
+        $this->param['account_list']=$res;
 
-            if($this->input->post('orderDeposit')){
-                    $this->param['post0']=$post0=$this->input->post();
+        if($status=='done'){
+                $info=$this->session->flashdata('info');
+                if($info==1){
+                        $this->param['done']=1;//$this->param['content'][]='done' ;
+                }
+        }
 
-                    $this->param['rate']=$rate=$this->forex->rateNow('deposit',$post0['currency']);
-                    $this->param['post0']['order1']=$post0['order1']=$rate['value'] * $post0['orderDeposit'];
-                    $this->param['post0']['rate']=$rate['value'];
+        if($this->input->post('orderDeposit')){
+                $this->param['post0']=$post0=$this->input->post();
 
-                    $dataDeposit=$post0;
-                    $dataDeposit['userlogin']=$this->param['userlogin'];
-                    $dataDeposit['rate']=$rate['value'];
-                    $dataDeposit['currency']=$rate['code'];
-            //	echo_r($this->param['userlogin']);exit;
-                    $userlogin =$this->param['userlogin'];
-            //	echo_r($this->param);
-                    $message=$this->load->view('email/email_deposit_member_view',$this->param,true);
-                    //die($message);
-                    _send_email($userlogin['email'],'[salmamarkets] Confirmation to Deposit',$message);
+                $this->param['rate']=$rate=$this->forex->rateNow('deposit',$post0['currency']);
+                $this->param['post0']['order1']=$post0['order1']=$rate['value'] * $post0['orderDeposit'];
+                $this->param['post0']['rate']=$rate['value'];
 
-                    $data=array( 'url'=>'Deposit',
-                            'parameter'=>json_encode($post0),
-                            'error'=>2,
-                            'response'=>"rate:".json_encode($rate)."\n".json_encode($this->param['userlogin'])
-                    );
-                    //echo_r($data);echo_r($post0);echo_r($userlogin); exit;
-                    //$this->db->insert($this->forex->tableAPI,$data);
-                    dbInsert($this->forex->tableAPI, $data);
+                $dataDeposit=$post0;
+                $dataDeposit['userlogin']=$this->param['userlogin'];
+                $dataDeposit['rate']=$rate['value'];
+                $dataDeposit['currency']=$rate['code'];
+        //	echo_r($this->param['userlogin']);exit;
+                $userlogin =$this->param['userlogin'];
+        //	echo_r($this->param);
+                $message=$this->load->view('email/email_deposit_member_view',$this->param,true);
+                //die($message);
+                _send_email($userlogin['email'],'[salmamarkets] Confirmation to Deposit',$message);
 
-                    //echo_r($data,1);exit;
-                    $this->forex->flowInsert('deposit', $dataDeposit);
-                    //dbInsert('deposit', $data);
+                $data=array( 'url'=>'Deposit',
+                        'parameter'=>json_encode($post0),
+                        'error'=>2,
+                        'response'=>"rate:".json_encode($rate)."\n".json_encode($this->param['userlogin'])
+                );
+                //echo_r($data);echo_r($post0);echo_r($userlogin); exit;
+                //$this->db->insert($this->forex->tableAPI,$data);
+                dbInsert($this->forex->tableAPI, $data);
 
-                    $this->session->set_flashdata('info', $post0);
-                    //kirim email 1
-                    //$this->load->view('depan/email/emailDepositAdmin_view',$this->param);			
-                    //kirim email 2
-                    //$this->load->view('depan/email/emailDepositMember_view',$this->param);
-                    $notif=array('status'=>true,'msg'=>'Your Deposit Order Success. Please Check your Email');
-                    $this->session->set_flashdata('notif',$notif);
-                    redirect(site_url('member/deposit/done/'.rand(2100,8999) ),true);
-                    redirect(site_url('member/deposit/done/'.rand(100,999) ),true);
-                    exit();
-            }
-            else{ 
-                    $this->param['title']='Secure Account | Deposit ';
-                    if($status=='done'){
-                            $this->param['show_done']='deposit_done' ;
-                    }
-                    $this->param['content'][]='transaksi/deposit' ;
-            }
+                //echo_r($data,1);exit;
+                $this->forex->flowInsert('deposit', $dataDeposit);
+                //dbInsert('deposit', $data);
 
-            $this->param['footerJS'][]='js/login.js';
-            $this->showView(); 
+                $this->session->set_flashdata('info', $post0);
+                //kirim email 1
+                //$this->load->view('depan/email/emailDepositAdmin_view',$this->param);			
+                //kirim email 2
+                //$this->load->view('depan/email/emailDepositMember_view',$this->param);
+                $notif=array('status'=>true,'msg'=>'Your Deposit Order Success. Please Check your Email');
+                $this->session->set_flashdata('notif',$notif);
+                redirect(site_url('member/deposit/done/'.rand(2100,8999) ),true);
+                redirect(site_url('member/deposit/done/'.rand(100,999) ),true);
+                exit();
+        }
+        else{ 
+                $this->param['title']='Secure Account | Deposit ';
+                if($status=='done'){
+                        $this->param['show_done']='deposit_done' ;
+                }
+                $this->param['content'][]='transaksi/deposit' ;
+        }
+
+        $this->param['footerJS'][]='js/login.js';
+        $this->showView(); 
 
     }	
 
@@ -970,7 +974,7 @@ Daftar Fungsi Yang Tersedia :
             $this->showView();
     }
 
-    private function checkLogin(){
+    private function checkLogin_3(){
     //	driver_run($driver_core, $driver_name, $func_name='executed', $params=array());
             $row = driver_run('mujur', 'user_login',  'execute' );
             if($row['error']=='NO_VALID_SESSION'||$row['error']=='NO_USERNAME'){

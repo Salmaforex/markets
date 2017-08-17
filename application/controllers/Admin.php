@@ -47,7 +47,7 @@ class Admin extends MY_Controller {
         $this->showView(); 
     }
     
-    private function checkLogin(){
+    private function checkLogin_admin(){
         $session=$this->param['session'];
         $login = $this->localapi_model->token_get($session['login']);
         $this->localapi_model->token_update($session['login']);
@@ -337,6 +337,7 @@ class Admin extends MY_Controller {
 	}
 	
 	function edit_user($id){
+            $this->checkLogin();
 		$this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
 		$params=array('id'=>$id,'type'=>"user_detail");
 		$ar=$this->users_model->gets($id,'u_id' );
@@ -497,16 +498,30 @@ class Admin extends MY_Controller {
 		$this->showView();
 	}
 //===========================TARIF
-        public function currency(){		
+        public function currency($page='',$code=''){		
             $this->checkLogin();
-            if($this->input->post('rate')){
+            if($this->input->post('name')){
                     $post= $this->input->post();
-                    echo_r($post);die();
-                    $stat=$this->forex->rateUpdate($post);
-                    if($stat===false)die('error');
-                    redirect(site_url('admin/tarif'));
+            //        echo_r($post);die();
+                    $stat=$this->forex->currency_new($post);
+            //        if($stat===false)die('error');
+                    redirect(site_url('admin/currency'));
                     exit();
             }else{}
+            
+    //=========================
+        if($page=='approved'){
+            $this->forex->currency_approve($code);
+            redirect(site_url('admin/currency'));
+        }
+        
+        if($page=='disable'){
+            $this->forex->currency_disable($code);
+            redirect(site_url('admin/currency'));
+        }
+        
+        
+            
 
             $this->param['title']='Salma forex | Currency'; 
             $this->param['content']=array(

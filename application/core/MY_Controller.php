@@ -6,6 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		parent::__construct(); 
 		$this->load->library('session');
 		$this->load->model('users_model');
+            $this->param['session']=$this->session->all_userdata();
 	}
 //---------Tidak diketahui kegunaannya?	
 	public function runApi(){
@@ -282,8 +283,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
 	}
 	
-        private function checkLogin(){
+        function checkLogin(){
             $session=$this->param['session'];
+            if(!isset($session['login'])){
+                echo_r($session);exit;
+            }
+            
             $login = $this->localapi_model->token_get($session['login']);
             $this->localapi_model->token_update($session['login']);
             //echo_r($session);echo_r($login);exit;

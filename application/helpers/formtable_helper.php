@@ -11,7 +11,7 @@ if ( ! function_exists('bsInput')){
 			'id'            => 'input_'.$name,
 			'value'         => $value,
 			'class'			=> 'form-control',
-			'type'			=> 'text',
+			'type'			=> $info=='password'?'password':'text',
 			'placeholder'	=> $info
 		);
 		if($disable!==false){

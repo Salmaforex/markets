@@ -325,6 +325,7 @@ public $CI;
 		left join mujur_usersdocument d on u.u_email = d.udoc_email";
 		$dt=dbFetchOne($sql);
 		$times['count 0']=microtime();
+                
 		//$this->db->query($sql)->row_array();
 		$respon['recordsTotal']=$dt['c'];
 		$respon['recordsFiltered']=$dt['c']; //karena tidak ada filter?!
@@ -378,14 +379,15 @@ public $CI;
 			$times['count 2b']=microtime();
 		}
 
-		$sql="select u.u_id id, u_modified created, udoc_status status_document, u_email main_email, '-'
+		$sql="select u.u_id id, u_modified created, d.udoc_status status_document, u_email main_email, '-'
 		from `mujur_users` u 
 		left join mujur_usersdocument d on u.u_email = d.udoc_email
 		where $where 
-		group by u_email
+
 			$orders
 		limit $start,$limit";
 		/*
+                 * 		group by u.u_email
 		left join mujur_accountdetail ad 
 			on a.username=ad.username
 		*/	

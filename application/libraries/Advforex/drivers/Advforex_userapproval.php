@@ -81,9 +81,10 @@ public $CI;
 		left join mujur_users u on u.u_email = ud.ud_email
 		left join mujur_usersdocument udoc on u.u_email = udoc.udoc_email
 			where ud_email is not null and ($where) $where2
-		group by u_email
+
 		$orders limit $start, $limit";
 		/*
+                 * 		group by u_email
 		left join mujur_accountdetail ad 
 			on a.username=ad.username
 		*/	

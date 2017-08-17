@@ -10,7 +10,7 @@ if (   function_exists('logFile')){ logFile('view/member/api','api_view.php','vi
       <div class="main col-md-9">
 <div class="panel panel-white">
           <div class="panel-heading partition-blue"> <span class="text-bold">
-		  User Detail
+		  User Detail (NEW)
 		  </span> </div>
           <div class="panel-body">
 		<div id='preview'></div>
@@ -42,7 +42,7 @@ if (   function_exists('logFile')){ logFile('view/member/api','api_view.php','vi
 </table>	
 
 <script>
-urlBase="<?=site_url();?>";
+urlBase="<?=site_url();?>/";
 urlAPI="<?=site_url("member/data?type=user");?>";
 urlDetail="<?=site_url("member/data");?>";
 urlChangeStatus="<?=site_url("member/data?type=update");?>";

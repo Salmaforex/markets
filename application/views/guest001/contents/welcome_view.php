@@ -47,7 +47,7 @@
                 </form-->				
 <?php
 */
-			$load_view=$baseFolder.'form_view';
+			$load_view=$baseFolder.'contents/form_view';
 			$this->load->view($load_view); 
 ?>
             <div class="vspace-15"></div>
