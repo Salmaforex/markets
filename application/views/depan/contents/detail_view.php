@@ -1,10 +1,16 @@
 <?php
-//echo_r($userlogin);die();
-$name=isset($userlogin['name'])&&$userlogin['name']!=''?$userlogin['name']:'User Forex';
-//." ".$userlogin['lastname'];
-//$userlogin['detail']['firstname']." ".$userlogin['detail']['lastname'];
+//echo_r($detail);die();
+//." ".$detail['lastname'];
+//$detail['detail']['firstname']." ".$detail['detail']['lastname'];
+
+$email = isset($userlogin['email'])?$userlogin['email']:'';
+$raw= _localApi( 'users','detail',array($email));
+$detail = $raw['data'];
+$name=isset($detail['name'])&&$detail['name']!=''?$detail['name']:'User Forex';
+
+
 $accountid=isset($accounts[0]['accountid'])?$accounts[0]['accountid']:'-';
-$profile_pic=$userlogin['document']['profile_pic']!=''?site_url('member/show_profile/'.$userlogin['document']['id'].'/100'):false;
+$profile_pic=$detail['document']['profile_pic']!=''?site_url('member/show_profile/'.$detail['document']['id'].'/100'):false;
 ?>
 
   <div class="container">
@@ -77,12 +83,12 @@ $profile_pic=$userlogin['document']['profile_pic']!=''?site_url('member/show_pro
                     </tr>
                     <tr class="active">
                       <td>Master Password</td>
-                      <td class="text-right"><?=isset($userlogin['users']['u_mastercode'])?$userlogin['users']['u_mastercode']:'-';?></td>
+                      <td class="text-right"><?=isset($detail['users']['u_mastercode'])?$detail['users']['u_mastercode']:'-';?></td>
                     </tr>
                     <tr>
                       <td>Account Type</td>
                       <td class="text-right">
-					  <?=isset($userlogin['accounttype'])?$userlogin['accounttype']:'MEMBER.';?>
+					  <?=isset($detail['accounttype'])?$detail['accounttype']:'MEMBER.';?>
 					  </td>
                     </tr>
                     <tr class="active">
@@ -92,14 +98,14 @@ $profile_pic=$userlogin['document']['profile_pic']!=''?site_url('member/show_pro
                     <tr >
                       <td>Phone Number</td>
                       <td class="text-right">
-					  <?=isset($userlogin['phone'])?$userlogin['phone']:' ';?>
+					  <?=isset($detail['phone'])?$detail['phone']:' ';?>
 					  </td>
                     </tr>
                     <tr class="active">
                       <td colspan=2>Address</td>
                     </tr>
                     <tr>
-                      <td colspan=2><?=isset($userlogin['address'])?nl2br($userlogin['address']):' ';?></td>
+                      <td colspan=2><?=isset($detail['address'])?nl2br($detail['address']):' ';?></td>
                     </tr>
                   </tbody>
                 </table>
@@ -167,45 +173,76 @@ $profile_pic=$userlogin['document']['profile_pic']!=''?site_url('member/show_pro
                     <tbody>
                       <tr>
                         <td>Username</td>
-                        <td class="text-right"> <?=isset($userlogin['email'])?$userlogin['email']:' ';?></td>
+                      <td>:</td>
+                        <td class="text-right"> <?=isset($detail['email'])?$detail['email']:' ';?></td>
                       </tr>
                       <tr>
                         <td>Name</td>
+                      <td>:</td>
                         <td class="text-right"><?=$name;?></td>
                       </tr>
 <?php
 if(defined('LOCAL')){?>
                       <tr class="active">
                       <td>Master Password</td>
-                      <td class="text-right"><?=isset($userlogin['users']['u_mastercode'])?$userlogin['users']['u_mastercode']:'-';?></td>
+                      <td>:</td>
+                      <td class="text-right"><?=isset($detail['users']['u_mastercode'])?$detail['users']['u_mastercode']:'-';?></td>
                     </tr>
 <?php
 }
+/*
 ?>
                     <tr>
                       <td>Account Type</td>
                       <td class="text-right">
-					  <?=isset($userlogin['accounttype'])?$userlogin['accounttype']:'MEMBER.';?>
+					  <?=isset($detail['accounttype'])?$detail['accounttype']:'MEMBER.';?>
 					  </td>
                     </tr>
+ * 
+ */
+?>
                     <tr class="active">
                       <td>Account Status</td>
+                      <td>:</td>
                       <td class="text-right">Active</td>
                     </tr>
+                    
                     <tr >
                       <td>Phone Number</td>
+                      <td>:</td>
                       <td class="text-right">
-					  <?=isset($userlogin['phone'])?$userlogin['phone']:' ';?>
-					  </td>
+                        <?=isset($detail['phone'])?$detail['phone']:' ';?>
+                      </td>
                     </tr>
+                    
+                    <tr >
+                      <td>Bank</td>
+                      <td>:</td>
+                      <td class="text-right">
+                        <?=isset($detail['bank'])?$detail['bank']:' ';?>
+                      </td>
+                    </tr>
+                    
+                    <tr >
+                      <td>Account Bank Number </td>
+                      <td>:</td>
+                      <td class="text-right">
+                        <?=isset($detail['bank_norek'])?$detail['bank_norek']:' ';?>
+                      </td>
+                    </tr>
+                    
                     <tr class="active">
-                      <td colspan=2>Address</td>
+                      <td>Address</td>
+                      <td>:</td>
+                      <td class="text- ">
+                        <?=isset($detail['address'])?nl2br($detail['address']):' ';?>
+                      </td>
                     </tr>
-                    <tr>
-                      <td colspan=2><?=isset($userlogin['address'])?nl2br($userlogin['address']):' ';?></td>
-                    </tr>
+                    
+                    
                     </tbody>
                   </table>
+                    <?php echo_r($detail);?>
                 </form>
               </div>
             </div>
@@ -223,6 +260,6 @@ if(defined('LOCAL')){?>
 /*
 if(defined('LOCAL')){
 	echo_r($accounts);
-	echo_r($userlogin);
+	echo_r($detail);
 }
 */

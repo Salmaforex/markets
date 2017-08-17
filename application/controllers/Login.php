@@ -16,6 +16,7 @@ Daftar Fungsi Yang Tersedia :
     }
 
     function member(){
+        logCreate('login| member| from:'.$_SERVER['HTTP_REFERER']);
         $this->param['title']='Login Secure Area';
         $this->param['show_open_live']=true;
         $this->param['content']=array(
@@ -48,23 +49,27 @@ Daftar Fungsi Yang Tersedia :
         log_message('debug','login process| res:'.json_encode($response));
         if( $response['success']  ){
             // Code jika sukses
-            //echo 'CAPTCHA OK';
             $response = $this->valid();
+            //echo_r($response);exit;
            
             if($response['status']===false){
                 js_goto( site_url('login/member')."?err=".$response['code'] );
+                
             }
+            
              $login = $this->localApi( 'users','token',array($post['username']));
            // echo_r($response);echo_r($post);echo_r($login);exit;
             $data_login = $login['data']['token'];
             $this->session->set_userdata('login', $data_login);
-           // echo_r( $login);//exit;
+           //exit;
             //$this->session->set_userdata('username', $post['username']);
-            
+            logCreate('login| process| input session :'.count($data_login));
             $type = $login['data']['typeMember'];
             
             //redirect(site_url('member/loginProcess'),1);
             echo "Please Wait, While we process your login";
+            logCreate('login| process| goto :'.$type);
+        
             js_goto( site_url($type)."?enter=".date("ymdhis") );
             js_goto( site_url('member/loginProcess')."?enter=".date("ymdhis") );
         } 
@@ -124,7 +129,7 @@ Daftar Fungsi Yang Tersedia :
         if($this->session->flashdata('login')){
                 $this->param['login']=$this->session->flashdata('login');
                 logCreate('session login valid','info');
-                logCreate('detail login:'.print_r($this->param['login'],1));
+                logCreate('detail login:'.  json_encode($this->param['login'],1));
         }else{}
                         $this->param['fileCss']=array(	
                 'css001/style.css',
@@ -152,9 +157,9 @@ Daftar Fungsi Yang Tersedia :
         $respon_data=isset($res['data'])?$res['data']:false;
 
         if( $respon_data===false){
-                $login['message']="Username Not Valid";
-                $this->session->set_flashdata('login', $login);
-                logCreate('debug','res:'.json_encode($res));
+            $login['message']="Username Not Valid";
+            $this->session->set_flashdata('login', $login);
+            logCreate('debug','email not valid| res:'.json_encode($res));
             return array('status'=>false,'code'=>'email_not_valid');
             //    redirect(site_url('login/member')."?err=email_not_valid",1);
         }

@@ -34,12 +34,14 @@ $email = isset($userlogin['email'])?$userlogin['email']:'';
             </ul>
           </div>
         </div>
+          
         <div class="panel panel-white">
           <div class="panel-heading border-light">
             <h3><strong>Welcome to secure area</strong></h3>
             <p>Since you have existing live accounts please use this form to create your additional live account.</p>
           </div>
         </div>
+          
         <div class="panel panel-white">
           <div class="panel-heading partition-blue"> <span class="text-bold"> Edit Detail</span> </div>
           <div class="panel-body no-padding">
@@ -53,7 +55,7 @@ $email = isset($userlogin['email'])?$userlogin['email']:'';
 	//$urlAffiliation=base_url("register/{$rand_url}");
 ?>		
 			<div class="main col-md-12">
-				<form   name="frm"  id="frmLiveAccount" method="POST"   role="form">
+				<form   name="frm"  id="frmLiveAccount3" method="POST"   role="form">
 <?php 
 //	$detail1=$detail['detail'];
 	callback_submit();
@@ -65,7 +67,10 @@ $email = isset($userlogin['email'])?$userlogin['email']:'';
 	<table class='table-striped table' border="0" style='background-color: #f3f3f3;'>
 <?php
 //ob_start();
-$detail = $userlogin;
+//$detail = $userlogin;
+$raw= _localApi( 'users','detail',array($email));
+$detail = $raw['data'];
+//echo_r($detail);
 	$html=form_hidden('email',$email) ;
 //	unset($detail['name']);
 	$disable=isset($detail['name'])&&$detail['name']!=''?true:false;
@@ -81,18 +86,21 @@ $detail = $userlogin;
 	
 	$html.=bsInput('Zip code','detail[zipcode]', $zipcode ,'zip code');
 	$html.=bsInput('Address','detail[address]', isset($detail['address'])?$detail['address']:'' ,'-');
-	$html.=bsInput('Phone','detail[phone]', isset($detail['phone'])?$detail['phone']:'' ,'-');
+        
+        $disable=isset($detail['phone'])&&$detail['phone']!=''?true:false;
+	$html.=bsInput('Phone','detail[phone]', isset($detail['phone'])?$detail['phone']:'' ,'-',$disable);
+        
 	$html.=bsInput('Bank','detail[bank]', isset($detail['bank'])?$detail['bank']:'' ,'-');
 	$html.=bsInput('Account Bank Number','detail[bank_norek]', isset($detail['bank_norek'])?$detail['bank_norek']:'' ,'-');
 	//================Tanggal lahir=============
 	$dt = array(
-			'name'          => '',
-			'id'            => 'input_birth',
-			'value'         => '',
-			'class'			=> 'form-control_2',
-			'type'			=> 'text',
+			'name'  => '',
+                        'id'    => 'input_birth',
+			'value' => '',
+			'class'	=> 'form-control',
+			'type'	=> 'text',
 			'placeholder'	=> "tanggal bulan tahun",
-			'style'	=> 'width:50px',
+			'style'	=> 'width:30%;float:left;margin-right:10px',
 	);
 	$inp='';
 	$dt['name']='detail[dob1]';

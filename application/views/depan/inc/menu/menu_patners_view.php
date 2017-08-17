@@ -16,31 +16,31 @@ if(isset($accounts)){
 else{
 	$accounts=array();
 }?> <div class="panel panel-mainmenu no-overflow">
-   <div class="panel-heading no-padding partition-blue"> <a class="panel-link-title" href="<?=base_url('partner');?>#"><span class="fa fa-home"></span> <span class="text">Home</span></a> </div>
+   <div class="panel-heading no-padding partition-blue"> <a class="panel-link-title" href="<?=site_url( 'partner');?>#"><span class="fa fa-home"></span> <span class="text">Home</span></a> </div>
    <div class="panel-body no-padding">
      <div class="mainmenu drop-nav">
        <ul>
 
   <li> <a href="#"><span class="fa fa-user"></span><span class="text">Profile</span></a> <span class="toggle fa fa-chevron-down"></span>
     <ul>
-      <li><a href="<?=base_url('partner/detail');?>#"><span class="fa fa-triangle-right"></span> Detail</a></li>
-      <li><a href="<?=base_url('partner/edit');?>#"><span class="fa fa-triangle-right"></span> Edit</a></li>
-      <li><a href="<?=base_url('partner/uploads');?>#"><span class="fa fa-triangle-right"></span> Upload Document</a></li>
-      <!--li><a href="<?=base_url('partner/editpassword');?>#"><span class="fa fa-triangle-right"></span> Edit Password</a></li-->
+      <li><a href="<?=site_url( 'partner/detail');?>#"><span class="fa fa-triangle-right"></span> Detail</a></li>
+      <li><a href="<?=site_url( 'partner/edit');?>#"><span class="fa fa-triangle-right"></span> Edit</a></li>
+      <li><a href="<?=site_url( 'partner/uploads');?>#"><span class="fa fa-triangle-right"></span> Upload Document</a></li>
+      <!--li><a href="<?=site_url( 'partner/editpassword');?>#"><span class="fa fa-triangle-right"></span> Edit Password</a></li-->
     </ul>
   </li>
 <?php if(true){?>	   
   <li> <a href="#"><span class="fa fa-user"></span><span class="text">Agent</span></a> <span class="toggle fa fa-chevron-down"></span>
     <ul>
-      <li><a href="<?=base_url('partner/list_member');?>#"><span class="fa fa-triangle-right"></span> Member List</a></li>
+      <li><a href="<?=site_url( 'partner/list_member');?>#"><span class="fa fa-triangle-right"></span> Member List</a></li>
 
     </ul>
   </li>
 <?php }?>
   <li> <a href="#"><span class="fa fa-user"></span><span class="text">Account (<?=count($accounts);?>)</span></a> <span class="toggle fa fa-chevron-down"></span>
     <ul>
-	<li><a href="<?=base_url('partner/register/account');?>#"><span class="fa fa-triangle-right"></span> Create New Account </a></li>
-	<!--li><a href="<?=base_url('partner/register/agent');?>#"><span class="fa fa-triangle-right"></span> Create New Agent </a></li-->
+	<li><a href="<?=site_url( 'partner/register/account');?>#"><span class="fa fa-triangle-right"></span> Create New Account </a></li>
+	<!--li><a href="<?=site_url( 'partner/register/agent');?>#"><span class="fa fa-triangle-right"></span> Create New Agent </a></li-->
 <?php
 $txt='';
 foreach($listAcc as $row){
@@ -60,14 +60,14 @@ echo $txt;
   </li>
   <li> <a href="#"><i class="fa fa-briefcase" aria-hidden="true"></i> <span class="text">Deposit</span></a> <span class="toggle fa fa-chevron-down"></span>
     <ul>
-      <li><a href="<?=base_url('partner/deposit');?>#"><span class="fa fa-triangle-right"></span> Form</a></li>
-     <li><a href="<?=base_url('partner/history');?>#"><span class="fa fa-triangle-right"></span> History </a></li>
+      <li><a href="<?=site_url( 'partner/deposit');?>#"><span class="fa fa-triangle-right"></span> Form</a></li>
+     <li><a href="<?=site_url( 'partner/history');?>#"><span class="fa fa-triangle-right"></span> History </a></li>
     </ul>
   </li>
   <li> <a href="#"><i class="fa fa-exchange" aria-hidden="true"></i> <span class="text">Withdrawal</span></a> <span class="toggle fa fa-chevron-down"></span>
     <ul>
-      <li><a href="<?=base_url('partner/widtdrawal');?>#"><span class="fa fa-triangle-right"></span> Form</a></li>
-      <li><a href="<?=base_url('partner/history');?>#"><span class="fa fa-triangle-right"></span> History </a></li>
+      <li><a href="<?=site_url( 'partner/widtdrawal');?>#"><span class="fa fa-triangle-right"></span> Form</a></li>
+      <li><a href="<?=site_url( 'partner/history');?>#"><span class="fa fa-triangle-right"></span> History </a></li>
     </ul>
   </li>
   <li> <a href="#"><i class="fa fa-server" aria-hidden="true"></i> <span class="text">Platform</span></a> <span class="toggle fa fa-chevron-down"></span>
@@ -81,9 +81,9 @@ echo $txt;
   </li>
   <li> <a href="#"><i class="fa fa-shield" aria-hidden="true"></i> <span class="text">Security</span></a> <span class="toggle fa fa-chevron-down"></span>
     <ul>
-      <li><a href="<?=base_url('partner/editpassword');?>#"><span class="fa fa-triangle-right"></span>Edit Cabinet Password</a></li>
-      <li><a href="<?=base_url('partner/edit_master_password');?>#"><span class="fa fa-triangle-right"></span>Edit Master Code</a></li>
-      <!--li><a href="<?=base_url('history');?>#"><span class="fa fa-triangle-right"></span>History </a></li-->
+      <li><a href="<?=site_url( 'partner/editpassword');?>#"><span class="fa fa-triangle-right"></span>Edit Cabinet Password</a></li>
+      <li><a href="<?=site_url( 'partner/edit_master_password');?>#"><span class="fa fa-triangle-right"></span>Edit Master Code</a></li>
+      <!--li><a href="<?=site_url( 'history');?>#"><span class="fa fa-triangle-right"></span>History </a></li-->
     </ul>
   </li>
   <li> <a href="https://www.salmamarkets.com/contact-us/"><i class="fa fa-life-ring" aria-hidden="true"></i> <span class="text">Support</span></a> <span class="toggle fa fa-chevron-down"></span>
@@ -95,10 +95,10 @@ echo $txt;
        </ul>
      </div>
    </div>
-   <div class="panel-footer partition-blue text-right"><a href="<?=base_url('partner/logout');?>#" class="btn btn-transparent-white btn-xs">Logout <i class="fa fa-power-off" aria-hidden="true"></i> </a></div>
+   <div class="panel-footer partition-blue text-right"><a href="<?=site_url( 'partner/logout');?>#" class="btn btn-transparent-white btn-xs">Logout <i class="fa fa-power-off" aria-hidden="true"></i> </a></div>
 <!--ccc-->
 		<div style="background:white no-repeat;background-size:99%" class="div_support_pic"  >
-		<img src='<?=base_url('media/images/sms_center.png');?>' width='260'/>
+		<img src='<?=site_url( 'media/images/sms_center.png');?>' width='260'/>
 		</div>
 		<div style="clear:both"></div>
    </div>

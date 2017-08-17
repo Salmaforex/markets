@@ -52,7 +52,7 @@ $name=isset($userlogin['name'])&&$userlogin['name']!=''?$userlogin['name']:'User
 	//$urlAffiliation=base_url("register/{$rand_url}");
 ?>		
 			<div class="main col-md-12">
-				<form   name="frm"  id="frmLiveAccount" method="POST"   role="form">
+				<form   name="frm"  id="frmLiveAccount2" method="POST"   role="form">
 <?php 
 //	$detail1=$detail['detail'];
 	callback_submit();
@@ -64,7 +64,10 @@ $name=isset($userlogin['name'])&&$userlogin['name']!=''?$userlogin['name']:'User
 	<table class='table-striped table' border="0">
 <?php
 //ob_start();
-$detail = $userlogin;
+$email = $userlogin['email'];
+$detail= $this->localApi( 'users','detail',array($email));
+//echo_r($detail);
+        //$userlogin;
 	$html=form_hidden('email',$userlogin['email']) ;
 //	unset($detail['name']);
 	$disable=isset($detail['name'])&&$detail['name']!=''?true:false;
@@ -118,7 +121,8 @@ echo $html;
 	</div>
 <?php
 if(defined('LOCAL')){
-	echo_r($userlogin);
+	//echo_r($userlogin);
+        echo_r($detail);
 }
 ?>
 </div>

@@ -72,8 +72,9 @@ if(isset($showAgent)){
                 <div class="form-group" style="">
                     <label for="input_phone" class="col-sm-2 control-label">Phone</label>
                     <div class="col-sm-10">
-                     <input name="phone" value="<?=isset($register['phone'])?$register['phone']:'';?>" id="input_phone" class="form-control" 
+                     <input name="phone" value="<?=isset($register['phone'])?$register['phone']:'+62';?>" id="input_phone" class="form-control" 
                             placeholder="Input your country number +62"  required type="text">
+                     <i>Input your country number +62</i>
 
                     </div>
                 </div>

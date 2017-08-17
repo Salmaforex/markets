@@ -72,8 +72,8 @@ Daftar Fungsi Yang Tersedia :
 	public function agent(){
 		$this->load->library('session');
 		 
-			$this->param['fullregis']=true;
-			$this->param['statAccount']='agent';
+                $this->param['fullregis']=true;
+                $this->param['statAccount']='agent';
 		$this->param['agent']=false;
 		$this->param['showAgent']=false;
 		$this->param['showForm']=false;
@@ -87,173 +87,180 @@ Daftar Fungsi Yang Tersedia :
 		$this->showView();
 	}
 
-	public function register(){
-	//$this->load->model('users_model');
-		$post=$this->input->post();
-	//echo_r($post);exit;
-		if(count($post)==0) redirect('welcome');
+    public function register(){
+    //$this->load->model('users_model');
+            $post=$this->input->post();
+    //echo_r($post);exit;
+            if(count($post)==0) redirect('welcome');
 
-            $ar_key=array('name','city','state','zip','address','phone');
-            foreach($ar_key as $key){
-                $values=isset($post[$key])?trim($post[$key]):'';
-                if($values==''){
-                        $post['message']='Provide with Your Detail ('.$key.')';
-                        $this->session->set_flashdata('error_message', 'Please Provide with Your Detail ('.$key.')');
-                        $this->session->set_flashdata('register', $post);
-                        logCreate('parameter invalid: please click check:'.$key,'error');
-                        redirect($_SERVER['HTTP_REFERER'],1);
-                }
+        $ar_key=array('name','city','state','zip','address','phone');
+        foreach($ar_key as $key){
+            $values=isset($post[$key])?trim($post[$key]):'';
+            if($values==''){
+                    $post['message']='Provide with Your Detail ('.$key.')';
+                    $this->session->set_flashdata('error_message', 'Please Provide with Your Detail ('.$key.')');
+                    $this->session->set_flashdata('register', $post);
+                    logCreate('parameter invalid: please click check:'.$key,'error');
+                    redirect($_SERVER['HTTP_REFERER'],1);
             }
-            //echo_r($post);exit;
+        }
+        //echo_r($post);exit;
 //==========email valid=================
-            $post['email']=isset($post['email'])?trim($post['email']):'';
-            if($post['email']==''){
-                    $post['message']='Provide with Your Email';
-                    $this->session->set_flashdata('error_message', 'Provide with Your Email');
-                    $this->session->set_flashdata('register', $post);
-                    logCreate('parameter invalid: please click accept','error');
-                    redirect($_SERVER['HTTP_REFERER'],1);
-            }
-            elseif(isset($post['email'])){
-                    $post['email']=trim($post['email']);
-            }
+        $post['email']=isset($post['email'])?trim($post['email']):'';
+        $email = $post['email'];
+        if($post['email']==''){
+                $post['message']='Provide with Your Email';
+                $this->session->set_flashdata('error_message', 'Provide with Your Email');
+                $this->session->set_flashdata('register', $post);
+                logCreate('parameter invalid: please click accept','error');
+                redirect($_SERVER['HTTP_REFERER'],1);
+        }
+        elseif(isset($post['email'])){
+                $post['email']=trim($post['email']);
+        }
 
-            if(!isset($post['accept'])){
-                    $post['message']='Please Click Accept';
-                    $this->session->set_flashdata('error_message', 'please click accept');
-                    $this->session->set_flashdata('register', $post);
-                    logCreate('parameter invalid: please click accept','error');
-                    redirect($_SERVER['HTTP_REFERER'],1);
-                    die('-not valid-');
-                    redirect('welcome');
-            }
-            $res=array();
+        if(!isset($post['accept'])){
+                $post['message']='Please Click Accept';
+                $this->session->set_flashdata('error_message', 'please click accept');
+                $this->session->set_flashdata('register', $post);
+                logCreate('parameter invalid: please click accept','error');
+                redirect($_SERVER['HTTP_REFERER'],1);
+                die('-not valid-');
+                redirect('welcome');
+        }
+        $res=array();
 
-            if( defined('LOCAL')){
-                    logCreate('Local.. hapus user' );
-                    //$res= _localApi('users','erase',array($post['email']));
-                    $this->users_model->erase($post['email']);
-            }
+        if( defined('LOCAL')){
+                logCreate('Local.. hapus user' );
+                //$res= _localApi('users','erase',array($post['email']));
+                $this->users_model->erase($post['email']);
+        }
 
-            //$res= _localApi('users', 'exist', array($post['email']));
-            //echo_r($res);	die('user exist?');
-            $res=$this->users_model->exist($post['email']);
-            //echo_r($res);
-            //die('user exist?');
+        //$res= _localApi('users', 'exist', array($post['email']));
+        //echo_r($res);	die('user exist?');
+        $res=$this->users_model->exist($post['email']);
+        //echo_r($res);
+        //die('user exist?');
 
-            $respon_data=isset($res['data'])?$res['data']:array();
-            if(!$respon_data){
-            //!$res=$this->users_model->exist($post['email'])){
-            //no email found
-            }
-            else{
-                    $post['message']='Email Already on Our System';
-                    $this->session->set_flashdata('error_message', 'Email Already on Our System');
-                    $this->session->set_flashdata('register', $post);
-                    logCreate('parameter invalid: email exist','error');
-                    redirect($_SERVER['HTTP_REFERER'],1);
-            }
+        $respon_data=isset($res['data'])?$res['data']:array();
+        if(!$respon_data){
+        //!$res=$this->users_model->exist($post['email'])){
+        //no email found
+        }
+        else{
+                $post['message']='Email Already on Our System';
+                $this->session->set_flashdata('error_message', 'Email Already on Our System');
+                $this->session->set_flashdata('register', $post);
+                logCreate('parameter invalid: email exist','error');
+                redirect($_SERVER['HTTP_REFERER'],1);
+        }
 
 //==========SAVE REGIS===================
-            $res=array();
-            $this->load->model('password_model');
-            $res['users']=$this->users_model->register($post,false);
-            $message='unknown';
-            $res['message']=$message;
+        $res=array();
+        $this->load->model('password_model');
+        $res['users']=$this->users_model->register($post,false);
+        if($post['statusMember']=='AGENT'){
+            $this->users_model->update_type($email, 10 );
 
-            $email_data=array(
-                    'username'=>$post['email'],
-                    'email'=>$post['email'],
-                    'password'=>$res['users']['masterpassword'],
-                    'mastercode'=>$res['users']['mastercode'],
-            );
-            //echo_r($res);echo_r($email_data);exit;
-            //$this->load->view('email/emailRegister_email',$email_data);
-            logCreate('active email:'.$post['email']);
-            $this->users_model->active_email($post['email']);
+        }
 
-            //echo_r($res);die();
-            //$res_acc= _localApi('account','register',$post);
-            //echo_r($res_acc);die();
-            
-            $email=$post['email'];
-            logCreate('simple register email:'.$post['email']);
-            $this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
-            $driver_core = 'advforex';
-            $driver_name='register';
-            $func_name='simple_register';
-            if( !method_exists($this->{$driver_core}->{$driver_name},$func_name) ){
-                    $output=array('function "'.$func_name.'" unable to declare');
-                    die(json_encode($output));
-            }
-            else{
-                    $row=$params=false;
-                    logCreate("RUN {$driver_core}->{$driver_name}->{$func_name} ");
-                    $res_account=$this->{$driver_core}->{$driver_name}->{$func_name}($post);
-            }
+        $message='unknown';
+        $res['message']=$message;
+
+        $email_data=array(
+                'username'=>$post['email'],
+                'email'=>$post['email'],
+                'password'=>$res['users']['masterpassword'],
+                'mastercode'=>$res['users']['mastercode'],
+        );
+        //echo_r($res);echo_r($email_data);exit;
+        //$this->load->view('email/emailRegister_email',$email_data);
+        logCreate('active email:'.$post['email']);
+        $this->users_model->active_email($post['email']);
+
+        //echo_r($res);die();
+        //$res_acc= _localApi('account','register',$post);
+        //echo_r($res_acc);die();
+
+        $email=$post['email'];
+        logCreate('simple register email:'.$post['email']);
+        $this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
+        $driver_core = 'advforex';
+        $driver_name='register';
+        $func_name='simple_register';
+        if( !method_exists($this->{$driver_core}->{$driver_name},$func_name) ){
+                $output=array('function "'.$func_name.'" unable to declare');
+                die(json_encode($output));
+        }
+        else{
+                $row=$params=false;
+                logCreate("RUN {$driver_core}->{$driver_name}->{$func_name} ");
+                $res_account=$this->{$driver_core}->{$driver_name}->{$func_name}($post);
+        }
 /*
 [account] => Array
-    (
-        [AccountID] => 2500042
-        [MasterPassword] => r2lKwon
-        [InvestorPassword] => uw6nnLc
-        [ResponseCode] => 0
-        [ResponseText] => Create user success
-    )
+(
+    [AccountID] => 2500042
+    [MasterPassword] => r2lKwon
+    [InvestorPassword] => uw6nnLc
+    [ResponseCode] => 0
+    [ResponseText] => Create user success
+)
 */
-            if(defined('LOCAL')&&!isset($res_account['account']) ){
-                    $res_account['account']=array(
-                    'AccountID'=>'2000fake',
-                    'MasterPassword'=>'xxxxxx',
-                    'InvestorPassword'=>'zzzzzzz',
-                    'ResponseCode'=>0,
-                    );
+        if(defined('LOCAL')&&!isset($res_account['account']) ){
+                $res_account['account']=array(
+                'AccountID'=>'2000fake',
+                'MasterPassword'=>'xxxxxx',
+                'InvestorPassword'=>'zzzzzzz',
+                'ResponseCode'=>0,
+                );
 
-            }
+        }
 
-            if($email_data){
-                    if($res_account['account']!=false){
-                            $email_data['account']=$res_account['account'];
-                    }
-                    //$email_data['show']=true;
-                    $email_data['name']=$post['name'];
-                    //$email_data['mastercode']=$post['name'];
+        if($email_data){
+                if($res_account['account']!=false){
+                        $email_data['account']=$res_account['account'];
+                }
+                //$email_data['show']=true;
+                $email_data['name']=$post['name'];
+                //$email_data['mastercode']=$post['name'];
 
-                    //echo_r($email_data);
-                    if(defined('LOCAL')){
-                    //	$email_data['show_local']=true;
-                    }
+                //echo_r($email_data);
+                if(defined('LOCAL')){
+                //	$email_data['show_local']=true;
+                }
 
-                    logCreate('email_data:'.print_r($email_data,1));
-                    $this->load->view('email/emailRegister_email',$email_data);
-                    $this->load->view('email/emailRegister_account',$email_data);
+                logCreate('email_data:'.print_r($email_data,1));
+                $this->load->view('email/emailRegister_email',$email_data);
+                $this->load->view('email/emailRegister_account',$email_data);
 
-            //	exit();
-                    $post['message']='Register Success. We will send to your email ('.$email.') detail';
-                    //$this->session->set_flashdata('register', $post);
-                    $register=array(
+        //	exit();
+                $post['message']='Register Success. We will send to your email ('.$email.') detail';
+                //$this->session->set_flashdata('register', $post);
+                $register=array(
                     'data'=>$res_account,
                     'email'=>$email_data,
                     'post'=>$post
-                    );
-                    $this->session->set_userdata($register);
-                    logCreate('register:'.print_r($register,1));
-                    logCreate('register sukses','info');
-                    redirect(site_url('guest/success'));
-            //	redirect($_SERVER['HTTP_REFERER'],1);
-            }
-            else{
-                    $post['message']='Register Failed. Try contact our CS';
-                    $this->session->set_flashdata('register', $post);
-                    logCreate('register sukses','info');
-                    redirect($_SERVER['HTTP_REFERER'],1);
-            }
+                );
+                $this->session->set_userdata($register);
+                logCreate('register:'.print_r($register,1));
+                logCreate('register sukses','info');
+                redirect(site_url('guest/success'));
+        //	redirect($_SERVER['HTTP_REFERER'],1);
+        }
+        else{
+                $post['message']='Register Failed. Try contact our CS';
+                $this->session->set_flashdata('register', $post);
+                logCreate('register sukses','info');
+                redirect($_SERVER['HTTP_REFERER'],1);
+        }
 
-            //echo_r($post);die(); 
-            $stat=false;
-		
-	}
-	public function register_old(){
+        //echo_r($post);die(); 
+        $stat=false;
+
+    }
+
+        public function register_old(){
 		$respon['title']='NEW LIVE ACCOUNT (CREATED)';
 			if($post['statusMember']=='AGENT'){
 				$respon['title']='NEW PATNER ACCOUNT (CREATED)';

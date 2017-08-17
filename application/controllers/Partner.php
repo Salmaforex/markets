@@ -189,7 +189,8 @@ Daftar Fungsi Yang Tersedia :
 				
 				//echo_r($params);exit;
 			}
-			redirect(base_url('partner/edit')."?rand=$rand");
+                        
+			redirect(site_url('partner/edit')."?rand=$rand");
 			/*
 			$param['username']= $this->param['detail']['username'];
 			$param['post']['detail']= $this->param['detail']['detail'];
@@ -771,7 +772,7 @@ Daftar Fungsi Yang Tersedia :
 		echo_r($res0);
 	}
 
-	private function checkLogin(){
+	private function checkLogin_old(){
 	//	driver_run($driver_core, $driver_name, $func_name='executed', $params=array());
 		$row = driver_run('mujur', 'user_login',  'execute' );
 		if($row['error']=='NO_VALID_SESSION'||$row['error']=='NO_USERNAME'){
@@ -832,99 +833,7 @@ Daftar Fungsi Yang Tersedia :
 		$this->param['accounts']=$res;
 		$this->param['agent_default']=$agent;
 	}
-	private function checkLogin_old(){
-	$page = $this->uri->segment(2);	
-		logCreate('partner |checkLogin');
-		$session=$this->param['session'];
-	//==========REVENUE========
-	//	$res0= $this->localApi( 'account','partner_revenue',array($session['username']));
-	//	$revenue = $this->param['partner_revenue'] = isset($res0['data'])?$res0['data']:0;
-	//==========LOGIN CHECK====
-		$res= $this->localApi( 'users','login_check',array($session['username'],$session['password']));
-		$detail=isset($res['data']['valid'])?$res['data']['valid']:false;
-		if($detail==false){
-		//	echo_r($res);var_dump($session);exit();
-			logCreate('detail false: '.json_encode($session).'| login_check:'.json_encode($res),'error login');
-			js_goto(site_url('login')."?stat=no_detail");
-			//redirect("login");
-		}
-		//echo_r($res);var_dump($session);exit();
-		//echo_r($session);exit;		
-		$res= $this->localApi( 'users','nullDetail',array($session['username']));
-		$session['expire']=strtotime("+20 minutes");
-		$array=array( 
-			'username'=>$session['username'],
-			'password'=>($session['password']),
-			'expire'=>$session['expire']
-		);
-		$this->session->set_userdata($array);
-		$res= $this->localApi( 'users','detail',array($session['username']));
-		$detail=isset($res['data'])?$res['data']:array();
-//=======balance
-		if(isset($session['accountid'])){
-			$accountid=$session['accountid'];
-			//$account_detail = $this->account->detail($accountid,'accountid') ;
-			$detail['balance']=isset($session['balance'])?$session['balance']:0;		
-			$detail['summary']=isset($session['summary'])?$session['summary']:0;		
-			//isset($account_detail['balance']['Balance'])?$account_detail['balance']['Balance'] :array();
 
-			$detail['accountid']=$accountid;
-
-		}
-		//$detail['name']='';
-		$this->param['userlogin']=$userlogin=$detail;
-		//echo_r($detail);exit;
-
-		if(isset($detail['users']['u_mastercode'])&&$detail['users']['u_mastercode']!=''){
-			//OK
-		}
-		else{
-			$this->users_model->random_mastercode( $userlogin['email'] );
-			if($page !='edit_master_password'){
-				logCreate('no master code');
-				$this->session->set_flashdata('notif',array('status'=>false,'msg'=>'Master Code not Valid'));
-			//	redirect('partner/edit_master_password');
-			}
-		}
-
-		if(isset($detail['name'])&&trim($detail['name'])!=''){
-			//OK
-		}
-		else{
-			if($page =='edit' || $page =='edit_master_password'){
-				//ok
-			}
-			else{
-				logCreate('no username');
-				$this->session->set_flashdata('notif',array('status'=>false,'msg'=>'Input Your Name'));
-				redirect('partner/edit');
-			}
-		}
-		$res0=  $this->account->get_by_field($session['username'],'email');
-		//==========DETAIL ALL
-		$res=array();$agent=false;
-		if(defined('LOCAL')){ $agent=9999; }
-		if(is_array($res0)){
-			foreach($res0 as $row){
-				if(isset($row['id'])){
-					$data_account=$this->account->gets($row['id'],'id');
-					if(isset($data_account['agent'])&&$data_account['agent']!=''){
-						$agent=$data_account['agent'];
-					}
-					$res[]=$data_account;
-				}
-			}
-		}
-
-		//$res0= $this->localApi( 'account','partner_revenue',array($session['username']));
-		//echo_r($session);
-		//echo_r($res0); die();
-		//$detail=isset($res['data'])?$res['data']:array();
-		$this->param['accounts']=$res;
-		$this->param['agent_default']=$agent;
-
-	}
-	
 	function send_email($status='',$id=''){
 		if($status!='send'){
 			$url0=base_url('partner/send_email/send/'.$id);
@@ -958,7 +867,8 @@ Daftar Fungsi Yang Tersedia :
 	}
 	
 	function __CONSTRUCT(){
-	parent::__construct(); 		
+	parent::__construct(); 
+        logCreate('start controller partner');
 		date_default_timezone_set('Asia/Jakarta');
 		$this->param['today']=date('Y-m-d');
 		$this->param['folder']='depan/';
@@ -1000,7 +910,7 @@ Daftar Fungsi Yang Tersedia :
 		$this->param['noBG']=true;
 		$this->param['outerJS']=array();
 		$this->folderUpload = 'media/uploads/';
-		logCreate('start controller partner');
+		
 		$this->param['title']='Secure Area';
 
 		//===============BARU=============
@@ -1365,4 +1275,8 @@ Daftar Fungsi Yang Tersedia :
 		//print_r($post);
 		//print_r($config);
 	}
+        
+    function reload(){
+        redirect('partner');
+    }
 }

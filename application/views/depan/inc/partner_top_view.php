@@ -1,7 +1,7 @@
 <?php
 $name=isset($userlogin['name'])&&$userlogin['name']!=''?$userlogin['name']:'User Forex';
 if(isset($patnerShowPanel)){
-	$res= _localApi('account','list_simple',array($session['username']));
+	$res= _localApi('account','list_simple',array($userlogin['email']));
 //echo_r($res);
 	$account =   isset($res['data'])?$res['data']:array();
 	$total_members=0;

@@ -97,3 +97,5 @@ $route['register/(:any)/(:any)'] = 'forex/register/$1/$1';
 https://secure.salmamarkets.com/register_agent/agent
 
 */
+
+$route['patners'] = 'partner/reload';
