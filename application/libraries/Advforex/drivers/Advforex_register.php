@@ -354,6 +354,10 @@ where u.u_email is null and a.email !=''
 
         ///===========SAVE REGISTER
         $data_table['reg_password']='----';
+        $data_table['reg_investorpassword']='---';
+        $data_table['reg_detail']='---';
+        $data_table['reg_created']=date("Y-m-d H:i:s");
+        $data_table['reg_agent']=isset($params['agent'])&&$params['agent']!=''?$param['agentid']:'';
 
         $res[]=$data_table;
         $url=$this->urls['register'];

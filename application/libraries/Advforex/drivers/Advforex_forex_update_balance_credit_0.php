@@ -83,13 +83,13 @@ public $CI;
 			}
 			else{
 				$str.='credit not success';
-				email_problem($title, "Last Messages ".$str, $balance);
+				email_problem($title, "Pesan terakhir".$str, $balance);
 			}
 		}
 		else{
 			$str='balance not success, ';
-			if($balance['raw']['ResponseCode']!=4){
-				email_problem($title, "Last Messages : ".$str, $balance);
+			if($balance['ResponseCode']!=4){
+				email_problem($title, "Pesan terakhir: ".$str, $balance);
 			}
 			else{
 				logCreate('advforex_forex_update_balance balance ResponseCode:4 '.json_encode($balance));

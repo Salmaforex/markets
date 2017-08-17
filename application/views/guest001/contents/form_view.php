@@ -16,7 +16,8 @@ if(!isset($showAgent)){
               <strong>Well done!</strong> You successfully read <a class="alert-link" href="#"> this important alert message</a> . </div>
 */
 //if(isset($register)){ print_r($register); }
-?><form novalidate="novalidate" name="frm" id0="frm" id="frmLiveAccount" method="POST"  class="form-horizontal" role="form" style2="" action="<?=base_url('guest/register');?>" >
+?><form novalidate="novalidate" name="frm" id0="frm" id="frmLiveAccount" method="POST"  class="form-horizontal" role="form" style2="" 
+      action="<?=site_url('guest/register');?>" >
 <?php callback_submit(); ?>
 		<input type='hidden' name='type' value='request' />
 		<div class="frame-form-basic"> 
@@ -65,8 +66,18 @@ if(isset($showAgent)){
 		<h2>Contact Information</h2>
  
 			<?=bsInput2( lang('forex_email'),'email', isset($register['email'])?$register['email']:'', lang('forex_inputsuggestion') );?>
-			<?=bsInput2( lang('forex_phone'),'phone', isset($register['phone'])?$register['phone']:$defInput, lang('forex_inputphone'),false,$showForm );?>
-<?php
+		<?php
+                //bsInput2( lang('forex_phone'),'phone', isset($register['phone'])?$register['phone']:$defInput, lang('forex_inputphone'),false,$showForm,true );
+                ?>
+                <div class="form-group" style="">
+                    <label for="input_phone" class="col-sm-2 control-label">Phone</label>
+                    <div class="col-sm-10">
+                     <input name="phone" value="<?=isset($register['phone'])?$register['phone']:'';?>" id="input_phone" class="form-control" 
+                            placeholder="Input your country number +62"  required type="text">
+
+                    </div>
+                </div>
+                    <?php
 /* 		
 		<div class='form-group' <?php 	if($showForm==false){?> style='display:none' <?php } ?> >
 			<label for="input_date" class="col-sm-2 control-label">Date&nbsp;of&nbsp;Birth</label> 
@@ -90,7 +101,7 @@ if(isset($showAgent)){
                 </div>
                 <div class="col-sm-3">
                   <input type="text" class="form-control"
-				  name="dob3" value="<?=isset($register['dob3'])?$register['dob3']:date("Y",strtotime("-20 years"));?>" id="input_date3" />
+                         name="dob3" value="<?=isset($register['dob3'])?$register['dob3']:date("Y",strtotime("-20 years"));?>" id="input_date3" />
                 </div>
               </div>
 

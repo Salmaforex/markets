@@ -104,6 +104,5 @@ $detail_deposit = $this->forex->flow_data($flow_id);
 </div>
 </div>
 <script>
-urlDeposit = "<?=site_url('forex/depo lf\\); ";
-//"<?=base_url("value_deposit")."?t=".date("ymdhis");?>";
+urlDeposit =  "<?=base_url("value_deposit")."?t=".date("ymdhis");?>";
 </script>

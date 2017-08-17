@@ -8,6 +8,7 @@ public $table_erase='mujur_users_erase';
 public $tableDocument='mujur_usersdocument';
 public $tableDetail='mujur_usersdetail';
 public $tabletype='mujur_userstype';
+public $table_erase_user='';
 
 function exist($search,$limit=10, $field='u_email'){
 	$sql='select u_id,u_password from `'.$this->table.'` where `'.$field.'` like \''.$search.'\'
@@ -27,6 +28,24 @@ function exist($search,$limit=10, $field='u_email'){
 }
 
 function erase($email){
+    logCreate('model|users_model| erase:'.$email);
+    $data= $this->gets($email);
+    $input=array(
+        'email'=>$email,
+        'parameter'=>  json_encode($data)
+    );
+    
+    $this->db->insert($this->table_erase_user,$input);
+    
+    $sql="delete from `{$this->table}` where `u_email` like '".$email."'";
+    dbQuery($sql);
+    $sql="delete from `{$this->tableDetail}` where `ud_email` like '".$email."'";
+    dbQuery($sql);
+    logCreate('model|users_model| delete:'.$email);
+    return true;
+}
+
+function erase_old($email){
 	logCreate('model|users_model| erase:'.$email);
 	$sql="insert into `{$this->table_erase}` select * from {$this->table} where `u_email` like '".$email."'";
 	dbQuery($sql);	
@@ -41,27 +60,28 @@ function erase($email){
 
 function register($param,$debug=false){
 	$res=array('data'=>$param);
-		$password="SalmaMarket";
+        $password="SalmaMarket";
 	$params=$param;
 	unset($params['accept'],$params['submit']);
 	$email=isset($param['email'])?trim($param['email']):null;
-		$resPass= $this->password_model->random(2);
-		$pass1=$resPass[0]['password'];
-		$pass2=$resPass[1]['password'];
-		$pass3=rand(1234,9876);//$resPass[2]['password'];
-		$input=array('u_type'=>1,'u_status'=>-1); //status -1 karena baru. di aktifkan setelah kirim email
-		$masterpassword = $pass1.$pass3;
-		$input['u_password']=sha1("{$pass1}{$pass3}|{$pass2}")."|".$pass2 ;
-		$input['u_email']=$email;
-		
-		$res['password'][]=$resPass;
-		$res['password'][]=$pass3;
+        $resPass= $this->password_model->random(2);
+        
+        $pass1=$resPass[0]['password'];
+        $pass2=$resPass[1]['password'];
+        $pass3=rand(1234,9876);//$resPass[2]['password'];
+        $input=array('u_type'=>1,'u_status'=>-1); //status -1 karena baru. di aktifkan setelah kirim email
+        $masterpassword = $pass1.$pass3;
+        $input['u_password']=sha1("{$pass1}{$pass3}|{$pass2}")."|".$pass2 ;
+        $input['u_email']=$email;
 
-		//$resPass= $this->password_model->random(2);
-		//$res['password'][]=$resPass;
-		//$pass1=$resPass[0]['password'];
-		//$pass2=$resPass[1]['password'];
-		$input['u_mastercode']=$mastercode=rand(142410,987658);
+        $res['password'][]=$resPass;
+        $res['password'][]=$pass3;
+
+        //$resPass= $this->password_model->random(2);
+        //$res['password'][]=$resPass;
+        //$pass1=$resPass[0]['password'];
+        //$pass2=$resPass[1]['password'];
+        $input['u_mastercode']=$mastercode=rand(142410,987658);
 		
 	//$sql= $this->db->insert_string($this->table, $input);
 	//	dbQuery($sql);
@@ -76,6 +96,7 @@ function register($param,$debug=false){
 	$sql="delete from {$this->tableDetail} where ud_email like '$email'";
 	dbQuery($sql);
 	dbInsert( $this->tableDetail, $input);
+        
 	$res['input']=$input;
 	$res['masterpassword']=$masterpassword;
 	$res['mastercode']=$mastercode;
@@ -91,6 +112,8 @@ function register($param,$debug=false){
             $this->load->dbforge();
             $this->recover();
             $this->updateType();
+            $this->load->model('erase_user_table');
+            $this->table_erase_user = $this->erase_user_table->table;
         }
         
         private function updateType(){
