@@ -10,7 +10,7 @@ Daftar Fungsi Yang Tersedia :
 ***/
     public $param;	
     function index(){
-        echo_r($_SERVER);exit;
+    //    echo_r($_SERVER);exit;
         js_goto( site_url("login/member")."?msg=login_to_secure" );
         redirect(site_url("login/member"));
     }

@@ -30,22 +30,22 @@ $account =   isset($res['data'])?$res['data']:array();
 	<th>Commission</th>
 */?>
 	<div class="col-md-10a" style="overflow: auto;">
-	            	<table class="table table-bordered table-striped table-full-width" id="list_member">
-						<thead class="partition-dark">
-							<tr>
-							<th>Login and Username</th>							
-							<th>Balance</th>
-							<th>Equity</th>
-							<th>Credits</th>
-							
-							<th>Free<br/>Margin</th>
-							<th class="hidden-xs">Depo<br/>WD</th>
-							<th>Lots</th>
-							<th class="hidden-xs">Other</th>
-							<th class="center"><?=$controller_main!='partner'?"Action":"Commis sion";?></th>
-							</tr>
-						</thead>
-	  <tbody>
+            <table class="table table-bordered table-striped table-full-width" id="list_member">
+                <thead class="partition-dark">
+                        <tr>
+                        <th>Login and Username</th>							
+                        <th>Balance</th>
+                        <th>Equity</th>
+                        <th>Credits</th>
+
+                        <th>Free<br/>Margin</th>
+                        <th class="hidden-xs">Depo<br/>WD</th>
+                        <th>Lots</th>
+                        <th class="hidden-xs">Other</th>
+                        <th class="center"><?=$controller_main!='partner'?"Action":"Commis sion";?></th>
+                        </tr>
+                </thead>
+              <tbody>
 <?php
 	foreach($account as $row0){
 		$account_id = $row0['accountid'];

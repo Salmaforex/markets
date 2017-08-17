@@ -190,8 +190,8 @@ try{
             { "data": "action","orderable": false },             
         ],
 		"lengthMenu": [
-                [5, 10,15, 20, 35],
-                [5, 10,15, 20, "max 35"] // change per page values here
+                [3,5, 10,15, 20, 35],
+                [3,5, 10,15, 20, "max 35"] // change per page values here
             ],
     } );
 	//console.log('table widtdrawal ready');

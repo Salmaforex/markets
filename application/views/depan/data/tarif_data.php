@@ -25,11 +25,14 @@ $ordertype=$ordertype=='asc'?'desc':'asc';
 $i= $post0['order'][0]['column'];
 $ordername=$colums[$i];
    $order="order by $ordername $ordertype";
+   
 $sql="select p.id, types,price,p.created,c.name,c.symbol  
 from mujur_price p LEFT join {$this->forex->tableCurrency} c on p.currency =c.code
 $order limit $start,$limit";
+
 //select id, types,price,created from mujur_price 
 $dt=$this->db->query($sql)->result_array();
+
 foreach($dt as $row){
 	$row['price1']=$row['symbol'].number_format($row['price'],2);
 	$row['types'].=" (".$row['name'].")";

@@ -64,18 +64,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		$this->load->helper('api');
 		
 		$session=$this->param['session'];
-		$detail=$this->users_model->gets($session['username'] );
+	//	$detail=$this->users_model->gets($session['username'] );
 		$aTime['user get']=microtime();
+        /*
 		if($detail==false){
-			$detail=$this->account->detail($session['username'],'accountid');
-			$aTime['account get']=microtime();
-			if($detail==false){
+                    $detail=$this->account->detail($session['username'],'accountid');
+                    $aTime['account get']=microtime();
+                    if($detail==false){
 			logCreate('no username','error');
 			redirect(site_url("login")."?err=no_user" );
-			}
+                    }
 		}
 		else{}
-		$this->param['userlogin']=$detail;
+         * $this->param['userlogin']=$detail;
+         * 
+         */
+		
 		
 		$respon=array(		
 			'html'=>print_r($_REQUEST,1), 
@@ -280,7 +284,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
         private function checkLogin(){
             $session=$this->param['session'];
-            echo_r($session);exit;
+            $login = $this->localapi_model->token_get($session['login']);
+            $this->localapi_model->token_update($session['login']);
+            //echo_r($session);echo_r($login);exit;
+            if(!isset($login['username'])){
+                js_goto(site_url('login')."?r=login_not_found");
+            }
+
+            $this->param['userlogin']= $login;
+            
+            $res= _localApi('account','lists',array($login['email']));
+            $detail=isset($res['data'])?$res['data']:array();
+            $this->param['accounts']=$detail;
+            return true;
         }
         
 	private function checkLogin_old(){

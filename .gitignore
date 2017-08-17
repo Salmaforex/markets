@@ -12,6 +12,8 @@ application/config/forexConfig_new.php
 
 media/email/*.txt
 
+nbproject/*
+
 application/config/mongoci.php
 application/config/mongoci_connect.php
 
@@ -41,3 +43,4 @@ other/*
 
 oth/*
 /nbproject/private/
+/index.php

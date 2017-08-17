@@ -29,14 +29,27 @@
   </li>
   <li> <a href="#"><i class="fa fa-server" aria-hidden="true"></i> <span class="text">Admin Tools</span></a> <span class="toggle fa fa-chevron-down"></span>
     <ul>
-      <li><a href="<?=site_url('admin/listApi/api');?>#"><span class="fa fa-triangle-right"></span>API</a></li>
-      <li><a href="<?=!isset($userlogin)?site_url("admin/logout"):site_url("admin/listApi/deposit");?>#"><span class="fa fa-triangle-right"></span>Deposit </a></li>
+      <li><a href="<?=site_url('admin/listApi/api');?>#"><span class="fa fa-triangle-right"></span>
+              API</a></li>
+
       <li><a href="<?=site_url('admin/tarif');?>#"><span class="fa fa-triangle-right"></span>
-	  Currency
+              Tarif
 	  </a></li>
-      <li><a href="<?=!isset($userlogin)?site_url("admin/logout"):site_url("admin/listApi/widtdrawal");?>#"><span class="fa fa-triangle-right"></span>Widtdrawal </a></li>
+      <li><a href="<?=site_url('admin/currency');?>#"><span class="fa fa-triangle-right"></span>
+              Currency
+	  </a></li>
+
     </ul>
   </li>
+  
+   <li> <a href="#"><i class="fa fa-money" aria-hidden="true"></i> <span class="text">Transaksi</span></a> <span class="toggle fa fa-chevron-down"></span>
+       <ul>      
+            <li><a href="<?=!isset($userlogin)?site_url("admin/logout"):site_url("admin/listApi/deposit");?>#"><span class="fa fa-triangle-right"></span>
+              Deposit </a></li>
+            <li><a href="<?=!isset($userlogin)?site_url("admin/logout"):site_url("admin/listApi/widtdrawal");?>#"><span class="fa fa-triangle-right"></span>
+              Widtdrawal </a></li> 
+       </ul>
+   </li>
   <li> <a href="#"><i class="fa fa-shield" aria-hidden="true"></i> <span class="text">Admin User </span></a> <span class="toggle fa fa-chevron-down"></span>
     <ul>
       <li><a href="<?=site_url('admin/listApi/account');?>#"><span class="fa fa-triangle-right"></span>Account MT4 </a></li>

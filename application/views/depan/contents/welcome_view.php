@@ -53,16 +53,16 @@ $summary=isset($userlogin['summary'])?$userlogin['summary']:array();
           </div>
         </div>
 		<div class="main col-md-12">
-	<?php
-	$this->load->view('depan/inc/partner_top_view');
-	?>
-<?php $this->load->view('depan/inc/account_list'); ?>
+<?php
+    $this->load->view('depan/inc/partner_top_view');
+    $this->load->view('depan/inc/account_list'); 
+?>
 		</div>
 	   </div>
     </div>
   </div>
 <?php
 if(defined('LOCAL')){
-	echo_r($accounts);
-	echo_r($userlogin);
+    //echo_r($accounts);
+    echo_r($userlogin);
 }

@@ -7,5 +7,7 @@ class Welcomes extends CI_Controller {
         echo 'hello';
     }
     
-    
+    function error404(){
+        echo_r($_SERVER);
+    }
 }

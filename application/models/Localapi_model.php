@@ -161,4 +161,19 @@ private $db_log;
        
         return $token;
     }
+    
+    function token_get($token){
+        $this->db_log->where('token',$token);
+        $query = $this->db_log->get($this->tables['token']);
+    
+        $row= $query->row_array();
+        $params = json_decode($row['parameter'],true);
+        return $params;
+    }
+    
+    function token_update($token){
+        $this->db_log->set('expire', date("Y-m-d H:i:s",strtotime("+15 minutes") ) );
+        $this->db_log->where('token', $token);
+        $this->db_log->update($this->tables['token']);
+    }
 }

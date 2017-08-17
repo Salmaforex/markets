@@ -8,16 +8,16 @@ class Admin extends MY_Controller {
 	public function detail(){
 		$this->profile();
 	}
-    public function profile(){
-            $this->checkLogin();
-            $this->param['title']='SECURE ACCOUNT | Profile'; 
-            $this->param['content']=array(
-                    'detail', 
-            );
-            $this->param['footerJS'][]='js/login.js';
-            $this->showView(); 
+	public function profile(){
+		$this->checkLogin();
+		$this->param['title']='SECURE ACCOUNT | Profile'; 
+		$this->param['content']=array(
+			'detail', 
+		);
+		$this->param['footerJS'][]='js/login.js';
+		$this->showView(); 
 
-    }
+	}
 
     public function listApi($type=null){
 	$types=array('account', 'api', 'deposit', 'widtdrawal',
@@ -52,12 +52,12 @@ class Admin extends MY_Controller {
         $login = $this->localapi_model->token_get($session['login']);
         $this->localapi_model->token_update($session['login']);
         //echo_r($session);echo_r($login);exit;
-        if(!isset($login['username'])){
-            js_goto(site_url('login')."?r=login_not_found");
-        }
         
         $this->param['userlogin']= $login;
         return true;
+    }
+    
+    function checkLogin_old(){
                 //$detail = $row['users'];
 	//	driver_run($driver_core, $driver_name, $func_name='executed', $params=array());
 		logCreate('admin |checkLogin |start');
@@ -468,7 +468,7 @@ class Admin extends MY_Controller {
 		$this->update_agent();
 	}
 //===========================TARIF
-        public function tarif(){		
+		public function tarif(){		
 		$this->checkLogin();
 		if($this->input->post('rate')){
 			$post= $this->input->post();
@@ -495,30 +495,6 @@ class Admin extends MY_Controller {
 		$this->param['footerJS'][]='js/tarif.js';
 		$this->param['fileCss']['dataTable']='css/jquery.dataTables.min.css';
 		$this->showView();
-	}
-//===========================TARIF
-        public function currency(){		
-            $this->checkLogin();
-            if($this->input->post('rate')){
-                    $post= $this->input->post();
-                    echo_r($post);die();
-                    $stat=$this->forex->rateUpdate($post);
-                    if($stat===false)die('error');
-                    redirect(site_url('admin/tarif'));
-                    exit();
-            }else{}
-
-            $this->param['title']='Salma forex | Currency'; 
-            $this->param['content']=array(
-                    'modal',
-                    'currency', 
-            );
-
-//datatables		
-            $this->param['footerJS'][]='js/jquery.dataTables.min.js';
-            $this->param['footerJS'][]='js/tarif.js';
-            $this->param['fileCss']['dataTable']='css/jquery.dataTables.min.css';
-            $this->showView();
 	}
 
 	public function index(){

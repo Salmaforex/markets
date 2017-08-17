@@ -71,7 +71,9 @@ Daftar Fungsi Yang Tersedia :
 		logCreate('error 404 link:'.current_url());
 		//die('unknown link');
 		echo 'unknown link';
-		 
+                js_goto($_SERVER['HTTP_REFERER']);
+                echo_r($_SERVER);
+		die(); 
 		js_goto(site_url('member')."?f=".date("Ymdhis")."&src=".current_url() );
 	}
 	

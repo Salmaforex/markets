@@ -1,4 +1,5 @@
 <?php
+
 if(isset($_SERVER['HTTP_HOST'])&&$_SERVER['HTTP_HOST']=='advance.forex'){
 //	define('_DEV_',1);
 	define('LOCAL',1);
@@ -12,12 +13,13 @@ else{
 //	define('ENVIRONMENT', 'development');
 	define('ENVIRONMENT', 'production'); 
 }
-	
+
 	date_default_timezone_set('Asia/Jakarta');
 
 	if ( !function_exists('logFile')){
 		function logFile(){ return true; }
 	}
+//die('satu');
 /**
  * CodeIgniter
  *

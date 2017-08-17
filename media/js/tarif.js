@@ -22,6 +22,25 @@ jQuery(document).ready(function() {
                          
         ]
     } );
+    
+    jQuery('#tblCurrency').DataTable( {
+		"columnDefs": [
+            {
+                 
+            }
+		],
+
+		"lengthMenu": [
+                [3,5, 10,15, 20, 35],
+                [3,5, 10,15, 20, "max 35"] // change per page values here
+            ],
+        "columns": [
+			{ "data": "created" },
+			{ "data": "types"},
+            { "data": "price1" },
+                         
+        ]
+    } );
 } );
 
 function detail(id){

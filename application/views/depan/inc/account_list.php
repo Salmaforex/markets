@@ -1,5 +1,5 @@
 <?php
-$res= _localApi('account','lists',array($session['username']));
+$res= _localApi('account','lists',array($userlogin['email'])); //$session['username']
 //echo_r($res);
 $account = isset($res['data'])?$res['data']:array();
 if(!isset($controller_main))
