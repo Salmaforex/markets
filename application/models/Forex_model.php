@@ -40,6 +40,8 @@ public $tableBatchEmail='zbatch_email';//messages
 public $tablepings='site_ping';
 public $tableCurrency='mujur_currency';
 public $url="http://localhost/forex/fake";
+public $db_log;
+public $tables;
 public $demo=1; 
 
 public $emailAdmin='admin@dev.salmaforex.com';
@@ -734,22 +736,28 @@ email double tidak diperbolehkan
 	}
 	
 	function apiDetail($id){
-		$this->db->reset_query();
-		$this->db->where('id',$id);
-		$data=$this->db->get($this->tableAPI)->row_array();
-		return $data; 
+            $this->db_log->reset_query();
+            $this->db_log->where('id',$id);
+            $data=$this->db_log->get($this->tables['api'])->row_array();
+            return $data; 
 	}
+        
+        function api_save($data){
+            $sql=$this->db_log->insert_string($this->tables['api'], $data);
+            logConfig('sql:'.$sql ,'logDB','not run query');
+            $this->db_log->insert($this->tables['api'],$data);
+        }
 //=====================================
 	public function pingFailed($url, $tmp=array()){
 		$response=(array) $tmp;
-		$dt=array(
-			'url'=>trim($url),
-			'status'=>-1,
-			'detail'=>json_encode($response),
-			'error'=>isset($response['message'])?$response['message']:''
-		);
-		$sql=$this->db->insert_string($this->tablepings, $dt);
-		dbQuery($sql);
+            $dt=array(
+                    'url'=>trim($url),
+                    'status'=>-1,
+                    'detail'=>json_encode($response),
+                    'error'=>isset($response['message'])?$response['message']:''
+            );
+            $sql=$this->db->insert_string($this->tablepings, $dt);
+            dbQuery($sql);
 	}
 	
 	public function pingSuccess($url, $tmp=array() ){
@@ -781,197 +789,188 @@ from mujur_account a left join mujur_accountdocument ad on a.email=ad.email wher
 		return true;
 	}
 
-		public function __construct(){
-            $this->load->database();
-			$this->load->dbforge();
-			$this->load->model('currency_table');
-			$this->tableCurrency = $this->currency_table->table;
-			$this->load->model('price_table');
-			$this->tablePrice = $this->price_table->table;
-			
-//=========UPDATE REGISTER
-			//logCreate('forex model start');
-			$sql="select count(reg_id) tot from {$this->tableRegis}";
-			$dt=dbFetchOne($sql);
-			if($dt['tot']==0){
-				$arr=array('reg_id'=>0,'reg_status'=>-1);
-				$this->db->insert($this->tableRegis,$arr);
-			}
-			$sql="select * from {$this->tableRegis} limit 1";
-			$dt=dbFetchOne($sql);
-			if(!isset($dt['reg_investorpassword'])){
-				$sql="ALTER TABLE `{$this->tableRegis}` ADD `reg_investorpassword` VARCHAR(100) NOT NULL AFTER `reg_password`;";
-				dbQuery($sql,1);
-			}
-//=========UPDATE ACCOUNT			
-			$sql="select count(id) tot from {$this->tableAccount}";
-			$dt=dbFetchOne($sql);
-			if($dt['tot']==0){
-				$arr=array('id'=>0,'created'=>date("Y-m-d"));
-				$this->db->insert($this->tableAccount,$arr);
-			}
-			$sql="select * from {$this->tableAccount} limit 1";
-			$dt=dbFetchOne($sql);
-			if(!isset($dt['investorpassword'])){
-				$sql="ALTER TABLE `{$this->tableAccount}` 
-				ADD `investorpassword` VARCHAR(100) NOT NULL, 
-				ADD `masterpassword` VARCHAR(100) NOT NULL, 
-				ADD `reg_id` BIGINT(20) NOT NULL ;";
-				dbQuery($sql,1);
-				$sql="ALTER TABLE `{$this->tableAccount}` CHANGE `username` `username` VARCHAR(50) NOT NULL;";
-				dbQuery($sql,1);				
-			}
-			if(!isset($dt['type'])){ 
-				$sql="ALTER TABLE `{$this->tableAccount}` ADD `type` varchar(20) 
-				NOT NULL 
-				DEFAULT 'MEMBER';";
-				dbQuery($sql,1);
-			}
-			if(!isset($dt['accountid'])){ 
-				$sql="ALTER TABLE `{$this->tableAccount}` ADD `accountid` bigint NOT NULL DEFAULT '1';";
-				dbQuery($sql,1);
-			}
-//=========Menambah Account Detail			
-			if(!$this->db->table_exists($this->tableAccountDetail)){
-				$fields = array(
-				  'id'=>array( 
-					'type' => 'BIGINT','auto_increment' => TRUE), 		   
-				  'username'=>array( 
-					'type' => 'VARCHAR',  
-					'constraint' => '100'),
-				  'detail'=>array( 'type' => 'text'),
-				  'modified'=>array( 'type' => 'timestamp'),
-				);
-				$this->dbforge->add_field($fields);
-				$this->dbforge->add_key('id', TRUE);
-				$this->dbforge->create_table($this->tableAccountDetail,TRUE);
-				$str = $this->db->last_query();			 
-				logConfig("create table:$str");
-				$this->db->reset_query();	
-			}
-//==========Menambah $this->tablepings
-			if(!$this->db->table_exists($this->tablepings)){
-				$fields=array(
-					'id'=>array( 
-					'type' => 'BIGINT','auto_increment' => TRUE), 		   
-				  'url'=>array( 
-					'type' => 'VARCHAR',  
-					'constraint' => '250'),
-				  'detail'=>array( 'type' => 'text'),
-				  'error'=>array( 'type' => 'text'),
-				  'status'=>array( 'type' => 'int'),
-				  'created'=>array( 'type' => 'timestamp'),
-				);
-				$this->dbforge->add_field($fields);
-				$this->dbforge->add_key('id', TRUE);
-				$this->dbforge->create_table($this->tablepings,TRUE);
-				$str = $this->db->last_query();			 
-				logConfig("create table:$str");
-				$this->db->reset_query();
-			}
-//==========Menambah mujur_api
-			if(!$this->db->table_exists('mujur_api')){
-				$fields = array(
-				  'id'=>array( 
-					'type' => 'BIGINT','auto_increment' => TRUE), 		   
-				  'url'=>array( 
-					'type' => 'VARCHAR',  
-					'constraint' => '200'),
-				  'parameter'=>array( 'type' => 'text'),
-				  'response'=>array( 'type' => 'text'),
-				  'error'=>array( 'type' => 'boolean'),
-				  'created'=>array( 'type' => 'timestamp'),
-				);
-				$this->dbforge->add_field($fields);
-				$this->dbforge->add_key('id', TRUE);
-				$this->dbforge->create_table('mujur_api',TRUE);
-				$str = $this->db->last_query();			 
-				logConfig("create table:$str");
-				$this->db->reset_query();	
-			}
-
-			if(!$this->db->table_exists('mujur_email')){
-				$fields = array(
-				  'id'=>array( 
-					'type' => 'BIGINT','auto_increment' => TRUE), 		   
-				  'to'=>array( 
-					'type' => 'VARCHAR',  
-					'constraint' => '200'),
-				  'subject'=>array( 'type' => 'text'),
-				  'headers'=>array( 'type' => 'text'),
-				  'created'=>array( 'type' => 'timestamp'),
-				);
-				$this->dbforge->add_field($fields);
-				$this->dbforge->add_key('id', TRUE);
-				$this->dbforge->create_table('mujur_email',TRUE);
-				$str = $this->db->last_query();			 
-				logConfig("create table:$str");
-				$this->db->reset_query();	
-			}
-
-			if (!$this->db->field_exists('messages', 'mujur_email')){
-				$sql="ALTER TABLE `mujur_email` ADD `messages` text AFTER `subject`";
-				dbQuery($sql);
-				$sql="ALTER TABLE `mujur_email` ADD FULLTEXT(`messages`);";
-				dbQuery($sql);
-			}
-			if (!$this->db->field_exists('status', 'mujur_email')){
-				$sql="ALTER TABLE `mujur_email` ADD `status` tinyint AFTER `to`";
-				dbQuery($sql);
-			}
-			if(!$this->db->table_exists($this->tableBatchEmail)){
-				$sql="create table IF NOT EXISTS {$this->tableBatchEmail} like {$this->tableEmail}";				
-				dbQuery($sql);
-				$sql="ALTER TABLE {$this->tableBatchEmail} ENGINE='MyISAM'";
-				dbQuery($sql);
-			}
-			if(!$this->db->table_exists('mujur_logs')){
-				$fields = array(
-				  'id'=>array( 
-					'type' => 'BIGINT','auto_increment' => TRUE), 		   
-				  'controller'=>array( 
-					'type' => 'VARCHAR',  
-					'constraint' => '200'),
-				  'function'=>array( 'type' => 'text'),
-				  'param'=>array( 'type' => 'text'),
-				  'created'=>array( 'type' => 'timestamp'),
-				);
-				$this->dbforge->add_field($fields);
-				$this->dbforge->add_key('id', TRUE);
-				$this->dbforge->create_table('mujur_logs',TRUE);
-				$str = $this->db->last_query();			 
-				logConfig("create table:$str");
-				$this->db->reset_query();	
-			}
-
-			if(!$this->db->table_exists('rest_temp')){
-				$fields = array(
-				  'id'=>array( 
-					'type' => 'BIGINT','auto_increment' => TRUE),
-				  'function'=>array(
-					'type' => 'VARCHAR',  
-					'constraint' => '100'),
-				  'data'=>array( 'type' => 'text'),
-				  'result'=>array( 'type' => 'text'),
-				  'created'=>array( 'type' => 'timestamp'),
-				);
-				$this->dbforge->add_field($fields);
-				$this->dbforge->add_key('id', TRUE);
-				$this->dbforge->create_table('rest_temp',TRUE);
-				$str = $this->db->last_query();			 
-				logConfig("create table:$str");
-				$this->db->reset_query();
-				$sql="ALTER TABLE `rest_temp` ADD INDEX(`function`);";
-				dbQuery($sql);
-				
-			}
-
-			$this->rateNow();
-			$this->flowInsert('');
-			$this->emailAdmin();
-			$this->accountRecover();
-			//logCreate('forex model done');
+    public function __construct(){
+        parent::__construct();
+        $this->db_log = $this->load->database('log', true);
+        $this->load->database();
+        $this->load->dbforge();
+        $this->load->model('currency_table');
+        $this->tableCurrency = $this->currency_table->table;
+        $this->load->model('price_table');
+        $this->tablePrice = $this->price_table->table;
+    //============load tables
+        $ar_tables=array('api');
+        foreach($ar_tables as $tables){
+            $model_name=$tables.'_table';
+            $this->load->model($model_name);
+            $this->tables[$tables]=$this->$model_name->table ;
         }
+
+//=========UPDATE REGISTER
+        //logCreate('forex model start');
+        $sql="select count(reg_id) tot from {$this->tableRegis}";
+        $dt=dbFetchOne($sql);
+        if($dt['tot']==0){
+                $arr=array('reg_id'=>0,'reg_status'=>-1);
+                $this->db->insert($this->tableRegis,$arr);
+        }
+        $sql="select * from {$this->tableRegis} limit 1";
+        $dt=dbFetchOne($sql);
+        if(!isset($dt['reg_investorpassword'])){
+            $sql="ALTER TABLE `{$this->tableRegis}` ADD `reg_investorpassword` VARCHAR(100) NOT NULL AFTER `reg_password`;";
+            dbQuery($sql,1);
+        }
+//=========UPDATE ACCOUNT			
+        $sql="select count(id) tot from {$this->tableAccount}";
+        $dt=dbFetchOne($sql);
+        if($dt['tot']==0){
+                $arr=array('id'=>0,'created'=>date("Y-m-d"));
+                $this->db->insert($this->tableAccount,$arr);
+        }
+        $sql="select * from {$this->tableAccount} limit 1";
+        $dt=dbFetchOne($sql);
+        if(!isset($dt['investorpassword'])){
+                $sql="ALTER TABLE `{$this->tableAccount}` 
+                ADD `investorpassword` VARCHAR(100) NOT NULL, 
+                ADD `masterpassword` VARCHAR(100) NOT NULL, 
+                ADD `reg_id` BIGINT(20) NOT NULL ;";
+                dbQuery($sql,1);
+                $sql="ALTER TABLE `{$this->tableAccount}` CHANGE `username` `username` VARCHAR(50) NOT NULL;";
+                dbQuery($sql,1);				
+        }
+        if(!isset($dt['type'])){ 
+                $sql="ALTER TABLE `{$this->tableAccount}` ADD `type` varchar(20) 
+                NOT NULL 
+                DEFAULT 'MEMBER';";
+                dbQuery($sql,1);
+        }
+        if(!isset($dt['accountid'])){ 
+                $sql="ALTER TABLE `{$this->tableAccount}` ADD `accountid` bigint NOT NULL DEFAULT '1';";
+                dbQuery($sql,1);
+        }
+//=========Menambah Account Detail			
+        if(!$this->db->table_exists($this->tableAccountDetail)){
+                $fields = array(
+                  'id'=>array( 
+                        'type' => 'BIGINT','auto_increment' => TRUE), 		   
+                  'username'=>array( 
+                        'type' => 'VARCHAR',  
+                        'constraint' => '100'),
+                  'detail'=>array( 'type' => 'text'),
+                  'modified'=>array( 'type' => 'timestamp'),
+                );
+                $this->dbforge->add_field($fields);
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table($this->tableAccountDetail,TRUE);
+                $str = $this->db->last_query();			 
+                logConfig("create table:$str");
+                $this->db->reset_query();	
+        }
+//==========Menambah $this->tablepings
+        if(!$this->db->table_exists($this->tablepings)){
+                $fields=array(
+                        'id'=>array( 
+                        'type' => 'BIGINT','auto_increment' => TRUE), 		   
+                  'url'=>array( 
+                        'type' => 'VARCHAR',  
+                        'constraint' => '250'),
+                  'detail'=>array( 'type' => 'text'),
+                  'error'=>array( 'type' => 'text'),
+                  'status'=>array( 'type' => 'int'),
+                  'created'=>array( 'type' => 'timestamp'),
+                );
+                $this->dbforge->add_field($fields);
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table($this->tablepings,TRUE);
+                $str = $this->db->last_query();			 
+                logConfig("create table:$str");
+                $this->db->reset_query();
+        }
+//==========Menambah mujur_api
+
+
+        if(!$this->db->table_exists('mujur_email')){
+                $fields = array(
+                  'id'=>array( 
+                        'type' => 'BIGINT','auto_increment' => TRUE), 		   
+                  'to'=>array( 
+                        'type' => 'VARCHAR',  
+                        'constraint' => '200'),
+                  'subject'=>array( 'type' => 'text'),
+                  'headers'=>array( 'type' => 'text'),
+                  'created'=>array( 'type' => 'timestamp'),
+                );
+                $this->dbforge->add_field($fields);
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('mujur_email',TRUE);
+                $str = $this->db->last_query();			 
+                logConfig("create table:$str");
+                $this->db->reset_query();	
+        }
+
+        if (!$this->db->field_exists('messages', 'mujur_email')){
+                $sql="ALTER TABLE `mujur_email` ADD `messages` text AFTER `subject`";
+                dbQuery($sql);
+                $sql="ALTER TABLE `mujur_email` ADD FULLTEXT(`messages`);";
+                dbQuery($sql);
+        }
+        if (!$this->db->field_exists('status', 'mujur_email')){
+                $sql="ALTER TABLE `mujur_email` ADD `status` tinyint AFTER `to`";
+                dbQuery($sql);
+        }
+        if(!$this->db->table_exists($this->tableBatchEmail)){
+                $sql="create table IF NOT EXISTS {$this->tableBatchEmail} like {$this->tableEmail}";				
+                dbQuery($sql);
+                $sql="ALTER TABLE {$this->tableBatchEmail} ENGINE='MyISAM'";
+                dbQuery($sql);
+        }
+        if(!$this->db->table_exists('mujur_logs')){
+                $fields = array(
+                  'id'=>array( 
+                        'type' => 'BIGINT','auto_increment' => TRUE), 		   
+                  'controller'=>array( 
+                        'type' => 'VARCHAR',  
+                        'constraint' => '200'),
+                  'function'=>array( 'type' => 'text'),
+                  'param'=>array( 'type' => 'text'),
+                  'created'=>array( 'type' => 'timestamp'),
+                );
+                $this->dbforge->add_field($fields);
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('mujur_logs',TRUE);
+                $str = $this->db->last_query();			 
+                logConfig("create table:$str");
+                $this->db->reset_query();	
+        }
+
+        if(!$this->db->table_exists('rest_temp')){
+                $fields = array(
+                  'id'=>array( 
+                        'type' => 'BIGINT','auto_increment' => TRUE),
+                  'function'=>array(
+                        'type' => 'VARCHAR',  
+                        'constraint' => '100'),
+                  'data'=>array( 'type' => 'text'),
+                  'result'=>array( 'type' => 'text'),
+                  'created'=>array( 'type' => 'timestamp'),
+                );
+                $this->dbforge->add_field($fields);
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->create_table('rest_temp',TRUE);
+                $str = $this->db->last_query();			 
+                logConfig("create table:$str");
+                $this->db->reset_query();
+                $sql="ALTER TABLE `rest_temp` ADD INDEX(`function`);";
+                dbQuery($sql);
+
+        }
+
+        $this->rateNow();
+        $this->flowInsert('');
+        $this->emailAdmin();
+        $this->accountRecover();
+        //logCreate('forex model done');
+    }
 	//=================FLOW LOG
 	function flow_member($accountid, $sort='created',$sortType='DESC', $limit=50,$start=0){
 		$where="`param` like '%\"account\":\"{$accountid}\"%'";

@@ -153,6 +153,7 @@ class Users extends REST_Controller {
 			//=========
 			$respon['totalBalance']='---';
 		}
+                
 		$respon['users']=$users;
 		//$respon['param']=$params;
 		return $respon;
@@ -197,5 +198,25 @@ class Users extends REST_Controller {
 		$res  = $this->users_model->addNullDetail( $email );
 		return $res;
 	}
+        
+    private function user_token($params){
+        $username = $params[0];
+        $respon=array('param'=>$params,'token'=>'' );
+        $users =$this->users_model->gets($username);
+        $detail= $this->users_model->getDetail($username);
+        foreach($detail as $name=>$val){
+             $respon[$name]=$val;
+        }
+        if(!isset($respon['balance'])){
+                //=========
+            $respon['totalBalance']='---';
+        }
+        
+        $respon['username']=$username;
+        $respon['users']=$users;
+        $respon['token']=$this->localapi_model->token_save($respon);
+        
+        return $respon;
+    }
 
 }

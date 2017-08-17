@@ -108,7 +108,7 @@ function register($param,$debug=false){
             foreach($type as $id=>$name){
                 $data=$this->gets_type($id);
                 if($data==false){
-                    $input = array('ut_id'=>$id,'ut_name'=>$name);
+                    $input = array('ut_id'=>$id,'ut_name'=>$name,'ut_detail'=>'user type'.$name);
                     dbInsert($this->tabletype, $input);
                 }
             }
@@ -118,54 +118,54 @@ function register($param,$debug=false){
 	private function recover(){
 	//tabletype
 		if(!$this->db->table_exists($this->tableDocument)){
-				$fields = array(
-				  'ut_id'=>array( 
-					'type' => 'BIGINT','auto_increment' => TRUE), 		   
-				  'ut_name'=>array( 
-					'type' => 'varchar(40)'),
-				  'ut_detail'=>array( 'type' => 'text'),
-				  'modified'=>array( 'type' => 'timestamp')
-				);
-				$this->dbforge->add_field($fields);
-				$this->dbforge->add_key('ut_id', TRUE);
-				$this->dbforge->create_table($this->tableDocument,TRUE);
-				$str = $this->db->last_query();			 
-				logConfig("create table:$str");
-				$this->db->reset_query();	
+                    $fields = array(
+                      'ut_id'=>array( 
+                            'type' => 'BIGINT','auto_increment' => TRUE), 		   
+                      'ut_name'=>array( 
+                            'type' => 'varchar(40)'),
+                      'ut_detail'=>array( 'type' => 'text'),
+                      'modified'=>array( 'type' => 'timestamp')
+                    );
+                    $this->dbforge->add_field($fields);
+                    $this->dbforge->add_key('ut_id', TRUE);
+                    $this->dbforge->create_table($this->tableDocument,TRUE);
+                    $str = $this->db->last_query();			 
+                    logConfig("create table:$str");
+                    $this->db->reset_query();	
 		}else{}
 		if(!$this->db->table_exists($this->tabletype)){
-				$fields = array(
-				  'ut_id'=>array( 
-					'type' => 'BIGINT','auto_increment' => TRUE), 		   
-				  'ut_name'=>array( 
-					'type' => 'varchar(40)'),
-				  'ut_detail'=>array( 'type' => 'text'),
-				  'modified'=>array( 'type' => 'timestamp')
-				);
-				$this->dbforge->add_field($fields);
-				$this->dbforge->add_key('ut_id', TRUE);
-				$this->dbforge->create_table($this->tabletype,TRUE);
-				$str = $this->db->last_query();			 
-				logConfig("create table:$str");
-				$this->db->reset_query();	
+                    $fields = array(
+                      'ut_id'=>array( 
+                            'type' => 'BIGINT','auto_increment' => TRUE), 		   
+                      'ut_name'=>array( 
+                            'type' => 'varchar(40)'),
+                      'ut_detail'=>array( 'type' => 'text'),
+                      'modified'=>array( 'type' => 'timestamp')
+                    );
+                    $this->dbforge->add_field($fields);
+                    $this->dbforge->add_key('ut_id', TRUE);
+                    $this->dbforge->create_table($this->tabletype,TRUE);
+                    $str = $this->db->last_query();			 
+                    logConfig("create table:$str");
+                    $this->db->reset_query();	
 		}else{}
 		
 		$sql="select count( ut_id) c from {$this->tabletype} where ut_id=10";
 		$row=dbFetchOne($sql);
 		if($row['c']==0){
-			$ar=array(
-			'ut_id'=>10,
-			'ut_name'=>'patners',
-			'ut_detail'=>'patners or agent'
-			);
-			dbInsert($this->tabletype, $ar);
+                    $ar=array(
+                    'ut_id'=>10,
+                    'ut_name'=>'patners',
+                    'ut_detail'=>'patners or agent'
+                    );
+                    dbInsert($this->tabletype, $ar);
 		}
 
 		if(!$this->db->table_exists($this->table_erase)){
-			$sql="create table IF NOT EXISTS `{$this->table_erase}` like `{$this->table}`";
-			dbQuery($sql);
-			$sql="ALTER TABLE `{$this->table_erase}` DROP INDEX `u_email`;";
-			dbQuery($sql);
+                    $sql="create table IF NOT EXISTS `{$this->table_erase}` like `{$this->table}`";
+                    dbQuery($sql);
+                    $sql="ALTER TABLE `{$this->table_erase}` DROP INDEX `u_email`;";
+                    dbQuery($sql);
 		}
 		if (!$this->db->field_exists('u_mastercode', $this->table_erase )){
 			$sql="ALTER TABLE `{$this->table_erase}` ADD `u_mastercode` varchar(50) default 0;";

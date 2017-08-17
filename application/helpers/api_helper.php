@@ -4,38 +4,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 if ( ! function_exists('_localApi')){
 	function _localApi_new($api='',$function='', $data=array()){
-		$CI =& get_instance();
-		$param=array(
-			'api'=>$api,
-			'function'=>$function,
-			'data'=>$data
-		);
-		log_info_table('localapi',array('new', $api,$function,$data));
-		
-		$id_random=dbId('random');
-		$url=site_url('rest/'.$param['api']);
-		$url.="?r=".$id_random;
-		
-		$api_name=ucfirst(strtolower($api));
-		$controllers=APPPATH.'/controllers/rest/'.$api_name.'.php';
-		logCreate('load '.$api_name."| ".$controllers );
-		require_once $controllers;
-		
-		$class = new  $api_name();
-		
-		$res = $class->index_post($param);
-		echo 'new';echo_r($res);exit;
-		$param['result']=json_encode($res);
-		$param['id']=dbId('api');
-		$param['data']=json_encode($data);
-		unset($param['api']);
-		$table=trim('rest_'.$api);
-		if(!$CI->db->table_exists($table)){
-			$sql="create table IF NOT EXISTS `$table` like `rest_temp`";
-			dbQuery($sql);
-		}
-		dbInsert($table, $param);
-		return $res;
+            $CI =& get_instance();
+            $param=array(
+                    'api'=>$api,
+                    'function'=>$function,
+                    'data'=>$data
+            );
+            log_info_table('localapi',array('new', $api,$function,$data));
+
+            $id_random=dbId('random');
+            $url=site_url('rest/'.$param['api']);
+            $url.="?r=".$id_random;
+
+            $api_name=ucfirst(strtolower($api));
+            $controllers=APPPATH.'/controllers/rest/'.$api_name.'.php';
+            logCreate('load '.$api_name."| ".$controllers );
+            require_once $controllers;
+
+            $class = new  $api_name();
+
+            $res = $class->index_post($param);
+            echo 'new';echo_r($res);exit;
+            $param['result']=json_encode($res);
+            $param['id']=dbId('api');
+            $param['data']=json_encode($data);
+            unset($param['api']);
+            $table=trim('rest_'.$api);
+            if(!$CI->db->table_exists($table)){
+                    $sql="create table IF NOT EXISTS `$table` like `rest_temp`";
+                    dbQuery($sql);
+            }
+            dbInsert($table, $param);
+            return $res;
 	}
 
 	function _localApi($api='',$function='', $data=array() ){
@@ -74,35 +74,46 @@ if ( ! function_exists('_localApi')){
 		//logCreate('localAPI (warning) no cache');
 
 			if($res==false){
-				$res= _runApi($url,$param);
-				logCreate('localAPI (runApi) result:'.json_encode($res));
-				$raw=array(
-					'params'=>$data,
-					'result'=>$res,
-				);
-				$raw['api']=$api;
-				$raw['functions']=$function;
-				$raw['member_login']=$member_login;
+                            $res= _runApi($url,$param);
+                            logCreate('localAPI (runApi) result:'.json_encode($res));
+                            $raw=array(
+                                    'params'=>$data,
+                                    'result'=>$res,
+                            );
+                            $raw['api']=$api;
+                            $raw['functions']=$function;
+                            $raw['member_login']=$member_login;
 			//	$result=$CI->localapi_model->new_data($raw);
 
 			//	echo_r($result);die;
 			}
 			else{
-				logCreate("localAPI (cache) table| $api| $function| $member_login");
+                            logCreate("localAPI (cache) table| $api| $function| $member_login");
 			}
 			
 			logCreate('localAPI (end) '.$url);
 			//echo '<br/>'.$url;var_dump($res);
 
-			$param['result']=json_encode($res);
+                         $json_data=json_encode($res);
+                        if(strlen($json_data)>500){
+                            $json_data=count($res);
+                        }
+                        
+			$param['result']= $json_data;//json_encode($res);
 			$param['id']=dbId('api_'.$api);
-			$param['data']=json_encode($data);
+                        
+                        $json_data=json_encode($data);
+                        if(strlen($json_data)>500){
+                            $json_data=count($data);
+                        }
+                        
+			$param['data']=$json_data;
 			unset($param['api']);
 			unset($param['id']);
-			$table=trim('zrest_'.$api);
+			$table=trim('zr_'.$api);
 			if(!$CI->db->table_exists($table)){
-				$sql="create table IF NOT EXISTS `$table` like `rest_temp`";
-				dbQuery($sql);
+                            $sql="create table IF NOT EXISTS `$table` like `rest_temp`";
+                            dbQuery($sql);
 			}
 			
 			logCreate('localAPI (save) '.count($param));
@@ -263,7 +274,7 @@ function return_rest($code=200,$data=array()){
 }
 
 if ( ! function_exists('save_rest')){
-function save_rest($param=array(),$result=false){
+    function save_rest($param=array(),$result=false){
 	$CI =& get_instance();
 	$CI->load->model('forex_model');
 	$dtAPI['url']='rest ';
@@ -275,9 +286,10 @@ function save_rest($param=array(),$result=false){
 	$dtAPI['response']=json_encode($result);
 	$dtAPI['error']=-10;
 
-	$sql= $CI->db->insert_string($CI->forex_model->tableAPI, $dtAPI);
-	dbQuery($sql);
-}
+        $CI->forex_model->api_save($dtAPI);
+	//$sql= $CI->db->insert_string($CI->forex_model->tableAPI, $dtAPI);
+	//dbQuery($sql);
+    }
 }
 
 function save_and_send_rest($code, $data, $param){
@@ -301,13 +313,13 @@ function _send_email($to='',$subject,$message,$from='noreply@salmaforex.com' ){
 	//if(isset($show_local))echo $message;
 	//===============================
 	{
-		if(!is_array($to))$to=array($to);
-		foreach($to as $email){
-			batchEmail($email, $subject, $message, $headers);
-		}
+            if(!is_array($to))$to=array($to);
+            foreach($to as $email){
+                    batchEmail($email, $subject, $message, $headers);
+            }
 
 	}
-	
-	log_info_table('savemail',array($to,$subject));
+
+    log_info_table('savemail',array($to,$subject));
 }
 }

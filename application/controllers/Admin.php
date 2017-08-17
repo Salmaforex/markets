@@ -19,65 +19,38 @@ class Admin extends MY_Controller {
 
 	}
 
-	public function loginProcess(){
-		$login=$post=$this->session->userdata('login');
-		$res= _localApi('users','exist',array($login['username']));
-		$respon_data=isset($res['data'])?$res['data']:array();
-		echo_r($respon_data);exit();
-		if(!$respon_data){
-			$login['message']="Username Not Valid";
-			$this->session->set_flashdata('login', $login);
-			redirect(base_url('login/member'),1);
-		}
-		else{
-			$login['valid']=$respon_data;
-			$res= _localApi('users','login',array($login['username'],$login['password']));
-			//redirect($_SERVER['HTTP_REFERER'],1);
-			$login['executeLogin']=$res;
-			$respon_data=isset($res['data'])?$res['data']:array();
-			//echo_r($respon_data);exit();
-			$session['expire']=strtotime("+20 minutes");
-			$array=array( 
-				'username'=>$login['username'],
-				'password'=>($res['data']['password']),
-				'expire'=>$session['expire']
-			);
-			$this->session->set_userdata($array);
-			js_goto(base_url('member')."?r=reload_login");
-			//redirect(base_url('member'),1);
-			
-		}
-	//	echo_r($login);
-	}
-
-	public function listApi($type=null){
+    public function listApi($type=null){
 	$types=array('account', 'api', 'deposit', 'widtdrawal',
 	'user','agent','approval','partner','patner_revenue');	
 //		if(!defined('LOCAL')){
 	$this->checkLogin();
 //		}
 
-		$this->param['title']='Secure Admin | '.$type; 
-		$this->param['content']=array(
-			'modal',			
-		) ;
-		
-		if(in_array($type, $types)){
-			$this->param['content']='api/'.$type;
-		}
-		else{ 
-			$this->param['content']='api/api';
-			log_message('error', 'listApi not define');
-			redirect(site_url('admin')."?not define");
-		}
+        $this->param['title']='Secure Admin | '.$type; 
+        $this->param['content']=array(
+                'modal',			
+        ) ;
+
+        if(in_array($type, $types)){
+                $this->param['content']='api/'.$type;
+        }
+        else{ 
+                $this->param['content']='api/api';
+                log_message('error', 'listApi not define');
+                redirect(site_url('admin')."?not define");
+        }
 //datatables		
-		$this->param['footerJS'][]='js/jquery.dataTables.min.js';
-		$this->param['footerJS'][]='js/api.js';
-		$this->param['fileCss']['dataTable']='css/jquery.dataTables.min.css';
-		//echo_r(array_keys($this->param));exit();
-		$this->showView(); 
-	}
-		private function checkLogin(){
+        $this->param['footerJS'][]='js/jquery.dataTables.min.js';
+        $this->param['footerJS'][]='js/api.js';
+        $this->param['fileCss']['dataTable']='css/jquery.dataTables.min.css';
+        //echo_r(array_keys($this->param));exit();
+        $this->showView(); 
+    }
+    
+    private function checkLogin(){
+        $session=$this->param['session'];
+        echo_r($session);exit;
+        $this->param['userlogin']=$detail = $row['users'];
 	//	driver_run($driver_core, $driver_name, $func_name='executed', $params=array());
 		logCreate('admin |checkLogin |start');
 		$row = driver_run('mujur', 'user_login',  'execute' );
@@ -118,7 +91,7 @@ class Admin extends MY_Controller {
 			else{
 				logCreate('admin |checkLogin |no username');
 				$this->session->set_flashdata('notif',array('status'=>false,'msg'=>'Input Your Name'));
-				js_goto( base_url('member/edit').'?r=input_your_name');exit;
+				js_goto( site_url('admin/edit').'?r=input_your_name');exit;
 			}
 		}
 		
@@ -181,6 +154,7 @@ class Admin extends MY_Controller {
 		$detail=isset($res['data'])?$res['data']:array();
 		$this->param['accounts']=$detail;
 	}
+        
 	private function checkAdmin(){
 	//	echo_r($this->param['userlogin']);
 		if( $this->param['userlogin']['typeMember']!='admin'){
@@ -222,7 +196,7 @@ class Admin extends MY_Controller {
 			'js/ddaccordion.js'
 		);
 		
-		$this->param['shortlink']=base_url();
+		$this->param['shortlink']=site_url();
 		$this->param['footerJS']=array(	 
 			'js/bootstrap.min.js',
 			'js/formValidation.min.js',
@@ -249,7 +223,7 @@ class Admin extends MY_Controller {
 			'js/ddaccordion.js'
 		);
 		
-		$this->param['shortlink']=base_url();
+		$this->param['shortlink']=site_url();
 		$this->param['footerJS']=array(	 
 			'js/bootstrap.min.js',
 			'js/formValidation.min.js',
@@ -365,8 +339,8 @@ class Admin extends MY_Controller {
 				'get'=>$this->input->get(),
 				'post0'=>array('email'=>$email),
 		);
-		//base_url("member/data")
-		//$res=_runApi(base_url("admin/data"),$params);
+		//site_url("admin/data")
+		//$res=_runApi(site_url("admin/data"),$params);
 		$type=$driver_name="user_edit";
 		$driver_core = 'advforex';
 		$ar = $this->{$driver_core}->user_edit->execute( $param );
@@ -391,8 +365,8 @@ class Admin extends MY_Controller {
 				'get'=>$this->input->get(),
 				'post0'=>array('email'=>$email),
 		);
-		//base_url("member/data")
-		//$res=_runApi(base_url("admin/data"),$params);
+		//site_url("admin/data")
+		//$res=_runApi(site_url("admin/data"),$params);
 		$type=$driver_name="user_detail";
 		$driver_core = 'advforex';
 		$ar = $this->{$driver_core}->user->detail( $param );
@@ -408,7 +382,7 @@ class Admin extends MY_Controller {
 
 	function send_email($id='',$status=''){
 		if($status!='send'){
-			$url0=base_url('admin/send_email/'.$id.'/send');
+			$url0=site_url('admin/send_email/'.$id.'/send');
 			echo "<h3 align='center'> Apakah email ini akan dikirim ulang? ".anchor($url0,'kirim email bila iya?')."</h3>";
 		}
 		$p=$this->forex->list_email($id);
@@ -492,7 +466,7 @@ class Admin extends MY_Controller {
 			$post= $this->input->post();
 			$stat=$this->forex->rateUpdate($post);
 			if($stat===false)die('error');
-			redirect(base_url('admin/tarif'));
+			redirect(site_url('admin/tarif'));
 			exit();
 		}else{}
 		
@@ -667,6 +641,185 @@ class Admin extends MY_Controller {
 		$this->param['footerJS'][]='js/login.js';
 		$this->showView('newbase_view');
 	}
-	
-	
+//================PROFILE=================
+    public function edit($warn=0){
+        $this->checkLogin();
+        if($this->input->post('rand')){
+            $rand=$this->input->post('rand');
+            $param=array(
+                    'type'=>'updateDetail',
+                    'data'=>array(					 
+                    ),
+                    'recover'=>true
+            );
+            $this->param['post']=$post=$param['post']=$this->input->post();
+            $user_detail = $this->users_model->getDetail($post['email'],'ud_email',true) ;
+            //echo_r($user_detail);echo_r($post);
+            foreach($post['detail'] as $name=>$values){
+                    $user_detail[$name]=$values;
+            }
+            //echo_r($user_detail);exit;
+            $params=array('ud_detail'=>json_encode($user_detail));
+
+            $this->users_model->update_detail($post['email'],$params);
+    //========update detail forex
+            $this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
+            $driver_core = 'advforex';
+            $driver_name='update_detail';
+            $func_name='execute';
+            if( !method_exists($this->{$driver_core}->{$driver_name},$func_name) ){
+                    $output=array('func.tion "'.$func_name.'" unable to declare');
+                    die(json_encode($output));
+            }
+            else{
+                    $row=$params=array($post['email']);
+                    $params=$this->{$driver_core}->{$driver_name}->{$func_name}($row);
+                    $this->load->model('localapi_model');
+                    $this->localapi_model->clean_member_login($post['email']);
+
+                    //echo_r($params);exit;
+            }
+            redirect(site_url('admin/edit')."?rand=$rand");
+
+            if(isset($result['status'])&&(int)$result['status']==1){
+                    redirect(site_url('admin/detail'));
+            }
+            else{ 
+                    redirect(site_url('admin/edit'));
+            }
+        }
+        else{ 
+            $this->param['title']='EDIT SECURE ACCOUNT'; 
+            $this->param['content']=array(
+                    'detail_edit', 
+            );
+            $this->param['footerJS'][]='js/login.js';
+            $this->param['warning']=$warn;
+            $this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
+                    $driver_core = 'advforex';
+                    $func_name='detail';
+            //$param1=array('post0'=>$param);
+            $param=array( );
+            $driver_name='user';
+            $this->showView(); 
+        }
+
+    }
+
+    public function editpassword(){
+        $this->checkLogin();
+        if($this->input->post('rand')){
+                $post0=$this->input->post();
+                $userlogin=$this->param['userlogin'];
+        //	echo '<pre>'.print_r($userlogin,1);exit();
+                $data=array(
+                        'user'=>$userlogin,
+                        'password'=>$post0['main1']
+                );
+                $message = $this->load->view('email/emailPasswordChange_email', $data, true);
+                //die($email);
+                _send_email($to=$userlogin['email'],$subject='[Salmamarkets] Cabinet Password',$message);
+                //echo_r($post0);exit;
+                $post=array(
+                'password'=>$post0['main1'],
+                'email'=>$userlogin['email']
+                );
+                $p=_localApi('users','update_password',$post);
+                //echo_r($p);
+                //echo 'not valid';
+                redirect(site_url("admin/editPassword"));
+                exit;
+        }
+        $this->param['title']='Secure Account | PASSWORD Edit'; 
+        $this->param['content']=array(
+                'passwordEdit', 'modal'
+        );
+        $this->param['footerJS'][]='js/login.js';
+        $this->showView();
+    }
+    
+    public function edit_master_password(){
+        $this->checkLogin();
+        if($this->input->post('rand')){
+                $post0=$this->input->post();
+                $userlogin=$this->param['userlogin'];
+        //	$notif=$CI->session->flashdata('notif');
+                if($post0['oldcode']!=$userlogin['users']['u_mastercode']){
+                        $this->session->set_flashdata('notif',array('status'=>false,'msg'=>'current code not valid'));
+                        redirect(site_url('admin/edit_master_password')."?p=".$userlogin['users']['u_mastercode']);
+                }
+                if($post0['code']!=$post0['code2']){
+                        $this->session->set_flashdata('notif',array('status'=>false,'msg'=>'new code not valid'));
+                        redirect(site_url('admin/edit_master_password')."?p=444" );
+                }
+
+
+                $data=array(
+                        'user'=>$userlogin,
+                        'password'=>$post0['code']
+                );
+                $message = $this->load->view('email/emailMasterCodeChange_email', $data, true);
+                //die($message);
+
+                _send_email($to=$userlogin['email'],$subject='[Salmamarkets] Master Code Change',$message);
+                $post=array(
+                'password'=>$post0['code'],
+                'email'=>$userlogin['email']
+                );
+                $p=_localApi('users','update_master_password',$post);
+                //echo_r($p);exit;
+                $this->session->set_flashdata('notif',array('status'=>true,'msg'=>'Success'));
+                redirect(site_url("admin/edit_master_password?success=".date("Ymd") ));
+                exit;
+        }
+
+        $userlogin=$this->param['userlogin'];
+        if(isset($userlogin['users']['u_mastercode'] )&&trim($userlogin['users']['u_mastercode'])!='' ){
+                $this->param['title']='Secure Account | PASSWORD Edit'; 
+                $this->param['content']=array(
+                        'masterpassword_edit', 'modal'
+                );
+                $this->param['footerJS'][]='js/login.js';
+                $this->showView();
+        }
+        else{
+                $userlogin=$this->param['userlogin'];
+                $this->users_model->random_mastercode( $userlogin['email'] );
+                redirect(site_url("admin/edit_master_password?reload=".date("Ymd") ));
+                exit;
+        }
+    }
+//================================
+
+    public function loginProcess(){
+            $login=$post=$this->session->userdata('login');
+            $res= _localApi('users','exist',array($login['username']));
+            $respon_data=isset($res['data'])?$res['data']:array();
+            //echo_r($respon_data);exit();
+            if(!$respon_data){
+                    $login['message']="Username Not Valid";
+                    $this->session->set_flashdata('login', $login);
+                    redirect(site_url('login/member'),1);
+            }
+            else{
+                    $login['valid']=$respon_data;
+                    $res= _localApi('users','login',array($login['username'],$login['password']));
+                    //redirect($_SERVER['HTTP_REFERER'],1);
+                    $login['executeLogin']=$res;
+                    $respon_data=isset($res['data'])?$res['data']:array();
+                    //echo_r($respon_data);exit();
+                    $session['expire']=strtotime("+20 minutes");
+                    $array=array( 
+                            'username'=>$login['username'],
+                            'password'=>($res['data']['password']),
+                            'expire'=>$session['expire']
+                    );
+                    $this->session->set_userdata($array);
+                    js_goto(site_url('member')."?r=reload_login");
+                    //redirect(site_url('member'),1);
+
+            }
+    //	echo_r($login);
+    }
+
 }

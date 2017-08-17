@@ -102,3 +102,20 @@ if(!isset($db['default'])){
 
 
 */
+
+/*DATABASE LOG disarankan di local */
+$db['log']['hostname'] = 'localhost';
+$db['log']['username'] = 'mujur_forex';
+$db['log']['password'] = 'v5aKFPRKDFxhV6A4';
+$db['log']['database'] = 'mujur_forex';
+$db['log']['dbdriver'] = 'mysqli';
+$db['log']['dbprefix'] = 'zl_';
+$db['log']['pconnect'] = FALSE;
+$db['log']['db_debug'] = TRUE;
+$db['log']['cache_on'] = FALSE;
+$db['log']['cachedir'] = '';
+$db['log']['char_set'] = 'utf8';
+$db['log']['dbcollat'] = 'utf8_general_ci';
+$db['log']['swap_pre'] = '';
+$db['log']['autoinit'] = TRUE;
+$db['log']['stricton'] = FALSE;

@@ -116,4 +116,17 @@ if( ! function_exists('driver_run')){
 	}
 	
 }
+
+function rnd_word($j){
+    $word='zxcvbnmasdfghjklqwertyuiop1234567890QWERTYUIOPASDFGHJKLMNBVCXZ';
+    $words='';
+    $n=strlen($word);
+    for($i=0;$i<$j;$i++){
+        $rand=  rand(10000, 90000);
+        $pos = $rand % $n;
+        $words.= substr($word, $pos,1);
+    }
+    
+    return $words;
+}
 /*===================*/

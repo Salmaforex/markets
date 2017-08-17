@@ -49,15 +49,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-
+/*
 if(!defined('_DEV_')){	
 	$route['default_controller'] = 'forex';
 }
 else{ 
 	$route['default_controller'] = 'member/login';
 }
-
-
+*/
+$route['default_controller'] = 'welcomes';
 $route['welcome'] = 'guest/home';
 $route['welcome/(:any)'] = 'guest/home/$1';
 //$route['registers/(:any)/(:any)'] = 'guest/home/$1/$1';

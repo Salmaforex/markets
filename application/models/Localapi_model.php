@@ -3,31 +3,43 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Localapi_model extends CI_Model {
 public $table='z_temp_local';
-
+public $tables=array();
+private $db_log;
 	function random($num=1){
 		$sql="select password from `{$this->table}` order by rand() limit {$num}";
 		return dbFetch($sql);
 	}
-		public function __construct()
+		
+        public function __construct()
         {
+            $this->db_log = $this->load->database('log', true);
             $this->load->database();
-			$this->load->dbforge();
-			$this->recover();
+            $this->load->dbforge();
 
-		}
+            $this->recover();
+            $ar_tables=array('token');
+            foreach($ar_tables as $tables){
+                $model_name=$tables.'_table';
+                $this->load->model($model_name);
+                $this->tables[$tables]=$this->$model_name->table ;
+            }
+        }
+        
 	function clean_member_login($email){
-		$sql='delete from `'.$this->table.'` where `member_login` like \''.$email."'";
-		dbQuery($sql);
-		$sql='OPTIMIZE TABLE `'.$this->table.'` ';
-		//dbQuery($sql);
+            $sql='delete from `'.$this->table.'` where `member_login` like \''.$email."'";
+            dbQuery($sql);
+            $sql='OPTIMIZE TABLE `'.$this->table.'` ';
+            //dbQuery($sql);
 	}	
+        
 	function clean(){
-		$date=date("Y-m-d H:i:s", strtotime("-5 minutes"));
-		$sql='delete from `'.$this->table.'` where `created` <\''.$date."'";
-		dbQuery($sql);
-		$sql='OPTIMIZE TABLE `'.$this->table.'` ';
-		//dbQuery($sql);
+            $date=date("Y-m-d H:i:s", strtotime("-5 minutes"));
+            $sql='delete from `'.$this->table.'` where `created` <\''.$date."'";
+            dbQuery($sql);
+            $sql='OPTIMIZE TABLE `'.$this->table.'` ';
+            //dbQuery($sql);
 	}	
+        
 
 	function new_data($raw){
 		if(!isset($raw['params']) ){
@@ -135,4 +147,18 @@ public $table='z_temp_local';
 			logCreate("create field:$str |table:$table");
 		}
 	}
+        
+    function token_save($param){
+        $id=dbId();
+        $random_words=rnd_word(7);
+         $token = sprintf("%s%010s",$random_words, $id);
+        $input =array(
+            'expire'=>date("Y-m-d H:i:s",strtotime("+15 minutes")),
+            'token'=>$token,
+            'parameter'=>  json_encode($param)
+        );
+        $this->db_log->insert($this->tables['token'],$input );
+       
+        return $token;
+    }
 }

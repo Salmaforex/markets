@@ -5,8 +5,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');?>
 	<head>
 	<meta name="google-site-verification" content="eN2buGvr_kmbf3GhbcXebqC2slK0av-S5qfviGM9mys" />
 <?php 
-		$load_view=isset($baseFolder)?$baseFolder.'inc/head_view':'head_view';
-		$this->load->view($load_view);
+    $load_view=isset($baseFolder)?$baseFolder.'inc/head_view':'head_view';
+    $this->load->view($load_view);
 	  if(!defined('LOCAL')){
 ?>
 		<script src='https://www.google.com/recaptcha/api.js'></script>
@@ -36,7 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');?>
 <?php 
 	$aContent= !is_array($content) ?(array)$content:$content;
 	foreach($aContent as $load_view){
-		$this->load->view($baseFolder.$load_view."_view");
+		$this->load->view($baseFolder.'contents/'.$load_view."_view");
 	}
 ?>
 </div>

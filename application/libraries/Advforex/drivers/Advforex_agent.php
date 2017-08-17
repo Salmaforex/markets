@@ -83,9 +83,9 @@ public $CI;
 		`mujur_account`  a 
 		left join `mujur_users` u on u.u_email like a.email
 		where $where and type like 'AGENT'
-		group by a.id
-			$orders
+                $orders
 		limit $start,$limit";
+                //group by acc_id
 		/*
 		left join mujur_accountdetail ad 
 			on a.username=ad.username

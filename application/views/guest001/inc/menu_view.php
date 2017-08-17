@@ -15,13 +15,13 @@
       <div class="quicklinks col-md-6">
         <ul class="list-inline text-right">
 			<?php if(isset($show_open_live)){?>
-          <li><a href="<?=base_url('welcome');?>"><span class="fa fa-user"></span>
+          <li><a href="<?=site_url('welcome');?>"><span class="fa fa-user"></span>
 			<span class="small">Open Live Account</span></a></li>
 			<?php } ?>
-          <li><a href="<?=base_url('login');?>"><span class="fa fa-user"></span>
-			<span class="small">Login</span></a></li>
-          <li><a href="<?=base_url('deposit-form');?>"><span class="fa fa-balance-scale"></span> <span class="small">Deposit</span></a></li>
-                    <li><a href="<?=base_url('widtdrawal-form');?>"><span class="fa fa-cc-amex"></span> <span class="small">Withdrawal</span></a></li>
+          <li><a href="<?=site_url('login');?>"><span class="fa fa-user"></span>
+			<span class="small">Login Secure</span></a></li>
+          <li><a href="<?=site_url('deposit-form');?>"><span class="fa fa-balance-scale"></span> <span class="small">Deposit</span></a></li>
+                    <li><a href="<?=site_url('widtdrawal-form');?>"><span class="fa fa-cc-amex"></span> <span class="small">Withdrawal</span></a></li>
         </ul>
       </div>
     </div>
@@ -42,11 +42,11 @@
             <div class="quicklinks col-md-6">	
                 <ul class="list-inline text-right">
 			<?php if(isset($show_open_live)){?>
-                    <li><a href="<?=base_url('welcome');?>"><span class="glyphicon glyphicon-user"></span> <span class="small">Open Live Account</span></a></li>
+                    <li><a href="<?=site_url('welcome');?>"><span class="glyphicon glyphicon-user"></span> <span class="small">Open Live Account</span></a></li>
 			<?php } ?>
-                    <li><a href="<?=base_url('login');?>"><span class="glyphicon glyphicon-user"></span> <span class="small">Login</span></a></li>
-                    <li><a href="<?=base_url('deposit-form');?>"><span class="glyphicon glyphicon-import"></span> <span class="small">Deposit</span></a></li>
-                    <li><a href="<?=base_url('widtdrawal-form');?>"><span class="glyphicon glyphicon-export"></span> <span class="small">Withdrawal</span></a></li>
+                    <li><a href="<?=site_url('login');?>"><span class="glyphicon glyphicon-user"></span> <span class="small">Login</span></a></li>
+                    <li><a href="<?=site_url('deposit-form');?>"><span class="glyphicon glyphicon-import"></span> <span class="small">Deposit</span></a></li>
+                    <li><a href="<?=site_url('widtdrawal-form');?>"><span class="glyphicon glyphicon-export"></span> <span class="small">Withdrawal</span></a></li>
                 </ul>
             </div>
         </div>

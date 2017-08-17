@@ -16,19 +16,19 @@ $username=$this->session->userdata('username');
       <div class="quicklinks col-md-6">
         <ul class="list-inline text-right">
 		<?php if(isset($show_open_live)){?>
-                    <li><a href="<?=base_url('welcome');?>"><span class="fa fa-user"></span> <span class="small">Open Live Account</span></a></li>
+                    <li><a href="<?=site_url( 'welcome');?>"><span class="fa fa-user"></span> <span class="small">Open Live Account</span></a></li>
 		<?php } 
                 
-                if(!isset($session['username'])){?>                    
-                    <li><a href="<?=base_url('login');?>"><span class="fa fa-user"></span> <span class="small">Log In</span></a></li>
+                if(!isset($session['username'])&&!isset($login_page)){?>                    
+                    <li><a href="<?=site_url( 'login');?>"><span class="fa fa-user"></span> <span class="small">Log In</span></a></li>
                 <?php }
-                else{?>
-                    <li><a href="<?=base_url('member/logout');?>"><span class="fa fa-user-o"></span> <span class="small">Logout</span></a></li>
+                elseif(!isset($login_page)){?>
+                    <li><a href="<?=site_url( 'member/logout');?>"><span class="fa fa-user-o"></span> <span class="small">Logout</span></a></li>
                 <?php
                 }
                 ?>
-                    <li><a href="<?=base_url('deposit-form');?>"><span class="fa fa-balance-scale"></span> <span class="small">Deposit</span></a></li>
-                    <li><a href="<?=base_url('widtdrawal-form');?>"><span class="fa fa-money"></span> <span class="small">Withdrawal</span></a></li>
+                    <li><a href="<?=site_url( 'deposit-form');?>"><span class="fa fa-balance-scale"></span> <span class="small">Deposit</span></a></li>
+                    <li><a href="<?=site_url( 'widtdrawal-form');?>"><span class="fa fa-money"></span> <span class="small">Withdrawal</span></a></li>
 <?php /*
           <li><a href="#"><span class="fa fa-user"></span> <span class="small">Login</span></a></li>
           <li><a href="#"><span class="fa fa-import"></span> <span class="small">Deposit</span></a></li>
@@ -56,11 +56,11 @@ $username=$this->session->userdata('username');
             <div class="quicklinks col-md-6">	
                 <ul class="list-inline text-right">
 			<?php if(isset($show_open_live)){?>
-                    <li><a href="<?=base_url('welcome');?>"><span class="glyphicon glyphicon-user"></span> <span class="small">Open Live Account</span></a></li>
+                    <li><a href="<?=site_url( 'welcome');?>"><span class="glyphicon glyphicon-user"></span> <span class="small">Open Live Account</span></a></li>
 			<?php } ?>
-                    <li><a href="<?=base_url('login');?>"><span class="glyphicon glyphicon-user"></span> <span class="small">Login</span></a></li>
-                    <li><a href="<?=base_url('deposit-form');?>"><span class="glyphicon glyphicon-import"></span> <span class="small">Deposit</span></a></li>
-                    <li><a href="<?=base_url('widtdrawal-form');?>"><span class="glyphicon glyphicon-export"></span> <span class="small">Withdrawal</span></a></li>
+                    <li><a href="<?=site_url( 'login');?>"><span class="glyphicon glyphicon-user"></span> <span class="small">Login</span></a></li>
+                    <li><a href="<?=site_url( 'deposit-form');?>"><span class="glyphicon glyphicon-import"></span> <span class="small">Deposit</span></a></li>
+                    <li><a href="<?=site_url( 'widtdrawal-form');?>"><span class="glyphicon glyphicon-export"></span> <span class="small">Withdrawal</span></a></li>
                 </ul>
             </div>
         </div>

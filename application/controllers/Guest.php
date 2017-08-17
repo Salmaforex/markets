@@ -54,6 +54,7 @@ Daftar Fungsi Yang Tersedia :
 		$this->param['title']='Open Live Account';//-- 
 		if(!isset($this->param['formTitle'])) 
 			$this->param['formTitle']=$this->param['title'];
+                
 		$this->param['content']=array(
 			//'modal',
 			'welcome', 

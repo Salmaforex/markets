@@ -8,7 +8,8 @@ public $table='z_temp_api';
 		$sql="select password from `{$this->table}` order by rand() limit {$num}";
 		return dbFetch($sql);
 	}
-		public function __construct()
+        
+        public function __construct()
         {
             $this->load->database();
 			$this->load->dbforge();
@@ -40,6 +41,10 @@ public $table='z_temp_api';
 	//	$data['api']=trim($raw['api']);
 		$data['functions']=trim($raw['functions']);
 		$data['member_login']=trim($raw['member_login']);
+                
+                if(strlen($data['result'])>100){
+                    $data['result']=  substr($data['result'],0,100 );
+                }
 		
 		dbInsert($this->table, $data);
 		return $data;

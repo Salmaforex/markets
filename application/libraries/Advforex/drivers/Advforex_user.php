@@ -296,7 +296,7 @@ public $CI;
 
 	}
 
-	function __CONSTRUCT(){
+    function __CONSTRUCT(){
 	$CI =& get_instance();
 	$CI->load->helper('api');
 	//$CI->config->load('forexConfig_new', TRUE);
@@ -304,7 +304,7 @@ public $CI;
     $this->privatekey = $CI->config->item('privatekey' );
 	$CI->load->model('account_model');
 	$CI->load->model('forex_model');
-	}
+    }
 	
 	function execute($raw_data){
 	$CI =& get_instance();
