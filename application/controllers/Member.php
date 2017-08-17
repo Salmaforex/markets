@@ -469,9 +469,15 @@ Daftar Fungsi Yang Tersedia :
 
 //==================
     public function history($status='none'){	
-            $this->checkLogin();
+        $this->checkLogin();
             $session=$this->param['session'];
-            $res= _localApi('account','lists',array($session['username']));
+            $detail=$uDetail=$userlogin=$this->param['userlogin'];
+        //    $res= $this->localApi( 'users','detail',array($session['username']));
+        //    $detail=isset($res['data'])?$res['data']:array();
+            if($detail['typeMember']=='patners'){
+                    redirect('partner/widtdrawal');
+            }
+            $res= _localApi('account','lists',array($detail['email']));
             //echo_r($res);
             $account = isset($res['data'])?$res['data']:array();
             //echo_r($account);
@@ -594,13 +600,15 @@ Daftar Fungsi Yang Tersedia :
     }	
 
     public function widtdrawal($status44=null){
+        $this->checkLogin();
             $session=$this->param['session'];
-            $res= $this->localApi( 'users','detail',array($session['username']));
-            $detail=isset($res['data'])?$res['data']:array();
+            $detail=$uDetail=$userlogin=$this->param['userlogin'];
+        //    $res= $this->localApi( 'users','detail',array($session['username']));
+        //    $detail=isset($res['data'])?$res['data']:array();
             if($detail['typeMember']=='patners'){
                     redirect('partner/widtdrawal');
             }
-            $this->checkLogin();
+            
             $notAllow=true;
             $detail=$uDetail=$userlogin=$this->param['userlogin'];
             if($status44==null && isset($detail['document']['udoc_status'])){

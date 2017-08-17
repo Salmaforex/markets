@@ -188,6 +188,7 @@ if(!function_exists('log_info_table')){
             $sql = dbInsert($tablename, $input);
             logCreate('log insert:'.$tablename);
 	}
+        
     function log_info_table_make($type){
           $CI =& get_instance();
         $tablename='y_'.trim($type)."s".date("Ym");

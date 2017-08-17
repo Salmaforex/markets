@@ -969,7 +969,16 @@ from mujur_account a left join mujur_accountdocument ad on a.email=ad.email wher
         $this->flowInsert('');
         $this->emailAdmin();
         $this->accountRecover();
+        $this->clean_session();
         //logCreate('forex model done');
+    }
+    
+    function clean_session(){
+        $sql="optimize table ci_session";
+        dbQuery($sql);
+        $date=date('Y-m-d H:i:s',strtotime("-30 minutes"));
+        $sql="delete from `ci_session` where modified <'$date'";
+        return dbQuery($sql);
     }
 	//=================FLOW LOG
 	function flow_member($accountid, $sort='created',$sortType='DESC', $limit=50,$start=0){

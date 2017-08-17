@@ -53,6 +53,7 @@ if($detail_deposit){
 <?php
 //echo_r($detail_deposit);//
 		$bank = $key=$this->config->item('forex_bank')[$detail_deposit['currency']];
+                if(isset($bank))
 		foreach($bank as $row){
 			echo "\n\t{$row['name']} : <strong>{$row['number']}</strong>  {$row['person']}<br />";
 		}
