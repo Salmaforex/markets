@@ -15,6 +15,7 @@ class Api extends REST_Controller {
 	$this->load->helper('api');
 	$this->load->helper('log');
 	$this->load->helper('db');
+        $this->load->model('localapi_model');
 	$this->load->database();
 	header('Access-Control-Allow-Origin: *'); 
     }
