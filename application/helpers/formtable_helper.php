@@ -160,3 +160,9 @@ if( ! function_exists('bsSelect2')){
 	
 	}
 }
+
+if( !function_exists('bsToken')){
+    function bsToken(){
+        return form_hidden('token_form', rnd_word(16));
+    }
+}

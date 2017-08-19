@@ -44,3 +44,7 @@ other/*
 oth/*
 /nbproject/private/
 /index.php
+
+app_api/config/database.php
+app_api/config/config.php
+app_api/config/forexConfig_new.php

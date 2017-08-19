@@ -48,6 +48,13 @@ $config['forexBank']=array(
 	array('name'=>'BNI', 'number'=>'-','person'=>'-'),
 
 );
+
+$config['forex_bank']['IDR']=array(
+    array('name'=>'BCA', 'number'=>'-','person'=>'-'), 
+);
+$config['forex_bank']['MYR']=array(
+    array('name'=>'BCA', 'number'=>'-','person'=>'-'), 
+);
 /*
 BCA : 2812226160 a.n PT. Salma Widyatama Mandiri 
 BRI : 2202.01.000120.561 a.n Yadi Supriyadi
@@ -68,3 +75,13 @@ $config['smtp']=array(
 'password'=>'njstmAF65K'
 
 );
+
+
+/*==============LINK============*/
+$config['fb_link']='https://www.facebook.com/salmaforexbroker';
+$config['twitter_link']='https://twitter.com/salmaforex';
+$config['ig_link']='https://instagram.com/salmaforex/';
+$config['email_link']='http://www.salmaforex.com/contact/';
+
+/*=============URL API ====================*/
+$config['salma_api']='http://advance.forex/forex.php/api';

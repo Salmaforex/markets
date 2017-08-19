@@ -14,8 +14,8 @@ else{
 	define('ENVIRONMENT', 'production'); 
 }
 */
-
 define('LOCAL',1);
+define('API',1);
 define('ENVIRONMENT', 'development');
 	date_default_timezone_set('Asia/Jakarta');
 
@@ -114,13 +114,13 @@ switch (ENVIRONMENT)
 }
 
  
-	$system_path = 'vendorci';
+$system_path = 'vendorci';
+
+
+$application_folder = 'app_api';
 
  
-	$application_folder = 'application';
-
- 
-	$view_folder = '';//views';
+$view_folder = '';//views';
 
 
 // --------------------------------------------------------------------
@@ -206,7 +206,8 @@ switch (ENVIRONMENT)
 		elseif ( ! is_dir(APPPATH.'views'.DIRECTORY_SEPARATOR))
 		{
 			header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-			echo 'Your view folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
+			echo 'Your view folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF.'<br> '.
+                                APPPATH.'views'.DIRECTORY_SEPARATOR;
 			exit(3); // EXIT_CONFIG
 		}
 		else
