@@ -3,7 +3,7 @@ $res= _localApi('account','list_simple',array($userlogin['email']));
 //echo_r($res);
 $account =   isset($res['data'])?$res['data']:array();
 ?>
-<div class="panel" style='width:1000px'>
+<div class="panel" style='x-width:1000px'>
   <div class="panel-heading partition-blue">
 	<span class="text-bold">Account Management</span>
   </div>
@@ -33,13 +33,15 @@ $account =   isset($res['data'])?$res['data']:array();
             <table class="table table-bordered table-striped table-full-width" id="list_member">
                 <thead class="partition-dark">
                         <tr>
-                        <th>Login and Username</th>							
+                        <th>Login</th>
+                        <th>Name</th>
                         <th>Balance</th>
                         <th>Equity</th>
                         <th>Credits</th>
 
                         <!--th>Free<br/>Margin</th-->
-                        <th class="hidden-xs">Depo<br/>WD</th>
+                        <th class="hidden-xs">Deposit</th>
+                        <th class="hidden-xs">Withdraw</th>
                         <th>Lots</th>
                         <!--th class="hidden-xs">Other</th-->
                         <th class="center"><?=$controller_main!='partner'?"Action":"Commission";?></th>
@@ -51,13 +53,15 @@ $account =   isset($res['data'])?$res['data']:array();
 		$account_id = $row0['accountid'];
 		$res0= _localApi('account','list_by_partner',array($account_id));
 		$members  =   isset($res0['data'])?$res0['data']:array();
-		//echo_r($res0);
+		//echo $account_id;echo_r($res0);
 		/*
 		if(count($members)){
 			?><tr><th colspan='6'>Members account id: <?=$account_id;?>  </th></tr><?php
 		}
 		*/
 		foreach($members as $row){
+                    if(!isset($row['accountid'])) continue;
+                    
 			$res=_localApi('forex','balance',array($row['accountid']));
 			$balance=isset($res['data']['margin'])?$res['data']['margin']:array($res);
 			
@@ -73,22 +77,29 @@ $account =   isset($res['data'])?$res['data']:array();
 			//logCreate("who : ".$row['accountid']."|".json_encode($res));
 		?>
 			<tr>
-			  <td>accountid: <?=$row['accountid'];?>
-			  <br/>username: <?=isset($row['username'])?$row['username']:'';?> </td>
+                            <td> <?=$row['accountid'];?></td>
+			  <td><?=isset($row['username'])?$row['username']:'';?></td>
 			  
-			  <td class="right_number"><?=!isset($balance['Balance'])?0:number_format($balance['Balance'],3);?><!--i class='fa fa-spinner fa-spin'></i--></td>
+			  <td class="right_number"><?=!isset($balance['Balance'])?0:number_format($balance['Balance'],2);?><!--i class='fa fa-spinner fa-spin'></i--></td>
 			  
 			  <td class="right_number"><?=!isset($balance['Equity'])?0:number_format($balance['Equity'],2);?><!--i class='fa fa-spinner fa-spin'></i--></td>
 			  
-			  <td class="right_number"><?=!isset($balance['Credit'])?0:number_format($balance['Credit'],3);?><!--i class='fa fa-spinner fa-spin'></i--></td>
+			  <td class="right_number"><?=!isset($balance['Credit'])?0:number_format($balance['Credit'],2);?><!--i class='fa fa-spinner fa-spin'></i--></td>
 			  
 			  <!--td class="right_number"><?=!isset($balance['FreeMargin'])?0:number_format($balance['FreeMargin'],3);?><!--i class='fa fa-spinner fa-spin'></i-->
                           </td-->
 			  
-			  <td class="right_number">Deposit: <?=!isset($summary['TotalDeposit'])?0:number_format($summary['TotalDeposit'],2);?>
-			  <br/>WD: <?=!isset($summary['TotalWithdrawal'])?0:number_format($summary['TotalWithdrawal'],2);?><!--i class='fa fa-spinner fa-spin'></i--></td>
+			  <td class="right_number"> <?=!isset($summary['TotalDeposit'])?0:number_format($summary['TotalDeposit'],2);?>
+			  </td>
+                          <td> <?=!isset($summary['TotalWithdrawal'])?0:number_format($summary['TotalWithdrawal'],2);?><!--i class='fa fa-spinner fa-spin'></i--></td>
 			  
-			  <td class="right_number"><?=!isset($summary['TotalVolume'])?0:number_format($summary['TotalVolume'],2);?><!--i class='fa fa-spinner fa-spin'></i--></td>
+			  <td class="right_number"><!-- <?=!isset($summary['TotalVolume'])?0:number_format($summary['TotalVolume'],2);?>
+                              -->
+                  <?php
+                            //echo "<br/>Total Volume (with Commission Agent): ";
+                            echo !isset($summary['TotalVolumeWithCommissionAgent'])?"0.00": number_format($summary['TotalVolumeWithCommissionAgent']/10,2);
+                ?>
+                              <!--i class='fa fa-spinner fa-spin'></i--></td>
 			  
 			  <!--td>
 			  Profit: <?=!isset($summary['TotalProfit'])?0: number_format($summary['TotalProfit'],2);?>
@@ -107,17 +118,16 @@ $account =   isset($res['data'])?$res['data']:array();
 	<?php
 	}
 	else{
-		echo "Commission: ";
+		//echo "Commission: ";
 		echo !isset($summary['TotalCommission'])?0:number_format($summary['TotalCommission'],2);
 		
-		echo "<br/>Total Volume (with Commission Agent): ";
-		echo !isset($summary['TotalVolumeWithCommissionAgent'])?"0.00": number_format($summary['TotalVolumeWithCommissionAgent'],2);
 		
-		echo "<br/>Total Commission Agent: ";
-		echo !isset($summary['TotalCommissionAgent'])?"0.00": number_format($summary['TotalCommissionAgent'],2);
 		
-		echo "<br/>Total Agent Commission: ";
-		echo !isset($summary['TotalAgentCommission'])?"0.00": number_format($summary['TotalAgentCommission'],2);
+		//echo "<br/>Total Commission Agent: ";
+		//echo !isset($summary['TotalCommissionAgent'])?"0.00": number_format($summary['TotalCommissionAgent'],2);
+		
+		//echo "<br/>Total Agent Commission: ";
+		//echo !isset($summary['TotalAgentCommission'])?"0.00": number_format($summary['TotalAgentCommission'],2);
 		
 		?><!--i class='fa fa-spinner fa-spin'></i-->
 	<?php
@@ -139,14 +149,17 @@ bal:{"AccountID":"7899280","Balance":"16106.110000","Credit":"10000.000000","Equ
 	  </tbody>
 	</table>
 	</div>
+      
 	<div class="col-md-2a">
 	&nbsp;
 	</div>
+      
 	<div class="col-md-12">
 		<div class="well text-center nomargin hide">
 			<p class="nomargin marbot-15">Click button to open a new account</p>
 			<a href="<?=site_url('member/register/account');?>" class="btn btn-red">Open New Account <i class="fa fa-plus"></i></a>
 		</div>
 	</div>
+      
   </div>
 </div>
