@@ -21,3 +21,8 @@ $config['pages']=array(
 $config['drivers_komunitas']=array(
     'demo'
 );
+
+$config['drivers_mujur']=array(
+    'user_login',
+    'login'
+);

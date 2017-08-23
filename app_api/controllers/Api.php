@@ -33,9 +33,11 @@ class Api extends REST_Controller {
         $func_name  =   isset($post['function'])?$post['function']:'execute';
         
         $raw = driver_run($driver_core, $driver_name, $func_name , $params );
+        $raw[]=date("Y-m-d H:i:s");
         
         $code = isset($raw['code'])?$raw['code']:205;
-        $result = isset($raw['result'])?$raw['result']:$raw;
+        unset($raw['code']);
+        $result = isset($raw['data'] )?$raw['data'] :$raw;
         
         save_and_send_rest($code, $result, $params);
     }
@@ -53,9 +55,11 @@ class Api extends REST_Controller {
             else{
                 $code=200;
             }
+            
+            
             $param['function']=$function;
             logCreate('rest/forex code:'.$code.'result'.json_encode($res));
-            save_and_send_rest($code,$res,$param);
+            save_and_send_rest($code,$result,$param);
         }
         else{
             save_and_send_rest(204,$res,$param);

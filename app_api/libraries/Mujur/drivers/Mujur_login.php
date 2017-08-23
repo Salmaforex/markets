@@ -20,6 +20,7 @@ public $CI;
         $CI =& get_instance();
         $return=array($params,dbId());
         $message = 'nothing to do here';
+        $debug=array();
 //        return array('code'=>200,'result'=>$return);
         $username=isset($params['username'])?$params['username']:false;
         $password=isset($params['password'])?$params['password']:false;
@@ -58,8 +59,20 @@ public $CI;
         $respon['raw']=$raw;
         $respon['token']=$raw['token'];
         $respon['message']='Success';
+        
+        $return=$respon;
                 
-        return array('code'=>200,'result'=>$respon);
+        if(isset($params['debug'])){
+            $debug = $params['debug']===true?true:false;
+            $return = $return['data'];
+        }
+        else{
+            $debug=false;
+        }
+        
+        //print_r($return);echo "---";
+        return $debug?array('params'=>$params,'debug'=>$debug,'return'=>$return):$return;
+       //return array('code'=>200,'result'=>$respon);
         
 //==================================not run====================
         $exist=$this->users_model->exist($username,2);
@@ -73,6 +86,7 @@ public $CI;
                 $respon=array('valid'=>false);
                 $respon['password']=null;//sha1("$password|zzzz")."|zzzz";
         }
+        
         $respon['status']=$status;
         return $respon;
     }
