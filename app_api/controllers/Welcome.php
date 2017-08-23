@@ -20,7 +20,12 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('welcome_message');
+            $data=array();
+            $pages=config_site('pages');
+            
+            $data['pages']=$pages;
+            //echo '<pre>';print_r($pages);exit;
+            $this->load->view('welcome_message',$data);
 	}
         
         public function error_page()
@@ -28,4 +33,13 @@ class Welcome extends CI_Controller {
             echo 'nothing to see here..';
             
         }
+        
+    function __construct(){
+	parent::__construct();
+	$this->load->helper([ 'basic', 'api','log','db','url']);
+        
+        $this->load->model('localapi_model');
+	$this->load->database();
+	//header('Access-Control-Allow-Origin: *'); 
+    }
 }

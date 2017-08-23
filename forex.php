@@ -22,7 +22,7 @@ define('ENVIRONMENT', 'development');
 	if ( !function_exists('logFile')){
 		function logFile(){ return true; }
 	}
-//die('satu');
+
 /**
  * CodeIgniter
  *

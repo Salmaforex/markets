@@ -80,6 +80,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<code>application/controllers/Welcome.php</code>
 
 		<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
+                
+                <p>List Pages yang berhubungan dengan konsep DRIVER. setelah mengklik linknya.. kembalilah ke halaman ini dengan menekan BACK</p>
+                <ol>
+                    <?php 
+                    foreach($pages as $page){
+                        echo '<li>'.anchor($page[0],$page[1]).'<br/>'.$page[2]."</li>";
+                    }
+                    ?>
+                </ol>
 	</div>
 
 	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
