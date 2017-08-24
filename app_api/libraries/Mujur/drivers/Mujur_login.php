@@ -55,7 +55,7 @@ public $CI;
         
         $return[]=$raw=$this->user_token(array($username));
         
-        $respon=array('valid'=>false);
+        $respon=array('valid'=>true);
         $respon['raw']=$raw;
         $respon['token']=$raw['token'];
         $respon['message']='Success';
