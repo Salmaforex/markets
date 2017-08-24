@@ -285,8 +285,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
         function checkLogin(){
             $session=$this->param['session'];
+            
             if(!isset($session['login'])){
-                echo_r($session);exit;
+                logCreate('admin |checkLogin | error:'.json_encode($session));
+                echo_r($session);die('error?');
+                
             }
             
             $login = $this->localapi_model->token_get($session['login']);
