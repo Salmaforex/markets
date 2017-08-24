@@ -47,9 +47,7 @@ class Admin extends MY_Controller {
         $this->showView(); 
     }
     
-    private function checkLogin(){
-        $this->checkLogin_admin();
-    }
+
     
     private function checkLogin_admin(){
         $session=$this->param['session'];
