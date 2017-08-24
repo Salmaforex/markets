@@ -3,9 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
  class MY_Controller extends CI_Controller {
 	function __CONSTRUCT(){
-		parent::__construct(); 
-		$this->load->library('session');
-		$this->load->model('users_model');
+            parent::__construct(); 
+            $this->load->library('session');
+            $this->load->model('users_model');
             $this->param['session']=$this->session->all_userdata();
 	}
 //---------Tidak diketahui kegunaannya?	
@@ -285,7 +285,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	}
 	
         function checkLogin(){
-            $session=$this->param['session'];
+            $session= $this->session->all_userdata();
+                    //$this->param['session'];
             
             if(!isset($session['login'])){
                 logCreate('admin |checkLogin | error:'.json_encode($session));
