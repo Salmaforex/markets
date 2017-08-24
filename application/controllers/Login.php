@@ -61,6 +61,7 @@ Daftar Fungsi Yang Tersedia :
            // echo_r($response);echo_r($post);echo_r($login);exit;
             $data_login = $login['data']['token'];
             $this->session->set_userdata('login', $data_login);
+            logCreate('login |process | data_login:'.json_encode($data_login));
            //exit;
             //$this->session->set_userdata('username', $post['username']);
             logCreate('login| process| input session :'.count($data_login));

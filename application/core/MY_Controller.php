@@ -19,6 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	}
 	
 	function localApi($api='',$function='', $data=array()){
+            logCreate('core |localApi | data:'.json_encode($data));
 		return _localApi( $api,$function,$data);
 	}
 	
