@@ -976,7 +976,7 @@ from mujur_account a left join mujur_accountdocument ad on a.email=ad.email wher
     function clean_session(){
         $sql="optimize table ci_session";
         dbQuery($sql);
-        $date=date('Y-m-d H:i:s',strtotime("-30 minutes"));
+        $date=date('Y-m-d H:i:s',strtotime("-1 days"));
         $sql="delete from `ci_session` where modified <'$date'";
         return dbQuery($sql);
     }
