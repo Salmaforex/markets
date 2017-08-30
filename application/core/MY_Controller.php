@@ -290,7 +290,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             
             if(!isset($session['login'])){
                 logCreate('admin |checkLogin | error:'.json_encode($session));
-                echo_r($session);die('error?');
+               // echo_r($session);
+                js_goto(site_url('login')."?r=session_error");
+                die('error?');
                 
             }
             
