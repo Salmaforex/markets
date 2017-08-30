@@ -286,7 +286,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
         function checkLogin(){
             $session= $this->session->all_userdata();
-                    //$this->param['session'];
+            $session2 = $this->session->userdata();
+            logCreate('admin |session2:'.json_encode($session2));//$this->param['session'];
             
             if(!isset($session['login'])){
                 logCreate('admin |checkLogin | error:'.json_encode($session));
