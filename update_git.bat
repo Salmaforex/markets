@@ -1,5 +1,5 @@
 git status
 git fetch --all
-git pull origin live_market
+git pull origin devel
 git reset --hard
-git pull origin live_market
+git pull origin devel
