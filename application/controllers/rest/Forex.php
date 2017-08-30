@@ -150,6 +150,7 @@ class Forex extends REST_Controller {
        $tables=array(  'balances','batchemails','emails','localapis','redirects','run_apis','save_emails' );
         foreach($tables as $name){
             $result[$name]=array();
+            log_info_table($tables,false);
             for($tahun=date("Y");$tahun>=2017;$tahun--){
                 { //for($i=1;$i<=12;$i++){
                     $bln= "";// sprintf("%02s",$i);

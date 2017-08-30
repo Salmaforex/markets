@@ -16,7 +16,11 @@ Daftar Fungsi Yang Tersedia :
     }
 
     function member(){
-        logCreate('login| member| from:'.$_SERVER['HTTP_REFERER']);
+        
+        if(isset($_SERVER['HTTP_REFERER'])){
+            logCreate('login| member| from:'.$_SERVER['HTTP_REFERER']);
+        }
+        
         $this->param['title']='Login Secure Area';
         $this->param['show_open_live']=true;
         $this->param['content']=array(
@@ -61,7 +65,7 @@ Daftar Fungsi Yang Tersedia :
            // echo_r($response);echo_r($post);echo_r($login);exit;
             $data_login = $login['data']['token'];
             $this->session->set_userdata('login', $data_login);
-            logCreate('login |process |data_login:'.json_encode($data_login));
+            logCreate('login |process |data_login:'.json_encode($login));
            //exit;
             //$this->session->set_userdata('username', $post['username']);
             logCreate('login| process|input session :'.count($data_login));
