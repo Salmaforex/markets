@@ -6,7 +6,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             parent::__construct(); 
             $this->load->library('session');
             $this->load->model('users_model');
-            $this->param['session']=$this->session->all_userdata();
+            $session = $this->param['session']=$this->session->all_userdata();
+            logCreate("core/My |path:".current_url()."|session:".json_encode($session));
 	}
 //---------Tidak diketahui kegunaannya?	
 	public function runApi(){

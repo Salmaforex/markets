@@ -1027,9 +1027,23 @@ from mujur_account a left join mujur_accountdocument ad on a.email=ad.email wher
 		$sql="select * from `{$this->tableCurrency}` ";
                 if($approve_only){
                     $sql.="where approved=1";
+                    
                 }
+                
 		return dbFetch($sql);
+                
 	}
+        
+        function select_currency(){
+            $dt = $this->currency_list(false);
+            $res = array();
+            foreach($dt as $row){
+                $res[$row['code']]=$row['name'].' ('.$row['symbol'].')';
+            }
+            
+            return $res;
+            
+        }
 	
 	function currency_by_code($code){
 		$sql="select * from `{$this->tableCurrency}` where code like '{$code}'";
