@@ -51,6 +51,7 @@ Daftar Fungsi Yang Tersedia :
         // Proses
         //echo_r($response);
         log_message('debug','login process| res:'.json_encode($response));
+        logCreate('login |process |response:'.json_encode($response),'info');
         if( $response['success']  ){
             // Code jika sukses
             $response = $this->valid();

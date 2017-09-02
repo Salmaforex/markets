@@ -13,7 +13,7 @@ public $CI;
 		$CI->load->helper('form');
 	}
 
-	function execute($param){
+    function execute($param){
 	$CI =& get_instance();
 	ob_start();
 	$CI->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
@@ -41,15 +41,28 @@ public $CI;
 	$html.=bsInput('phone','detail[phone]', $detail['phone'] ,'-');
 	$html.=bsInput('bank','detail[bank]', isset($detail['bank'])?$detail['bank']:'' ,'-');
 	$html.=bsInput('rekening','detail[bank_norek]', isset($detail['bank_norek'])?$detail['bank_norek']:'' ,'-');
+        
+        $html.=bsInput('Master Code','mastercode', isset($detail['users']['u_mastercode'])?$detail['users']['u_mastercode']:'' ,'-');
+        //$html.=bsInput('Currency','mastercode', isset($detail['users']['u_currency'])?$detail['users']['u_currency']:'' ,'-');
+    //==============TYPE============
+        $option = $CI->users_model->select_type_data();
+        $html.= bsSelect('Type', 'type',$option, $detail['users']['u_type'] );
+        
+    //==============TYPE============
+        $option = $CI->forex_model->select_currency();
+        $html.= bsSelect('Currency', 'currency',$option, $detail['users']['u_currency'] );
+        
+        //bsInput('Type','mastercode', isset($detail['users']['u_type'])?$detail['users']['u_type']:'' ,'-');
+        //form_dropdown('shirts', $options, 'large'); bsSelect($title, $name, $data='',$default='')
 //================Tanggal lahir=============
 	$dt = array(
-			'name'          => '',
-			'id'            => 'input_1',
-			'value'         => '',
-			'class'			=> 'form-control_2',
-			'type'			=> 'text',
-			'placeholder'	=> "tanggal bulan tahun",
-			'style'	=> 'width:50px',
+                'name'          => '',
+                'id'            => 'input_1',
+                'value'         => '',
+                'class'			=> 'form-control_2',
+                'type'			=> 'text',
+                'placeholder'	=> "tanggal bulan tahun",
+                'style'	=> 'width:50px',
 	);
 	$inp='';
 	$dt['name']='detail[dob1]';
@@ -78,7 +91,7 @@ public $CI;
 	ob_end_clean();
 	//$result['warn']=explode("\n",$html);
 	return $result;
-	}
+    }
 
 }
 /*==*/

@@ -1,5 +1,7 @@
 git status
 git fetch --all
-git pull origin live
+
+echo =======
+git pull origin devel
 git reset --hard
-git pull origin live
+git pull origin devel

@@ -311,6 +311,24 @@ function register($param,$debug=false){
 		where `$field`='$id'";
 		return dbFetchOne($sql);
 	}
+        
+        
+        function all_type( ){
+		$sql="select ut.*  from {$this->tabletype} ut";
+		return dbFetch($sql);
+	}
+        
+        function select_type_data(){
+            $dt = $this->all_type();
+            $res = array();
+            foreach($dt as $row){
+                $res[$row['ut_id']]=$row['ut_name'];
+            }
+            
+            return $res;
+            
+        }
+        
 
 	function updatePass($email,$pass_sha1){
 		$data = array('u_password' => $pass_sha1);
@@ -319,6 +337,7 @@ function register($param,$debug=false){
 		dbQuery($str);
 		return true;
 	}
+        
 	function update_type($email, $type){
 		if(trim($email)=='') return false;
 		$data = array('u_type' => $type);
@@ -336,13 +355,29 @@ function register($param,$debug=false){
 		return true;
 	}
 
-	function update_detail($email,$data){
-		//$data = array('u_password' => $pass_sha1);
-		$where = "ud_email='".addslashes($email)."'";
-		$str = $this->db->update_string($this->tableDetail, $data, $where);
-		//echo $str;exit;
-		dbQuery($str);
-		return true;
+	function update_detail($email,$raw){
+            if($email=='') return false;
+            //$data = array('u_password' => $pass_sha1);
+            $where = "u_email='".addslashes($email)."'";
+            $data = array(
+                'u_type'=>$raw['type'],
+                'u_mastercode'=>$raw['mastercode'],
+                'u_currency'=>$raw['currency']
+            );
+
+            $str = $this->db->update_string($this->table, $data, $where);
+            //echo $str;exit;
+            dbQuery($str);
+
+//======================DETAIL==============
+            $data = array(
+                'ud_detail'=>$raw['ud_detail']
+            );
+            $where = "ud_email='".addslashes($email)."'";
+            $str = $this->db->update_string($this->tableDetail, $data, $where);
+            //echo $str;exit;
+            dbQuery($str);
+            return true;
 	}
 	
 	function updateDocumentStatus($email, $status){
