@@ -336,9 +336,23 @@ function register($param,$debug=false){
 		return true;
 	}
 
-	function update_detail($email,$data){
+	function update_detail($email,$raw){
 		//$data = array('u_password' => $pass_sha1);
-		$where = "ud_email='".addslashes($email)."'";
+		$where = "u_email='".addslashes($email)."'";
+                $data = array(
+                    'u_type'=>$raw['type'],
+                    'u_mastercode'=>$raw['mastercode'],
+                    'u_currency'=>$raw['currency']
+                );
+		$str = $this->db->update_string($this->table, $data, $where);
+		//echo $str;exit;
+		dbQuery($str);
+                
+//======================DETAIL==============
+                $data = array(
+                    'ud_detail'=>$raw['ud_detail']
+                );
+                $where = "ud_email='".addslashes($email)."'";
 		$str = $this->db->update_string($this->tableDetail, $data, $where);
 		//echo $str;exit;
 		dbQuery($str);

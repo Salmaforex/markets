@@ -807,7 +807,7 @@ SELECT `id`, `username`, `email`, `accountid`, if(`agent` is null,mujur_register
 	function update_to_agent($email){
 		$sql="update `{$this->tableAccount}` set type='AGENT' where `email` like '$email'";
 		dbQuery($sql);
-		$sql="update `{$this->tableAccount}` set type='AGENT' where `type like 'agent'";
+		$sql="update `{$this->tableAccount}` set type='AGENT' where `type` like 'agent'";
 		dbQuery($sql);
 	}
     function all($limit=10,$offset=0,$field='*'){

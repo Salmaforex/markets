@@ -316,14 +316,15 @@ class Admin extends MY_Controller {
 	
 	function save_users(){
 		$post=$this->input->post();
-		//echo_r($post);
+		echo_r($post);exit;
 		$params=array('ud_detail'=>json_encode($post['detail']));
 		$this->users_model->update_detail($post['email'],$params);
+                
 	//========update detail forex
 		$this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
-        $driver_core = 'advforex';
-        $driver_name='update_detail';
-        $func_name='execute';
+                $driver_core = 'advforex';
+                $driver_name='update_detail';
+                $func_name='execute';
 		if( !method_exists($this->{$driver_core}->{$driver_name},$func_name) ){
 			$output=array('function "'.$func_name.'" unable to declare');
 			die(json_encode($output));
@@ -340,29 +341,31 @@ class Admin extends MY_Controller {
 	
 	function edit_user($id){
             $this->checkLogin();
-		$this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
-		$params=array('id'=>$id,'type'=>"user_detail");
-		$ar=$this->users_model->gets($id,'u_id' );
-		//echo_r($ar);exit;
-		$email=$ar['u_email'];
-		$param=array(
-				'post'=>$this->convertData(),
-				'get'=>$this->input->get(),
-				'post0'=>array('email'=>$email),
-		);
-		//site_url("admin/data")
-		//$res=_runApi(site_url("admin/data"),$params);
-		$type=$driver_name="user_edit";
-		$driver_core = 'advforex';
-		$ar = $this->{$driver_core}->user_edit->execute( $param );
-		//echo_r($ar);
-		$html = $ar['html'];
-		$this->param['html']=$html;
-		$this->param['title']='Secure Admin | edit '.$email; 
-		$this->param['content']=array(
-			'edit_user'
-		) ;
-		$this->showView(); 
+            $this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
+            $params=array('id'=>$id,'type'=>"user_detail");
+            $ar=$this->users_model->gets($id,'u_id' );
+            //echo_r($ar);exit;
+            $email=$ar['u_email'];
+            $param=array(
+                'post'=>$this->convertData(),
+                'get'=>$this->input->get(),
+                'post0'=>array('email'=>$email),
+            );
+            
+            //site_url("admin/data")
+            //$res=_runApi(site_url("admin/data"),$params);
+            $type=$driver_name="user_edit";
+            $driver_core = 'advforex';
+            $ar = $this->{$driver_core}->user_edit->execute( $param );
+            //echo_r($ar);
+            
+            $html = $ar['html'];
+            $this->param['html']=$html;
+            $this->param['title']='Secure Admin | edit '.$email; 
+            $this->param['content']=array(
+                    'edit_user'
+            ) ;
+            $this->showView(); 
 	}
 
 	function detail_user($id){
@@ -445,6 +448,7 @@ class Admin extends MY_Controller {
 			$email = $row['u_email'];
 			echo_r($row);
 			$this->users_model->update_type($email, 10);
+                        echo "update agent email ".$email; 
 			$this->account_model->update_to_agent($email );
 //			exit;
 			echo 'update '.$email.  ' please close the page';
@@ -455,12 +459,14 @@ class Admin extends MY_Controller {
 			echo "no id to edit";
 			exit;
 		}
+                
 		$res=$this->account_model->all_agent('email','email');
 		foreach($res as $row){
-			if($row['email']!=''){
-				$this->users_model->update_type($row['email'], 10); //10 adalah agent
+                    if($row['email']!=''){
+                        echo "update email:".$row['email'];
+                        $this->users_model->update_type($row['email'], 10); //10 adalah agent
 //				echo "<br/> update $row[email]";
-			}
+                    }
 		}
 		$url=site_url('admin')."?update_agent=okk"; 
 		js_goto($url);
