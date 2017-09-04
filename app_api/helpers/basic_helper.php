@@ -67,10 +67,19 @@ if( ! function_exists('driver_run')){
                     return $result;
             }
             else{
+                $result=$CI->{$driver_core}->{$driver_name}->{$func_name}($params);
+                if(!isset($result['error'])){
                     $result['error']=false;
+                }
+                
+                if(!isset($result['messages'])){
                     $result['messages']='success';
-                    $result['data']=$CI->{$driver_core}->{$driver_name}->{$func_name}($params);
+                }
+                
+                if(!isset($result['code'])){
                     $result['code']=200;
+                }
+                
             }
 		
             return $result ;
@@ -79,9 +88,9 @@ if( ! function_exists('driver_run')){
 }
 
 if(!function_exists('driver_run_action')){
-    function driver_run_action($driver_core, $driver_name, $func_name='executed', $params=array()){
+    function driver_run_action($driver_core, $driver_name,  $params=array()){
         $result=array('code'=>203,'data'=>false,'messages'=>'');
-        log_info_table('driver',array($driver_core, $driver_name, $func_name));
+        log_info_table('driver',array($driver_core, $driver_name ));
 
 /* no drivers core =============================== */
         $core_file=ucfirst(strtolower($driver_core));
@@ -93,7 +102,6 @@ if(!function_exists('driver_run_action')){
 
         $CI =& get_instance();
 
-        // log_add("run driver: $driver_core| $driver_name| $func_name");
         // log_add("parameter:".count($params));
 /*	Kita butuh file config khusus untuk daftar driver  */
         $config_file='driver_gw';
@@ -128,18 +136,44 @@ if(!function_exists('driver_run_action')){
 /*	Kita butuh functionnya ==================================  */
         if( !method_exists($CI->{$driver_core}, $driver_name ) ){
                 // log_add('buatlah fungsi '.$func_name.'($params) pada file drivernya di:'.APPPATH.'libraries/'.$core_file.'/drivers/'.$driver_file.".php",'error');
-                $result['error']=105;
-                $result['messages']=!defined('LOCAL')?'no function': 'buatlah fungsi '.$func_name.'($params) pada file drivernya di:'.APPPATH.'libraries/'.$core_file.".php" ;
+                $result['error']=104;
+                $result['messages']=!defined('LOCAL')?'no function': 'buatlah fungsi '.$driver_name.'($params) pada file drivernya di:'.APPPATH.'libraries/'.$core_file.".php" ;
                 return $result;
         }
         else{
+            
+            $result=$CI->{$driver_core}->{$driver_name}($params);
+            if(!isset($result['error'])){
                 $result['error']=false;
+            }
+
+            if(!isset($result['messages'])){
                 $result['messages']='success';
-                $result['data']=$CI->{$driver_core}->{$driver_name}->{$func_name}($params);
+            }
+
+            if(!isset($result['code'])){
                 $result['code']=200;
+            }
         }
 
-        return isset($result['data'])?$result['data']:array();
+        return  $result;
+    }
+}
+
+if(!function_exists('driver_return')){
+    function driver_return($return_code, $pesan, $return, $debug, $show_debug)
+    {
+        $result=array(
+            'code'=>$return_code,
+            'message'=>$pesan,
+            'data'=> $return
+        );
+        
+        if($show_debug){
+            $result['debug']=$debug;
+        }
+        
+        return $result;
     }
 }
 

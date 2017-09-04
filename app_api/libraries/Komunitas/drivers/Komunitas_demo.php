@@ -16,7 +16,7 @@ public $CI;
         
     }
     
-    function basic($params=array()){
+    function basic_old($params=array()){
         $debug=array('start'=>microtime()); //biarkan saja
         $return=array(); //disarankan array
 //=====================DEFAULT START=========
@@ -31,5 +31,23 @@ public $CI;
         
         //==================lebih baik dibuat seperti ini
         return isset($params['debug'])&$params['debug']==true?array('params'=>$params,'debug'=>$debug,'return'=>$return):$return;
+    }
+    
+    function basic($params=array() ){
+//=============default================
+        $debug=array('time'=>array(microtime()),'params'=>$params);
+        //debug berisi time eksekusi dan param
+        //-------------------//
+        $pesan="Ini adalah Pesan";
+        $return_code =200; //ignore saja.. saya perlu ini untuk API 
+        
+//-------------show debug
+        $show_debug = isset($params['debug'])&&$params['debug']!=false?true:false;
+        unset( $params['debug']);
+        
+//=============ARRAY KEMBALIAN============= 
+        $return = array('info'=>'perhatikan debug yang di hasilkan' );
+        //gunakan metode pengembalian lain bila tidak sesuai
+        return driver_return($return_code,  $pesan, $return, $debug, $show_debug );
     }
 }

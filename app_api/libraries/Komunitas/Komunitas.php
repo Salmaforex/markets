@@ -20,5 +20,26 @@ Daftar Fungsi Yang Tersedia :
         $valid_drivers = config_site('drivers_'.$driver_core);
         $this->valid_drivers = $valid_drivers;
     }
+//====================================DEMO================
+    function demo($params){
+//=============default================
+        $debug=array('time'=>array(microtime()),'params'=>$params);
+        //debug berisi time eksekusi dan param
+        //-------------------//
+        $pesan="Ini adalah Pesan";
+        $return_code =200; //ignore saja.. saya perlu ini untuk API 
+        
+//-------------show debug
+        $show_debug = isset($params['debug'])&&$params['debug']!=false?true:false;
     
+        unset( $params['debug']);
+        
+        $return = array();
+        $return[]="untuk menjalankan fungsi yang di inginkan.. diketik dalam fungsi di dalamnya";
+        $return[]="gunakan perintah driver_run()";
+        
+        $debug['time'][]=  microtime();
+        
+        return driver_return($return_code,  $pesan, $return, $debug, $show_debug );
+    }
 }
