@@ -20,7 +20,7 @@ private $db_log;
             $ar_tables=array('token');
             foreach($ar_tables as $tables){
                 $model_name=$tables.'_table';
-                $this->load->model($model_name);
+                $this->load->model('tables/'.$model_name);
                 $this->tables[$tables]=$this->$model_name->table ;
             }
         }

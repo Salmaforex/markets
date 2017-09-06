@@ -79,9 +79,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<p>The corresponding controller for this page is found at:</p>
 		<code>application/controllers/Welcome.php</code>
 
-		<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
+		<p>If you are exploring CodeIgniter for the very first time, 
+                    you should start by reading the <a href="user_guide/">User Guide</a>.</p>
                 
-                <p>List Pages yang berhubungan dengan konsep DRIVER. setelah mengklik linknya.. kembalilah ke halaman ini dengan menekan BACK</p>
+                <p>List Pages yang berhubungan dengan konsep DRIVER. setelah mengklik linknya.. 
+                    kembalilah ke halaman ini dengan menekan BACK</p>
                 <ol>
                     <?php 
                     foreach($pages as $page){

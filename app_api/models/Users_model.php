@@ -29,7 +29,7 @@ public $tables;
         
         foreach($tables as $name=>$filename){
             $table_name = $filename."_table";
-            $this->load->model($table_name);
+            $this->load->model('tables/'.$table_name);
             $this->tables[$name]=$this->$table_name->table; 
         }
         
