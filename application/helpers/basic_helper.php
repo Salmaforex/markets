@@ -7,6 +7,13 @@ function ciConfig($name='' ){
 	return $config;
 }
 
+function config_site($name,$config_file='site_config'){
+    $CI =& get_instance();
+    $CI->config->load($config_file, TRUE);
+    $config_value = $CI->config->item($name, $config_file);
+    return $config_value;
+}
+
 function echo_r($param=array()){
 	if(defined('LOCAL')){
 	echo '<pre>'.print_r($param,1).'</pre>';
@@ -130,3 +137,22 @@ function rnd_word($j){
     return $words;
 }
 /*===================*/
+
+
+
+if(!function_exists('driver_return')){
+    function driver_return($return_code, $pesan, $return, $debug, $show_debug)
+    {
+        $result=array(
+            'code'=>$return_code,
+            'message'=>$pesan,
+            'data'=> $return
+        );
+        
+        if($show_debug){
+            $result['debug']=$debug;
+        }
+        
+        return $result;
+    }
+}

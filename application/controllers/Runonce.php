@@ -29,9 +29,42 @@ private $db_main;
         $db['default']['autoinit'] = TRUE;
         $db['default']['stricton'] = FALSE;
         $this->db_main = $this->load->database('default', true);//
-        send_api();
+        //send_api();
         //$this->cloneAccount();
         //$this->updateDetail();
+        $this->get_all_bad_account();
+    }
+    
+        
+    function get_all_bad_account(){
+        $driver_core = "mujur";
+        $driver_name = "fix_country";
+        $func_name="execute";
+        $urls=ciConfig('apiForex_url');//,'forexConfig_new' );
+        $total=100;
+        $start=0;
+        echo "\ndate:".date("Y-m-d H:i:s");
+        $params = array('limit'=>5,'debug'=>true,'url'=>$urls,'start'=>0 );
+        while($total>0){
+            $start+=5;
+            $params['start']=$start;
+            $raw = driver_run($driver_core, $driver_name, $func_name, $params);
+           echo '<pre>params '.print_r($params,1).'<br/>result:'.print_r($raw,1).'</pre>';
+            echo "\ndate:".date("Y-m-d H:i:s");
+            $run = $raw['data']['run'];
+            foreach($run as $n=>$row){
+                $url=$row[0];
+                $params=$row[1];
+                echo "\n runapi $url";
+                $res=array($n);
+                //$res=_runApi($url,$params);
+                print_r($res);
+            }
+        //    print_r($raw);
+            $total=$raw['data']['total'];
+          die;
+        }
+        echo 'done';
     }
     
     function send_api(){

@@ -10,7 +10,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Runonce extends CI_Controller {
 
     function index(){
-        $this->get_all_account();
+        $this->get_all_bad_account();
+    }
+    
+    function get_all_bad_account(){
+        $driver_core = "mujur";
+        $driver_name = "fix_country";
+        $func_name="execute";
+        $urls=config_site('drivers_mujur' );
+        $params = array('limit'=>5,'debug'=>true,'url'=>$urls );
+        
+        $raw = driver_run($driver_core, $driver_name, $func_name, $params);
+        echo '<pre>params '.print_r($params,1).'<br/>result:'.print_r($raw,1).'</pre>';
     }
     
     function get_all_account(){
