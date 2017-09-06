@@ -6,9 +6,18 @@ $respon=array( 'draw'=>isset($_POST['draw'])?$_POST['draw']:1);
 $respon['time'][]=microtime(true);
 
 $where_currency='';
+$session=$this->session-> all_userdata();
+$login = $this->localapi_model->token_get($session['login']);
+$respon['raw2'] =array($session, $login);
+if(isset($login['users']['u_type'])&&$login['users']['u_type']==7){
+    $where_currency=" and currency like '{$login['users']['u_currency']}' ";
+}
+
+/*
 if($userlogin['u_type']==7){
     $where_currency=" and currency like '{$userlogin['u_currency']}' ";
 }
+*/
 
 $sql="select count(id) c from mujur_flowlog where
 types='widtdrawal' $where_currency";
@@ -89,8 +98,10 @@ $respon['time'][]=microtime(true);
 $warning = ob_get_contents();
 ob_end_clean();
 if($warning!=''){
-	$respon['warning']=$warning;     
+    $respon['warning']=$warning;
 }
+
+unset($respon['raw'],$respon['raw2']);
 
 if(isset($respon)){ 
 	echo json_encode($respon);

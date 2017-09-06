@@ -23,7 +23,7 @@ $config['pages']=array(
         array('demo/action/debug','driver dengan konsep 1 call (debug)','memakai driver yang menyesuaikan pembahasan di grup PHP. '
             . 'Metode ini mirip seperti yang dibahas, tetapi masih jauh dari OK. Driver tetap diberikan parameter (array) namun dipisah array untuk '
             . 'data dan perintahnya. kembalian dalam bentuk Debug'),
-    
+        array('runonce/index','detail account','berikan parameter accountid=xxx'),
     );
 //=============khusus Driver===========
 $config['drivers_komunitas']=array(
@@ -32,5 +32,6 @@ $config['drivers_komunitas']=array(
 
 $config['drivers_mujur']=array(
     'user_login',
-    'login'
+    'login',
+    'account'
 );

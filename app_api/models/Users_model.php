@@ -32,6 +32,8 @@ public $tables;
             $this->load->model($table_name);
             $this->tables[$name]=$this->$table_name->table; 
         }
+        
+        $this->load->model('settings_model');
     }
     
     function exist_email($email){
@@ -88,6 +90,12 @@ public $tables;
 
             $respon['typeMember']=isset($user_main['type_user'])?$user_main['type_user']:null;
             $respon['statusMember']=$user_main['u_status']==1?'ACTIVE':'NOT ACTIVE';
+    //==========CITIZEN ?
+            $citizen=isset($respon['citizen'])?$respon['citizen']:false;
+            if($citizen){
+            $respon['country']=$this->settings_model->country_get($citizen);
+            }
+            
             return $respon;
     }
 

@@ -9,10 +9,16 @@ Daftar Fungsi Yang Tersedia :
 ***/
 	function __construct(){
         $this->CI =$CI  =& get_instance();
+        $driver_core='mujur';
+        $valid_drivers = config_site('drivers_'.$driver_core);
+        $this->valid_drivers = $valid_drivers;
+        /*
 		$config_file='driver_gw';
 		$driver_core='mujur';
 		$CI->config->load($config_file);
 		$valid_drivers= $CI->config->item('drivers_'.$driver_core);
 		$this->valid_drivers = $valid_drivers;
+         * 
+         */
     }
 }

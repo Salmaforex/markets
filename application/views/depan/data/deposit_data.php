@@ -4,10 +4,14 @@ ob_start();
 //api_data
 $respon=array( 'draw'=>isset($_POST['draw'])?$_POST['draw']:1);
 $respon['time'][]=microtime(true);
+$respon['raw']=array(date('Y-m-d H:i:s'));
 
 $where_currency='';
-if($userlogin['u_type']==7){
-    $where_currency=" and currency like '{$userlogin['u_currency']}' ";
+$session=$this->session-> all_userdata();
+$login = $this->localapi_model->token_get($session['login']);
+$respon['raw2'] =array($session, $login);
+if(isset($login['users']['u_type'])&&$login['users']['u_type']==7){
+    $where_currency=" and currency like '{$login['users']['u_currency']}' ";
 }
 
 $sql="select count(id) c from mujur_flowlog where"
@@ -94,7 +98,7 @@ foreach($dt as $row){
 }
 
 $respon['data']=$data;
-$respon['-']=array($userlogin, $post0);
+$respon['raw'][]=array($userlogin, $post0);
 $respon['time'][]=microtime(true);
 //echo '<pre>'.print_r($data,1);die();
 $warning = ob_get_contents();
@@ -102,7 +106,9 @@ ob_end_clean();
 if($warning!=''){
     $respon['warning']=$warning;     
 }
-
+else{
+    unset($respon['raw'],$respon['raw2']);
+}
 
 if(isset($respon)){ 
 	echo json_encode($respon);

@@ -79,13 +79,17 @@ function execute(){
 		}
 	//======Optional
 		if($dt['address']!='')
-			$param['address']	=trim($dt['address']); 
+			$param['address']	=trim($dt['address']);
+                
 		if($dt['zipcode']!='')
-			$param['zip_code']	=trim($dt['zipcode']);	
+			$param['zip_code']	=trim($dt['zipcode']);
+                
 		if($dt['email']!='')
 			$param['email']		=$dt['email'];
+                
 		if($dt['country']['name']!='')
 			$param['country']	=$dt['country']['name'];
+                
 		if($dt['phone']!='')
 			$param['phone']		=$dt['phone'];
 
@@ -117,6 +121,7 @@ function execute(){
 		if( !isset($result0['ResponseCode'])){
 			echo "<pre>".print_r($result0,1)."</pre>";
 			continue;
+                        
 		}
 
 		if( isset($result0['ResponseCode'])&& $result0['ResponseCode']==0){
@@ -169,38 +174,43 @@ function execute(){
 		   if($dt['zipcode']!='')
 			$param['zip_code']	=$dt['zipcode'];	
 		   
-		   if($dt['country']['name']!='')
-			$param['country']	=$dt['country']['name'];
-		   if($dt['phone']!='')
-			$param['phone']		=$dt['phone']; 
+		   
 	*/
-		   	$url.="?".http_build_query($param);
-			$res= $CI->advforex->runApi($url);//,$param);
-			$result0=isset($res['response'])?$res['response']:false;
+                    if($dt['country']['name']!=''){
+			$param['country']	=$dt['country']['name'];
+                    }
+                    
+		   if($dt['phone']!=''){
+			$param['phone']		=$dt['phone'];
+                   }
+                   
+                    $url.="?".http_build_query($param);
+                    $res= $CI->advforex->runApi($url);//,$param);
+                    $result0=isset($res['response'])?$res['response']:false;
 
-			if(isset($result0['ResponseCode'])&& ((int)$result0['ResponseCode']==1||(int)$result0['ResponseCode']==9) ){
+                    if(isset($result0['ResponseCode'])&& ((int)$result0['ResponseCode']==1||(int)$result0['ResponseCode']==9) ){
 		   //isset($result0['status'])&&isset($result0['code'])&&$result0['status']==1&&$result0['code']==9){
-				$result= $result0;
-				logCreate("agent bermasalah V1 result:".print_r($result,1)); 
-				echo "\nagent bermasalah(2)?:".$result['ResponseCode'];
-		   	}
-		   	else{
-				$result=array(
-				'accountid'=>isset($result0['AccountID'])?$result0['AccountID']:null,
-				'masterpassword'=>isset($result0['MasterPassword'])?$result0['MasterPassword']:null,
-				'investorpassword'=>isset($result0['InvestorPassword'])?$result0['InvestorPassword']:null,
-				'responsecode'=>isset($result0['ResponseCode'])?$result0['ResponseCode']:-100,
-				
-				);
-				echo "\nagent bermasalah(3)?:".print_r($result ,1);
-				logCreate("agent bermasalah? agent bermasalah v2 result:".print_r($result ,1)); 
+                        $result= $result0;
+                        logCreate("agent bermasalah V1 result:".print_r($result,1)); 
+                        echo "\nagent bermasalah(2)?:".$result['ResponseCode'];
+                    }
+                    else{
+                        $result=array(
+                        'accountid'=>isset($result0['AccountID'])?$result0['AccountID']:null,
+                        'masterpassword'=>isset($result0['MasterPassword'])?$result0['MasterPassword']:null,
+                        'investorpassword'=>isset($result0['InvestorPassword'])?$result0['InvestorPassword']:null,
+                        'responsecode'=>isset($result0['ResponseCode'])?$result0['ResponseCode']:-100,
 
-				$dtAPI=array(
-					'url'=>'register new(2)',
-					'parameter'=>json_encode($param),
-					'response'=>json_encode($result),
-					'error'=>'-1'
-				);
+                        );
+                        echo "\nagent bermasalah(3)?:".print_r($result ,1);
+                        logCreate("agent bermasalah? agent bermasalah v2 result:".print_r($result ,1)); 
+
+                        $dtAPI=array(
+                                'url'=>'register new(2)',
+                                'parameter'=>json_encode($param),
+                                'response'=>json_encode($result),
+                                'error'=>'-1'
+                        );
 			$sql=$CI->db->insert_string($CI->forex->tableAPI, $dtAPI);
 			dbQuery($sql);
                         //$CI->db->insert($CI->forex->tableAPI,$dtAPI);
@@ -409,50 +419,50 @@ where u.u_email is null and a.email !=''
     }
 	
 	private function save_table_account($result, $register){
-		$CI =& get_instance();
-		$tableRegis= $CI->account_model->tableRegis;
-		$tableAccount= $CI->account_model->tableAccount;
-		$tableAccountDetail= $CI->account_model->tableAccountDetail;
-		$sql="update  `$tableRegis` set `reg_status`=0 where reg_id='{$register['reg_id']}'";
-		dbQuery($sql);
-		$id=dbId();
-		$data_table=array(
-			'id'=>$id,
-			'reg_id'=>$register['reg_id'],
-			'username'=>isset($register['reg_username'])?$register['reg_username']:'',
-			'investorpassword'=>md5($result['InvestorPassword']),
-			'masterpassword'=>md5($result['MasterPassword']),
-			'accountid'=>$result['AccountID'],
-			'email'=>$register['reg_email'],
-			'created'=>date('Y-m-d')
-		);
-		if(isset($register['reg_agent'])){
-			$data_table['agent']=$data_table['reg_agent'];
-		}
-		$data_table['type']='MEMBER';
-		dbInsert($tableAccount, $data_table);
+            $CI =& get_instance();
+            $tableRegis= $CI->account_model->tableRegis;
+            $tableAccount= $CI->account_model->tableAccount;
+            $tableAccountDetail= $CI->account_model->tableAccountDetail;
+            $sql="update  `$tableRegis` set `reg_status`=0 where reg_id='{$register['reg_id']}'";
+            dbQuery($sql);
+            $id=dbId();
+            $data_table=array(
+                    'id'=>$id,
+                    'reg_id'=>$register['reg_id'],
+                    'username'=>isset($register['reg_username'])?$register['reg_username']:'',
+                    'investorpassword'=>md5($result['InvestorPassword']),
+                    'masterpassword'=>md5($result['MasterPassword']),
+                    'accountid'=>$result['AccountID'],
+                    'email'=>$register['reg_email'],
+                    'created'=>date('Y-m-d')
+            );
+            if(isset($register['reg_agent'])){
+                    $data_table['agent']=$data_table['reg_agent'];
+            }
+            $data_table['type']='MEMBER';
+            dbInsert($tableAccount, $data_table);
 
-		//email====
-		$email_data=array(
-			'username'=>$register['reg_email'],
-			'email'=>$register['reg_email'],
-			'password'=>false
-		);
-		
-		$email_data['account']=array(
-		'MasterPassword'=>$result['MasterPassword'],
-		'InvestorPassword'=>$result['InvestorPassword']
-		);
+            //email====
+            $email_data=array(
+                    'username'=>$register['reg_email'],
+                    'email'=>$register['reg_email'],
+                    'password'=>false
+            );
 
-		$email_data['show']=true;
-		$CI->load->view('email/emailRegister_email',$email_data);
+            $email_data['account']=array(
+                'MasterPassword'=>$result['MasterPassword'],
+                'InvestorPassword'=>$result['InvestorPassword']
+            );
 
-		$result[]=$data_table;
-		$input=array();
-		$input['detail']=json_encode($data_table);
-		$input['username']=$result['AccountID'];
-		dbInsert($tableAccountDetail, $input);
-		$result[]=$input;
-		return $result;
+            $email_data['show']=true;
+            $CI->load->view('email/emailRegister_email',$email_data);
+
+            $result[]=$data_table;
+            $input=array();
+            $input['detail']=json_encode($data_table);
+            $input['username']=$result['AccountID'];
+            dbInsert($tableAccountDetail, $input);
+            $result[]=$input;
+            return $result;
 	}
 }
