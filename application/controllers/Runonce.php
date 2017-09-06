@@ -67,6 +67,39 @@ private $db_main;
         echo 'done';
     }
     
+    function fix_account(){
+        $driver_core = "mujur";
+        $driver_name = "fix_country";
+        $func_name="execute_2";
+        $urls=ciConfig('apiForex_url');//,'forexConfig_new' );
+        $total=100;
+        $start=0;
+        echo "\ndate:".date("Y-m-d H:i:s");
+        $params = array('limit'=>3,'debug'=>true,'url'=>$urls,'start'=>0 );
+        while($total>0){
+            $start+=3;
+            $params['start']=$start;
+            $raw = driver_run($driver_core, $driver_name, $func_name, $params);
+           echo '<pre>params '.print_r($params,1).'<br/>result:'.print_r($raw,1).'</pre>';
+            echo "\ndate:".date("Y-m-d H:i:s");
+            $run = $raw['data']['run'];
+            foreach($run as $n=>$row){
+                $url=$row[0];
+                $params_api=$row[1];
+                unset($params_api['raw']);
+                echo "\n runapi $url ";print_r($params_api);
+                $res=array($n);
+                //$res=_runApi($url,$params_api);
+                print_r($res);
+            }
+        //    print_r($raw);
+            $total=$raw['data']['total'];
+            sleep(1);
+          die;
+        }
+        echo 'done';
+    }
+    
     function send_api(){
          $urls=$this->config->item('apiForex_url' );
         $url=$urls['update'];
