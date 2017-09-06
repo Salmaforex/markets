@@ -54,10 +54,10 @@ private $db_main;
             $run = $raw['data']['run'];
             foreach($run as $n=>$row){
                 $url=$row[0];
-                $params=$row[1];
+                $params_api=$row[1];
                 echo "\n runapi $url";
                 $res=array($n);
-                //$res=_runApi($url,$params);
+                //$res=_runApi($url,$params_api);
                 print_r($res);
             }
         //    print_r($raw);
