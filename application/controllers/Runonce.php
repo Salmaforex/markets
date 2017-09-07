@@ -75,13 +75,14 @@ private $db_main;
         $total=100;
         $start=0;
         echo "\ndate:".date("Y-m-d H:i:s");
-        $params = array('limit'=>3,'debug'=>true,'url'=>$urls,'start'=>0 );
+        $limit=3;
+        $params = array('limit'=>$limit,'debug'=>true,'url'=>$urls,'start'=>0 );
         while($total>0){
-            $start+=3;
+            
             $params['start']=$start;
             $raw = driver_run($driver_core, $driver_name, $func_name, $params);
            echo '<pre>params '.print_r($params,1).'<br/>result:'.print_r($raw,1).'</pre>';
-            echo "\ndate:".date("Y-m-d H:i:s");
+            echo "\n{$start} date:".date("Y-m-d H:i:s");
             $run = $raw['data']['run'];
             foreach($run as $n=>$row){
                 $url=$row[0];
@@ -94,10 +95,12 @@ private $db_main;
             }
         //    print_r($raw);
             $total=$raw['data']['total'];
+            echo "\nstart:$start";
+            $start+=$limit;
             sleep(1);
           die;
         }
-        echo 'done';
+        echo 'done '.$start;
     }
     
     function send_api(){
