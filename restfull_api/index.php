@@ -114,10 +114,10 @@ switch (ENVIRONMENT)
 }
 
  
-$system_path = 'vendorci';
+$system_path = '../vendorci';
 
 
-$application_folder = 'restfull_api/applications';
+$application_folder = 'applications';
 
  
 $view_folder = '';//views';

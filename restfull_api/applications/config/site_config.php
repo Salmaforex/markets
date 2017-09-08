@@ -24,6 +24,7 @@ $config['pages']=array(
             . 'Metode ini mirip seperti yang dibahas, tetapi masih jauh dari OK. Driver tetap diberikan parameter (array) namun dipisah array untuk '
             . 'data dan perintahnya. kembalian dalam bentuk Debug'),
         array('runonce/index','detail account','berikan parameter accountid=xxx'),
+        array('ujian','silakan perbaiki error','pastikan bersih')
     );
 //=============khusus Driver===========
 $config['drivers_komunitas']=array(
