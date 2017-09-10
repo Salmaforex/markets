@@ -16,15 +16,20 @@ Daftar Fungsi Yang Tersedia :
     }
 
     function member(){
-        $params = array('member',true);
-        $params['debug']=true;
-        $result=driver_run_action('salma', 'login', $params);
-        //driver_run_action
-        //libraries/salma/drivers/salma_guest_home
-        //echo_r($result);exit;
-        $this->parse_params($result['data']);
-        $this->showView('newbase001_view');
-         
+        
+        if(isset($_SERVER['HTTP_REFERER'])){
+            logCreate('login| member| from:'.$_SERVER['HTTP_REFERER']);
+        }
+        
+        $this->param['title']='Login Secure Area';
+        $this->param['show_open_live']=true;
+        $this->param['content']=array(
+                'modal',
+                'login', 
+        );
+        //$this->param['footerJS'][]='js/login.js';
+
+        $this->showView('newbase001_view'); 
 
     }
 
@@ -89,7 +94,39 @@ Daftar Fungsi Yang Tersedia :
     function __CONSTRUCT(){
     parent::__construct();
 //		logCreate('controller Login','info');
+        $this->load->library('recaptcha');
+        $this->load->library('session');
+        date_default_timezone_set('Asia/Jakarta');
+        $this->param['today']=date('Y-m-d');
+        $this->param['folder']='depan/';
+        $this->load->helper('form');
+        $this->load->helper('formtable');
+        $this->load->helper('language');
+        $this->load->helper('api');
+        $this->load->helper('db');
+//        $this->load->model('forex_model','forex');
+//        $this->load->model('country_model','country');
+//        $this->load->model('account_model','account');
+        $defaultLang="english";
+        $this->lang->load('forex', $defaultLang);
+        $this->param['fileCss']=array(	
+                'css/style.css',
+                'css/bootstrap.css',
+        );
+        $this->param['fileJs']=array(
+                'js/jquery-1.7.min.js',
+        );
 
+        $this->param['shortlink']=site_url();
+        $this->param['footerJS']=array(	 
+                'js/bootstrap.min.js',
+                'js/formValidation.min.js',
+                'js/scripts.js'
+        );
+        $this->param['description']="Trade now with the best and most transparent forex STP broker";
+
+        $this->param['emailAdmin']=$this->forex_model->emailAdmin;
+        $this->param['login_page']=true;
 
         //$this->param['session']=$this->session->all_userdata(); 
         $this->param['baseFolder']='depan/';
@@ -170,10 +207,5 @@ Daftar Fungsi Yang Tersedia :
         }
             //echo_r($login);
     }
-    private function parse_params($params){
-        foreach($params as $name => $values){
-            $this->param[$name]=$values;
-        }
-    }
-    
+
 }

@@ -87,6 +87,7 @@ if( ! function_exists('driver_run')){
 	
 }
 
+
 if(!function_exists('driver_run_action')){
     function driver_run_action($driver_core, $driver_name,  $params=array()){
         $result=array('code'=>203,'data'=>false,'messages'=>'');
@@ -112,17 +113,6 @@ if(!function_exists('driver_run_action')){
                 return $result;
         }
 
-/*	Kita butuh config parameter untuk daftar driver  */
-
-        //$CI->config->load($config_file);
-        //$valid_drivers= $CI->config->item('drivers_'.$driver_core);
-        $valid_drivers = config_site('drivers_'.$driver_core);
-        if(is_null($valid_drivers)||$valid_drivers===false){
-                // log_add("buatlah array confignya \$config['drivers_{$driver_core}']=array();",'error');
-                $result['error']=102;
-                $result['messages']=!defined('LOCAL')?'no config':"buatlah array confignya \$config['drivers_{$driver_core}']=array();" ;
-                return $result;
-        }
 /*	Kita butuh nilai parameter yang sesuai untuk daftar driver  */		
         if(!in_array($driver_name,$valid_drivers)){
                 // log_add("buatlah nilai '{$driver_name}' pada array confignya \$config['drivers_{$driver_core}']=array('{$driver_name}');",'error');

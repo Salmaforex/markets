@@ -10,67 +10,82 @@ Daftar Fungsi Yang Tersedia :
 *	forgot()
 *	__CONSTRUCT()
 ***/
-    public function home($agents=null, $raw=null)
-    {
-        $params = array('home', $agents, $raw);
-        $params['debug']=true;
-        $result=driver_run_action('salma', 'guest', $params);
-        //driver_run_action
-        //libraries/salma/drivers/salma_guest_home
-        //echo_r($result);exit;
-        $this->parse_params($result['data']);
-        $this->showView('newbase001_view');
-    }
-    
-    function register_agent($agents=null,$raw=null)
-    {
-        $params = array('agent', $agents, $raw);
-        $params['function']="register";
-        
-        $params['debug']=true;
-        
-        $result=driver_run_action('salma', 'guest', $params);
-        //driver_run_action
-        //libraries/salma/drivers/salma_guest_home
-        echo_r($result);exit;
-        $this->parse_params($result['data']);
-        $this->showView('newbase001_view');
-   /*     
-       
+	public function home($agents=false, $raw=false){
+	//echo_r($this->country_model->getAll());exit;
+		$this->load->library('session');
+		$this->param['statAccount']='member';
+		if($agents!==false){
+			$agent = explode("_",$agents);
+			$this->param['fullregis']=true;
+			$this->param['agent_code']=$agent[0];
+		}
+		
+		if($this->session->flashdata('register')){
+			$this->param['register']=$this->session->flashdata('register');
+			logCreate('session register valid','info');
+		}
+		
+                if(!isset($agent[0])){
+                    $agent_num='';
+                }
+                else{
+                    $agent_num=$agent[0];
+                }
+                
+		if(isset($this->param['register'])){
+                    $this->param['register']['agent']=$this->param['agent']=$agent_num;
+		}
+		
+		if($raw!='0'){
+			$ar=explode("-",$raw);
+			logCreate("agent ref:$raw id:{$ar[0]}","info");
+			$num=trim($ar[0]);
+			$this->session->set_flashdata('agent', $num);
+			logCreate('parameter agent:'.$num,'info');
+			die('???');
+			redirect(base_url('welcome'),1);
+			exit();
+		}
+		else{
+			$num=$info=$this->session->flashdata('agent');
+			$this->param['agent']=$num!=''?$num:'';
+		}
+		
+		if($this->param['statAccount']=='agent'){
+			//$this->param['showAgent']=true;
+		}
+		else{
+			$this->param['showAgent']=true;
+		}
+
+		$this->param['title']='Open Live Account';//-- 
+		if(!isset($this->param['formTitle'])) 
+			$this->param['formTitle']=$this->param['title'];
+                
+		$this->param['content']=array(
+			//'modal',
+			'welcome', 
+		);
+		$this->showView('newbase001_view');
+	}
+
+	public function agent(){
+		$this->load->library('session');
+		 
+                $this->param['fullregis']=true;
+                $this->param['statAccount']='agent';
+		$this->param['agent']=false;
+		$this->param['showAgent']=false;
+		$this->param['showForm']=false;
+		
+		$this->param['title']='OPEN PATNER ACCOUNT'; 
+		if(!isset($this->param['formTitle'])) 
+			$this->param['formTitle']=$this->param['title'];
+		$this->param['content']=array(
+			'welcome', 
+		);
 		$this->showView();
-    * 
-    */
-    }
-
-
-    public function agent(){
-        $params = array('agent', $agents, $raw);
-        $params['debug']=true;
-        $result=driver_run_action('salma', 'guest', $params);
-        //driver_run_action
-        //libraries/salma/drivers/salma_guest_home
-        //echo_r($result);exit;
-        $this->parse_params($result['data']);
-        $this->showView('newbase001_view');
-        /*
-        $this->load->library('session');
-        $this->param['fullregis']=true;
-        $this->param['statAccount']='agent';
-        $this->param['agent']=false;
-        $this->param['showAgent']=false;
-        $this->param['showForm']=false;
-
-        $this->param['title']='OPEN PATNER ACCOUNT'; 
-        if(!isset($this->param['formTitle'])) 
-                $this->param['formTitle']=$this->param['title'];
-        $this->param['content']=array(
-                'welcome', 
-        );
-        $this->showView();
-
-         * 
-         */
-    }
+	}
 
     public function register(){
     //$this->load->model('users_model');
@@ -432,7 +447,6 @@ Daftar Fungsi Yang Tersedia :
 		$this->param['today']=date('Y-m-d');
 		$this->param['folder']='guest001/';
 		$this->param['baseFolder']='guest001/';
-/*
 		$this->load->helper('form');
 		$this->load->helper('formtable');
 		$this->load->helper('language');
@@ -463,13 +477,13 @@ Daftar Fungsi Yang Tersedia :
 		$this->param['emailAdmin']=$this->forex->emailAdmin; 
 		logCreate('Guest Controllers','start');
 		logCreate(current_url(),'url');
-		
+/*		
 		if($this->input->post())
 			logCreate($this->input->post(),'post');
 */
 	}
 /*==========================*/
-	public function register_agent_old($agent=false,$raw=false){
+	public function register_agent($agent=false,$raw=false){
 		$this->load->library('session');
 		$this->param['fullregis']=true;
 		$this->param['statAccount']='agent';
@@ -507,28 +521,21 @@ Daftar Fungsi Yang Tersedia :
 		//$this->showView('newbase001_view');
 	}
 
-    function success(){
-            $this->load->library('session');
-            $this->param['session'] = $login=$this->session->userdata( ); 
-            //echo_r($this->param['session']);exit;
-            $this->param['fullregis']=true;
-            $this->param['statAccount']='agent';
-            $this->param['agent']=false;
-            $this->param['showAgent']=false;
-            $this->param['showForm']=false;
-
-            $this->param['title']='Register Success'; 
-
-            $this->param['content']=array(
-                    'success', 
-            );
-            $this->showView();
-    }
-        
-    private function parse_params($params){
-        foreach($params as $name => $values){
-            $this->param[$name]=$values;
-        }
-    }
-    
+	function success(){
+		$this->load->library('session');
+		$this->param['session'] = $login=$this->session->userdata( ); 
+		//echo_r($this->param['session']);exit;
+		$this->param['fullregis']=true;
+		$this->param['statAccount']='agent';
+		$this->param['agent']=false;
+		$this->param['showAgent']=false;
+		$this->param['showForm']=false;
+		
+		$this->param['title']='Register Success'; 
+		
+		$this->param['content']=array(
+			'success', 
+		);
+		$this->showView();
+	}
 }

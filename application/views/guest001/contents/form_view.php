@@ -21,14 +21,14 @@ if(!isset($showAgent)){
 <?php callback_submit(); ?>
 		<input type='hidden' name='type' value='request' />
 		<div class="frame-form-basic"> 
-			<?=bsInput2( lang('forex_fullname'),'name', isset($register['name'])?$register['name']:'', lang('forex_inputsuggestion') );?> 
+			<?=bsInput2( lang('forex_fullname'),'name', isset($register['name'])?$register['name']:'', lang('forex_inputsuggestion'),false,true,true );?> 
 <?php 
 //=bsInput2( lang('forex_country'),'country', isset($register['country'])?$register['country']:"Indonesia", lang('forex_inputsuggestion'),false, $showForm  );
 $dataCountry = $this->country_model->selectValue();
 echo bsSelect2( lang('forex_country'),'country', $dataCountry, isset($register['country'])?$register['country']:"Indonesia" );
 ?>
 			<?=bsInput2( lang('forex_city'),'city', isset($register['city'])?$register['city']:$defInput, lang('forex_inputsuggestion2') ,false, $showForm);?>
-			<?=bsInput2( lang('forex_state'),'state', isset($register['state'])?$register['state']:$defInput, lang('forex_inputsuggestion2'),false, $showForm );?>
+			<?=bsInput2( lang('forex_state'),'state', isset($register['state'])?$register['state']:$defInput, lang('forex_inputsuggestion2'),false, $showForm,true );?>
 			<?=bsInput2( lang('forex_zipcode'),'zip', isset($register['zip'])?$register['zip']:$defInput, lang('forex_inputsuggestion'),false, $showForm );?>
 
 			<?=bsInput2( lang('forex_address'), 'address',isset($register['address'])?$register['address']:$defInput, lang('forex_inputsuggestion2'),false, $showForm );?> 
@@ -65,7 +65,7 @@ if(isset($showAgent)){
 
 		<h2>Contact Information</h2>
  
-			<?=bsInput2( lang('forex_email'),'email', isset($register['email'])?$register['email']:'', lang('forex_inputsuggestion') );?>
+			<?=bsInput2( lang('forex_email'),'email', isset($register['email'])?$register['email']:'', lang('forex_inputsuggestion'),false,true,true );?>
 		<?php
                 //bsInput2( lang('forex_phone'),'phone', isset($register['phone'])?$register['phone']:$defInput, lang('forex_inputphone'),false,$showForm,true );
                 ?>

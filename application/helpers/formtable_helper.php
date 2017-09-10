@@ -35,10 +35,11 @@ if ( ! function_exists('bsInput2')){
 			'name'          => $name,
 			'id'            => 'input_'.$name,
 			'value'         => $value,
-			'class'			=> 'form-control',
-			'type'			=> 'text',
+			'class'		=> 'form-control',
+			'type'		=> 'text',
 			'placeholder'	=> $info,
-                    
+                    'autocomplete'=>'off'
+
 		);
                 if($require){
                     $data['required']='required';
