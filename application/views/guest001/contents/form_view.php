@@ -56,7 +56,7 @@ echo bsSelect2( lang('forex_country'),'country', $dataCountry, isset($register['
 <?php
 if(isset($showAgent)){
 	$agent = isset($agent_code)?$agent_code:false;
-//	var_dump($showAgent);
+// 	var_dump($register);
 ?>
 		<?=bsInput2( lang('forex_agent'),'agent', isset($register['agent'])?$register['agent']:$agent, lang('forex_inputsuggestion'),false, $showAgent  );?>
  <?php

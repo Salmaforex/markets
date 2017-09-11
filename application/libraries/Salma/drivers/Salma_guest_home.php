@@ -31,6 +31,7 @@ public $CI;
         $CI =& get_instance();
 
         $return['statAccount']='member';
+        $return['agent_code']=isset($params['agent_num'])?$params['agent_num']:false;
         if($agents!==false&&$agents!==NULL){
             $agent = explode("_",$agents);
             $return['fullregis']=true;
@@ -52,23 +53,27 @@ public $CI;
             $agent_num=$agent[0];
         }
 
-        if(isset($return['register'])){
-            $return['register']['agent']=$return['agent']=$agent_num;
+        if(!isset($return['register']['agent'])){
+            $return['register']['agent']=$return['agent']= $return['agent_code']=$agent_num;
         }
 
         if($raw!='0'){
         //    var_dump($params);exit;
-            $ar=explode("-",$raw);
+            $ar=explode("_",$agents);
             logCreate("agent ref:$raw id:{$ar[0]}","info");
             $num=trim($ar[0]);
             $CI->session->set_flashdata('agent', $num);
             logCreate('parameter agent:'.$num,'info');
-            redirect(site_url('welcome'),1);
+            $url=site_url('welcome')."?agent=".base64_encode($num)."&d=".base64_encode(date('ymdhis'));
+            //die($url);
+            js_goto($url);
+            
+            //redirect($url,1);
             exit();
         }
         else{
             $num=$info=$CI->session->flashdata('agent');
-            $return['agent']=$num!=''?$num:'';
+            $return['agent']=$return['agent_code']=$num!=''?$num:'';
         }
 
         if($return['statAccount']=='agent'){

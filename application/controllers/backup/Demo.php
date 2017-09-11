@@ -15,8 +15,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Demo extends MY_Controller {
-	public $param;
-	public $folderUpload;
+    public $param;
+    public $folderUpload;
     function __CONSTRUCT(){
     parent::__construct(); 		
         date_default_timezone_set('Asia/Jakarta');

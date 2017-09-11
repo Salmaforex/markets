@@ -9,5 +9,7 @@ $config['drivers_salma']=array(
     'guest_home',
     'guest_agent',
 //================login
-    'login_member'
+    'login_member',
+//================partner
+    'partner_promotion'
 );

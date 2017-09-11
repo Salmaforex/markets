@@ -12,61 +12,63 @@ Daftar Fungsi Yang Tersedia :
 ***/
 	public function home($agents=false, $raw=false){
 	//echo_r($this->country_model->getAll());exit;
-		$this->load->library('session');
-		$this->param['statAccount']='member';
-		if($agents!==false){
-			$agent = explode("_",$agents);
-			$this->param['fullregis']=true;
-			$this->param['agent_code']=$agent[0];
-		}
-		
-		if($this->session->flashdata('register')){
-			$this->param['register']=$this->session->flashdata('register');
-			logCreate('session register valid','info');
-		}
-		
-                if(!isset($agent[0])){
-                    $agent_num='';
-                }
-                else{
-                    $agent_num=$agent[0];
-                }
-                
-		if(isset($this->param['register'])){
-                    $this->param['register']['agent']=$this->param['agent']=$agent_num;
-		}
-		
-		if($raw!='0'){
-			$ar=explode("-",$raw);
-			logCreate("agent ref:$raw id:{$ar[0]}","info");
-			$num=trim($ar[0]);
-			$this->session->set_flashdata('agent', $num);
-			logCreate('parameter agent:'.$num,'info');
-			die('???');
-			redirect(base_url('welcome'),1);
-			exit();
-		}
-		else{
-			$num=$info=$this->session->flashdata('agent');
-			$this->param['agent']=$num!=''?$num:'';
-		}
-		
-		if($this->param['statAccount']=='agent'){
-			//$this->param['showAgent']=true;
-		}
-		else{
-			$this->param['showAgent']=true;
-		}
+            $this->load->library('session');
+            $this->param['statAccount']='member';
+            
+            if($agents!==false){
+                    $agent = explode("_",$agents);
+                    $this->param['fullregis']=true;
+                    $this->param['agent_code']=$agent[0];
+            }
 
-		$this->param['title']='Open Live Account';//-- 
-		if(!isset($this->param['formTitle'])) 
-			$this->param['formTitle']=$this->param['title'];
-                
-		$this->param['content']=array(
-			//'modal',
-			'welcome', 
-		);
-		$this->showView('newbase001_view');
+            if($this->session->flashdata('register')){
+                    $this->param['register']=$this->session->flashdata('register');
+                    logCreate('session register valid','info');
+            }
+
+            if(!isset($agent[0])){
+                $agent_num='';
+            }
+            else{
+                $agent_num=$agent[0];
+            }
+
+            if(isset($this->param['register'])){
+                $this->param['register']['agent']=$this->param['agent']=$agent_num;
+            }
+
+            if($raw!='0'){
+                    $ar=explode("-",$raw);
+                    logCreate("agent ref:$raw id:{$ar[0]}","info");
+                    $num=trim($ar[0]);
+                    $this->session->set_flashdata('agent', $num);
+                    logCreate('parameter agent:'.$num,'info');
+            //	die('???');
+                $url=base_url('welcome');
+                    redirect($url,1);
+                    exit();
+            }
+            else{
+                    $num=$info=$this->session->flashdata('agent');
+                    $this->param['agent']=$num!=''?$num:'';
+            }
+
+            if($this->param['statAccount']=='agent'){
+                    //$this->param['showAgent']=true;
+            }
+            else{
+                    $this->param['showAgent']=true;
+            }
+
+            $this->param['title']='Open Live Account';//-- 
+            if(!isset($this->param['formTitle'])) 
+                    $this->param['formTitle']=$this->param['title'];
+
+            $this->param['content']=array(
+                    //'modal',
+                    'welcome', 
+            );
+            $this->showView('newbase001_view');
 	}
 
 	public function agent(){
@@ -91,7 +93,7 @@ Daftar Fungsi Yang Tersedia :
     //$this->load->model('users_model');
             $post=$this->input->post();
     //echo_r($post);exit;
-            if(count($post)==0) redirect('welcome');
+            if(count($post)==0) redirect('welcome/register_problem');
 
         $ar_key=array('name','city','state','zip','address','phone');
         foreach($ar_key as $key){

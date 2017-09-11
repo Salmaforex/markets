@@ -51,7 +51,8 @@ $profile_pic=$userlogin['document']['profile_pic']!=''?site_url('member/show_pro
 			  <li> <a href="#"> 3 </a> </li>
 			  <li> <a href="#"> Next </a> </li>
 			</ul-->
-		   <div class="page-heading">
+
+                        <div class="page-heading">
 			  <h3>Select ads Media</h3>
 			  Choose your Banner and click "Get Embed Code"
 			</div>
@@ -70,33 +71,33 @@ for($i=1;$i<=6;$i++){?>
               <div class="panel-heading border-right border-light visible-lg visible-md"> Select Size </div>
               <div class="options padding-15">
                 <button class="btn btn-xs btn-primary <?=$active;?>" 
-								data-image="<?=base_url('media/images/banner/set'.$i.'/set'.$i.'-180x150.png');?>" data-image0="images/728x90.jpg"
-								data-dimension='180x150'
-								data-text="<span class='text-bold'>Leaderboard Banner 180x150</span>, Performs well if placed above main content, and on forum sites."
-							>180x150</button>
+                            data-image="<?=base_url('media/images/banner/set'.$i.'/set'.$i.'-180x150.png');?>" data-image0="images/728x90.jpg"
+                            data-dimension='180x150'
+                            data-text="<span class='text-bold'>Leaderboard Banner 180x150</span>, Performs well if placed above main content, and on forum sites."
+                    >180x150</button>
                 <button class="btn btn-xs btn-primary" 
-								data-image="<?=base_url('media/images/banner/set'.$i.'/set'.$i.'-336x280.png');?>" data-image0="images/300x250.jpg"
-								data-dimension='336x280'
-								data-text="<span class='text-bold'>Medium Rectangle Banner 336x280</span>, Performs well if placed above main content, and on forum sites."
-							>336x280</button>
+                            data-image="<?=base_url('media/images/banner/set'.$i.'/set'.$i.'-336x280.png');?>" data-image0="images/300x250.jpg"
+                            data-dimension='336x280'
+                            data-text="<span class='text-bold'>Medium Rectangle Banner 336x280</span>, Performs well if placed above main content, and on forum sites."
+                    >336x280</button>
                 <button class="btn btn-xs btn-primary" 
-								data-image="<?=base_url('media/images/banner/set'.$i.'/set'.$i.'-320x50.png');?>" data-image0="images/300x600.jpg"
-								data-dimension='320x50'
-								data-text="<span class='text-bold'>Half Page Banner 320x50</span>, Performs well if placed above main content, and on forum sites."
-							>320x50</button>
+                            data-image="<?=base_url('media/images/banner/set'.$i.'/set'.$i.'-320x50.png');?>" data-image0="images/300x600.jpg"
+                            data-dimension='320x50'
+                            data-text="<span class='text-bold'>Half Page Banner 320x50</span>, Performs well if placed above main content, and on forum sites."
+                    >320x50</button>
                 <button class="btn btn-xs btn-primary" 
-								data-image="<?=base_url('media/images/banner/set'.$i.'/set'.$i.'-250x250.png');?>" data-image0="images/320x100.jpg"
-								data-dimension='320x100'
-								data-text="<span class='text-bold'>Medium Banner 250x250</span>, Performs well if placed above main content, and on forum sites."
-							>250x250</button>
+                            data-image="<?=base_url('media/images/banner/set'.$i.'/set'.$i.'-250x250.png');?>" data-image0="images/320x100.jpg"
+                            data-dimension='320x100'
+                            data-text="<span class='text-bold'>Medium Banner 250x250</span>, Performs well if placed above main content, and on forum sites."
+                    >250x250</button>
 <?php
 	$arSize=array( '728x90','160x600','120x600');
 	foreach($arSize as $size){?>
                 <button class="btn btn-xs btn-primary" 
-								data-image="<?=base_url('media/images/banner/set'.$i.'/set'.$i.'-'.$size.'.png');?>" data-image0="images/<?=$size;?>.jpg"
-								data-dimension='<?=$size;?>'
-								data-text="<span class='text-bold'>Banner <?=$size;?></span>"
-							><?=$size;?></button>
+                            data-image="<?=base_url('media/images/banner/set'.$i.'/set'.$i.'-'.$size.'.png');?>" data-image0="images/<?=$size;?>.jpg"
+                            data-dimension='<?=$size;?>'
+                            data-text="<span class='text-bold'>Banner <?=$size;?></span>"
+                    ><?=$size;?></button>
 <?php
 	}
 ?>
@@ -107,6 +108,7 @@ for($i=1;$i<=6;$i++){?>
             <div class="desc col-sm-9 padding-vertical-10 small"> <span class='text-bold'>Leaderboard Banner 180x150</span>, Performs well if placed above main content, and on forum sites. </div>
             <div class="col-sm-3 text-right padding-vertical-10">
               <button class="getcode btn btn-xs btn-green">Get Embed Code</button>
+              <!--button class="gethtml btn btn-xs btn-green">Get Embed Code</button-->
             </div>
           </div>
         </div>
@@ -114,6 +116,7 @@ for($i=1;$i<=6;$i++){?>
 	$active='';
 }
 ?>
+                
 </div>
 
 		

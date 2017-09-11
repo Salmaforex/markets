@@ -57,7 +57,33 @@ Daftar Fungsi Yang Tersedia :
         
         return driver_return($return_code,  $pesan, $return, $debug, $show_debug );
     }
+         
+    function partner($params){
+        //=============default================
+        $debug=array('time'=>array(microtime()),'params'=>$params);
+        //debug berisi time eksekusi dan param
+        //-------------------//
+        $pesan="Ini adalah Pesan";
+        $return_code =200; //ignore saja.. saya perlu ini untuk API 
         
+//-------------show debug
+        $show_debug = isset($params['debug'])&&$params['debug']!=false?true:false;
+    
+        unset( $params['debug']);
+        
+        $debug[]="untuk menjalankan fungsi yang di inginkan.. diketik dalam fungsi di dalamnya";
+        $debug[]="gunakan perintah driver_run()";
+        
+        $new_params = $this->clean_first_params($params);
+        $function_run = isset($params['function'])?$params['function']:'executed';
+        
+        $return=driver_run('salma','partner_'.$params[0], $function_run, $new_params );
+        
+        $debug['time'][]=  microtime();
+        //============NAMBAH DEFAULT CSS,JS
+
+        return driver_return($return_code,  $pesan, $return, $debug, $show_debug );
+    }  
     function login($params){
         if(isset($_SERVER['HTTP_REFERER'])){
             logCreate('login| member| from:'.$_SERVER['HTTP_REFERER']);

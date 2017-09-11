@@ -14,13 +14,14 @@ Daftar Fungsi Yang Tersedia :
     {
         $params = array('home', $agents, $raw);
         $params['debug']=true;
+        $params['agent_num']=$this->input->get('agent');
         //$result=driver_run_action('salma', 'guest', $params);
         
         $options =array(
             'parent'=>'salma',
             'sub'=>'guest',
             'params'=>$params,
-            'debug'=>false,
+            'debug'=>true,
         //    'mode'=>'api'
         );
         
@@ -32,6 +33,7 @@ Daftar Fungsi Yang Tersedia :
             $this->parse_params($result['data']);
             
         }
+        
         
         $this->showView('newbase001_view');
     }
@@ -102,6 +104,7 @@ Daftar Fungsi Yang Tersedia :
             if(count($post)==0) redirect('welcome');
 
         $ar_key=array('name','city','state','zip','address','phone');
+         
         foreach($ar_key as $key){
             $values=isset($post[$key])?trim($post[$key]):'';
             if($values==''){
@@ -112,19 +115,22 @@ Daftar Fungsi Yang Tersedia :
                     redirect($_SERVER['HTTP_REFERER'],1);
             }
         }
-        //echo_r($post);exit;
+        
 //==========email valid=================
         $post['email']=isset($post['email'])?trim($post['email']):'';
         $email = $post['email'];
+        
         if($post['email']==''){
                 $post['message']='Provide with Your Email';
                 $this->session->set_flashdata('error_message', 'Provide with Your Email');
                 $this->session->set_flashdata('register', $post);
                 logCreate('parameter invalid: please click accept','error');
                 redirect($_SERVER['HTTP_REFERER'],1);
+                
         }
         elseif(isset($post['email'])){
                 $post['email']=trim($post['email']);
+                
         }
 
         if(!isset($post['accept'])){
