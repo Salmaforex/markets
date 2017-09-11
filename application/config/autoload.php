@@ -137,4 +137,6 @@ $autoload['language'] = array();
 |	$autoload['model'] = array('first_model' => 'first');
 */
 
-$autoload['model'] = array('country_model','forex_model','api_model','localapi_model');
+$autoload['model'] = array(
+    'basic_model'=>'basic',
+    'country_model','forex_model','api_model','localapi_model');

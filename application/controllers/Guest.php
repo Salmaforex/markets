@@ -14,25 +14,48 @@ Daftar Fungsi Yang Tersedia :
     {
         $params = array('home', $agents, $raw);
         $params['debug']=true;
-        $result=driver_run_action('salma', 'guest', $params);
+        //$result=driver_run_action('salma', 'guest', $params);
+        
+        $options =array(
+            'parent'=>'salma',
+            'sub'=>'guest',
+            'params'=>$params,
+            'debug'=>false,
+        //    'mode'=>'api'
+        );
+        
+        $result = $this->basic->driver_action($options);
         //driver_run_action
         //libraries/salma/drivers/salma_guest_home
         //echo_r($result);exit;
-        $this->parse_params($result['data']);
+        if(isset($result['data'])){
+            $this->parse_params($result['data']);
+            
+        }
+        
         $this->showView('newbase001_view');
     }
     
-    function register_agent($agents=null,$raw=null)
+    function register_agent($agents=NULL,$raw=NULL)
     {
         $params = array('agent', $agents, $raw);
         $params['function']="register";
         
         $params['debug']=true;
         
-        $result=driver_run_action('salma', 'guest', $params);
+        //$result=driver_run_action('salma', 'guest', $params);
         //driver_run_action
-        //libraries/salma/drivers/salma_guest_home
-        echo_r($result);exit;
+        $options =array(
+            'parent'=>'salma',
+            'sub'=>'guest',
+            'params'=>$params,
+            'debug'=>false,
+        //    'mode'=>'api'
+        );
+        
+        $result = $this->basic->driver_action($options);
+        //libraries/salma/drivers/salma_guest_agent
+        //echo_r($result);exit;
         $this->parse_params($result['data']);
         $this->showView('newbase001_view');
    /*     

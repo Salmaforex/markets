@@ -39,13 +39,15 @@ public $CI;
             logCreate('session register valid','info');
         }
 
-        if($raw!='0'){
+        
+        if($raw!=NULL){
+        //    echo_r($params);die;
             $ar=explode("-",$raw);
             logCreate("agent ref:$raw id:{$ar[0]}","info");
             $num=trim($ar[0]);
             $CI->session->set_flashdata('agent', $num);
             logCreate('parameter agent:'.$num,'info');
-            redirect(site_url('welcome'),1);
+            redirect(site_url('welcome')."?reg=agent",1);
             exit();
         }
         else{

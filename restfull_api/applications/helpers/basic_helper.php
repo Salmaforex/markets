@@ -38,6 +38,7 @@ if( ! function_exists('driver_run')){
                     $result['messages']=!defined('LOCAL')?'no config':"buatlah array confignya \$config['drivers_{$driver_core}']=array();" ;
                     return $result;
             }
+            
 /*	Kita butuh nilai parameter yang sesuai untuk daftar driver  */		
             if(!in_array($driver_name,$valid_drivers)){
                     // log_add("buatlah nilai '{$driver_name}' pada array confignya \$config['drivers_{$driver_core}']=array('{$driver_name}');",'error');
