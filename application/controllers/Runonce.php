@@ -35,13 +35,53 @@ private $db_main;
         $this->get_all_bad_account();
     }
     
-        
     function get_all_bad_account(){
+        $driver_core = "mujur";
+        $driver_name = "fix_country";
+        $func_name="account";
+        $urls=ciConfig('apiForex_url');
+        $url_update=$urls['update'];
+        $total=100;
+        $start=0;
+        echo "\n<pre>date:".date("Y-m-d H:i:s");
+        $limit =3;
+        
+        $params = array('limit'=>$limit,'debug'=>true,'url'=>$urls,'start'=>0 );
+        while($total>0){
+            
+            $params['start']=$start;
+            $raw = driver_run($driver_core, $driver_name, $func_name, $params);
+           echo ' params '.print_r($params,1).'<br/>result:'.print_r($raw,1) ;
+           $run = $raw['data']['run'];
+           foreach($run as $n=>$row){
+               $res =array($n);
+               //$res=_runApi($row[0],$row[1]);
+               if(isset($res['Country'])){
+                   $country=$res['Country'];
+                   if($country==''){
+                       $row[1]['country']='Indonesia';
+                       //$res[]=_runApi($url_update,$row[1]);
+                   }
+                   
+               }
+               $res[]=$row;
+               print_r($res);
+               
+           }
+           
+           $start+=$limit;
+           $total=$raw['data']['total'];
+           die;
+        }
+    }
+        
+    function get_all_bad_account1(){
         $driver_core = "mujur";
         $driver_name = "fix_country";
         $func_name="execute";
         $urls=ciConfig('apiForex_url');//,'forexConfig_new' );
         $url_detail = $urls['get_account'];
+        
         $total=100;
         $start=0;
         echo "\ndate:".date("Y-m-d H:i:s");

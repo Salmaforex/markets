@@ -637,22 +637,22 @@ SELECT `id`, `username`, `email`, `accountid`, if(`agent` is null,mujur_register
 	}
 	
 	private function balance($username,&$time){
-		//========update detail forex
-			$this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
-			$driver_core = 'advforex';
-			$driver_name='forex_balance';
-			$func_name='execute';
-			if( !method_exists($this->{$driver_core}->{$driver_name},$func_name) ){
-				$output=array('function "'.$func_name.'" unable to declare');
-				die(json_encode($output));
-			}
-			else{
-				$row=$params=array($username);
-				$params=$this->{$driver_core}->{$driver_name}->{$func_name}($row);
-				
-				//echo_r($params);exit;
-			}
-		return isset($params['margin'])?$params['margin']:$params;
+            //========update detail forex
+                    $this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
+                    $driver_core = 'advforex';
+                    $driver_name='forex_balance';
+                    $func_name='execute';
+                    if( !method_exists($this->{$driver_core}->{$driver_name},$func_name) ){
+                            $output=array('function "'.$func_name.'" unable to declare');
+                            die(json_encode($output));
+                    }
+                    else{
+                            $row=$params=array($username);
+                            $params=$this->{$driver_core}->{$driver_name}->{$func_name}($row);
+
+                            //echo_r($params);exit;
+                    }
+            return isset($params['margin'])?$params['margin']:$params;
 	}
 	
 	private function balance_old($username,&$time){
@@ -788,13 +788,14 @@ SELECT `id`, `username`, `email`, `accountid`, if(`agent` is null,mujur_register
 	
 
 //=====================================
-		public function __construct()
+        public function __construct()
         {
             $this->load->database();
 			$this->load->dbforge();
 			$this->recover();
 			$this->load->model('users_model');
-		}
+        }
+        
 //============AGENT
 	function all_agent($field='*',$group=false){
 		$sql="select {$field} from {$this->tableAccount} where type like 'agent'";
@@ -810,6 +811,7 @@ SELECT `id`, `username`, `email`, `accountid`, if(`agent` is null,mujur_register
 		$sql="update `{$this->tableAccount}` set type='AGENT' where `type` like 'agent'";
 		dbQuery($sql);
 	}
+        
     function all($limit=10,$offset=0,$field='*'){
         $sql="select {$field} from {$this->tableAccount} order by id asc limit $offset,$limit";
         return dbFetch($sql);
