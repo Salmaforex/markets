@@ -38,7 +38,9 @@ public $CI;
 //=============ARRAY KEMBALIAN============= 
         $return=array();
         
-        $sql="select * from mujur_account order by modified desc limit $start,$limit ";
+        $sql="select * from mujur_account where modified < '2017-09-01' "
+                . "order by modified desc "
+                . "limit $start,$limit ";
         $debug[]=$sql;
         $res = $CI->db->query($sql)->result_array();
         $debug['time'][]=  microtime();
@@ -71,7 +73,7 @@ public $CI;
                 $country='';
             }
             
-            if($country==''){
+            if(true){
                 $params_api['country']='Indonesia';
                 $hasil[]=array($url_update,$params_api,$modif);
                 unset($params_api['country']);
