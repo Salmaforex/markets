@@ -38,7 +38,7 @@ public $CI;
 //=============ARRAY KEMBALIAN============= 
         $return=array();
         
-        $sql="select * from mujur_account where modified < '2017-09-01' "
+        $sql="select * from mujur_account where modified > '2017-09-02' "
                 . "order by modified desc "
                 . "limit $start,$limit ";
         $debug[]=$sql;
@@ -68,13 +68,13 @@ public $CI;
             
             //$hasil['api'][]='run ok'; //_runApi($url,$params);
             
-            $country = isset($users['country'])?trim($users['country']):'';
+            $country = isset($users['country'])?trim($users['country']):'Indonesia';
             if(strtolower($country)=='usd'){
-                $country='';
+                $country='Indonesia';
             }
             
             if(true){
-                $params_api['country']='Indonesia';
+                $params_api['country']=$country;
                 $hasil[]=array($url_update,$params_api,$modif);
                 unset($params_api['country']);
                 $hasil[]=array($url,$params_api,$modif);

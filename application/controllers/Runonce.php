@@ -76,7 +76,7 @@ private $db_main;
            $start+=$limit;
            $total=$raw['data']['total'];
            die;
-           echo "\n$start|$limit\ndate:".date("Y-m-d H:i:s");
+           echo "\nstart: $start|limit:$limit\ndate:".date("Y-m-d H:i:s");sleep(1);
         }
     }
         
