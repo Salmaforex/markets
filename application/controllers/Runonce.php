@@ -41,6 +41,7 @@ private $db_main;
         $driver_name = "fix_country";
         $func_name="execute";
         $urls=ciConfig('apiForex_url');//,'forexConfig_new' );
+        $url_detail = $urls['get_account'];
         $total=100;
         $start=0;
         echo "\ndate:".date("Y-m-d H:i:s");
@@ -57,8 +58,10 @@ private $db_main;
                 $params_api=$row[1];
                 echo "\n runapi $url";
                 $res=array($n);
+                print_r($params_api);
                 //$res=_runApi($url,$params_api);
                 print_r($res);
+                //$res=_runApi($url_detail,$params_api);
             }
         //    print_r($raw);
             $total=$raw['data']['total'];
