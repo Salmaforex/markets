@@ -52,26 +52,31 @@ private $db_main;
             $params['start']=$start;
             $raw = driver_run($driver_core, $driver_name, $func_name, $params);
            echo ' params '.print_r($params,1).'<br/>result:'.print_r($raw,1) ;
+           echo "\ndate:".date("Y-m-d H:i:s");
            $run = $raw['data']['run'];
            foreach($run as $n=>$row){
                $res =array($n);
-               //$res=_runApi($row[0],$row[1]);
+               //$res[]=_runApi($row[0],$row[1]);
+               echo "\ndate:".date("Y-m-d H:i:s");
                if(isset($res['Country'])){
                    $country=$res['Country'];
                    if($country==''){
                        $row[1]['country']='Indonesia';
                        //$res[]=_runApi($url_update,$row[1]);
+                       echo "\ndate:".date("Y-m-d H:i:s");
                    }
                    
                }
+               
                $res[]=$row;
                print_r($res);
-               
+               echo "\ndate:".date("Y-m-d H:i:s");
            }
            
            $start+=$limit;
            $total=$raw['data']['total'];
            die;
+           echo "\n$start|$limit\ndate:".date("Y-m-d H:i:s");
         }
     }
         
