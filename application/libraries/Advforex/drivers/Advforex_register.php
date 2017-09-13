@@ -478,6 +478,7 @@ where u.u_email is null and a.email !=''
             logCreate('advforex_register save_table_account insert:'.$tableAccountDetail." |data:".  json_encode($input));
             $result[]=$input;
     //===================Update ACCOUNT ALL=================
+            $driver_core='advforex';
             $driver_name='update_detail';
             $row=array( $register['reg_email'] );
             $func_name='execute';
