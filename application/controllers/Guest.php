@@ -457,45 +457,41 @@ Daftar Fungsi Yang Tersedia :
 	}
 
 	function __CONSTRUCT(){
-	parent::__construct();
-		$this->param['today']=date('Y-m-d');
-		$this->param['folder']='guest001/';
-		$this->param['baseFolder']='guest001/';
-/*
-		$this->load->helper('form');
-		$this->load->helper('formtable');
-		$this->load->helper('language');
-		$this->load->helper('api');
-		$this->load->helper('db');
-		$this->load->model('forex_model','forex');
-		$this->load->model('account_model','account');
-		$this->load->model('country_model','country');
-		$defaultLang="english";
-		$this->lang->load('forex', $defaultLang);
-		$this->param['fileCss']=array(	
-			'css001/style_salmamarkets.css',
-			'css001/bootstrap.css',
-		);
-		$this->param['fileJs']=array(
-			'js/jquery-1.7.min.js',
-		);
-		
-		$this->param['shortlink']=base_url();
-		$this->param['footerJS']=array(	 
-			'js/bootstrap.min.js',
-			'js/formValidation.min.js',
-			'js001/scripts.js'
-		);
- 
-		$this->param['description']="Trade now with the best and most transparent forex STP broker";
-		 
-		$this->param['emailAdmin']=$this->forex->emailAdmin; 
-		logCreate('Guest Controllers','start');
-		logCreate(current_url(),'url');
-		
-		if($this->input->post())
-			logCreate($this->input->post(),'post');
-*/
+            parent::__construct();
+            
+            $this->param['today']=date('Y-m-d');
+            $this->param['folder']='guest001/';
+            $this->param['baseFolder']='guest001/';
+            $this->load->helper('form');
+            $this->load->helper('formtable');
+            $this->load->helper('language');
+            $this->load->helper('api');
+            $this->load->helper('db');
+            $this->load->model('forex_model','forex');
+            $this->load->model('account_model','account');
+            $this->load->model('country_model','country');
+            $defaultLang="english";
+            $this->lang->load('forex', $defaultLang);
+            $this->param['fileCss']=array(	
+                    'css001/style_salmamarkets.css',
+                    'css001/bootstrap.css',
+            );
+            $this->param['fileJs']=array(
+                    'js/jquery-1.7.min.js',
+            );
+
+            $this->param['shortlink']=base_url();
+            $this->param['footerJS']=array(	 
+                    'js/bootstrap.min.js',
+                    'js/formValidation.min.js',
+                    'js001/scripts.js'
+            );
+
+            $this->param['description']="Trade now with the best and most transparent forex STP broker";
+
+            $this->param['emailAdmin']=$this->forex->emailAdmin; 
+            logCreate('Guest Controllers','start');
+            logCreate(current_url(),'url');
 	}
 /*==========================*/
 	public function register_agent_old($agent=false,$raw=false){
