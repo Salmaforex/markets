@@ -339,8 +339,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 js_goto(site_url('login')."?r=login_not_found");
             }
 
-            $this->param['userlogin']= $login;
-            
+            $email = $login['email'];
+            $user_detail = $this->users_model->getDetail($email);
+ 
+            $this->param['userlogin']= $user_detail;
             $res= _localApi('account','lists',array($login['email']));
             $detail=isset($res['data'])?$res['data']:array();
             $this->param['accounts']=$detail;

@@ -377,7 +377,7 @@ Daftar Fungsi Yang Tersedia :
 		}
 
 		if(isset($notAllow)){
-		//	echo_r($userlogin);
+			echo_r($uDetail);exit;
 		//	$this->session->set_flashdata('notif', array('status' => false, 'msg' => 'Update nomor rekening!'));
 			redirect(site_url("partner/edit/warning"),1);
 		}

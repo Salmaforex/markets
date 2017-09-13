@@ -360,10 +360,18 @@ function register($param,$debug=false){
             //$data = array('u_password' => $pass_sha1);
             $where = "u_email='".addslashes($email)."'";
             $data = array(
-                'u_type'=>$raw['type'],
-                'u_mastercode'=>$raw['mastercode'],
-                'u_currency'=>$raw['currency']
+            //    'u_type'=>$raw['type'],
+            //    'u_mastercode'=>$raw['mastercode'],
+                'u_currency'=>isset($raw['currency'])?$raw['currency']:'IDR'
             );
+            
+            if(isset($raw['type'])){
+                $data['u_type']=$raw['type'];
+            }
+            
+            if(isset($raw['mastercode'])){
+                $data['u_mastercode']=$raw['mastercode'];
+            }
 
             $str = $this->db->update_string($this->table, $data, $where);
             //echo $str;exit;
