@@ -126,24 +126,24 @@ if ( ! function_exists('_localApi')){
 	}
 }
 if ( ! function_exists('_runApi')){
-	function _runApi($url, $parameter=array()){
-		$CI =& get_instance();
-		$CI->load->driver('advforex');
-		$res= $CI->advforex->runApi($url,$parameter);
-		log_info_table('run_api',array('new',$url,count($parameter) ));
-		$result0=isset($res['response'])?$res['response']:false;
-		if($result0===false){
-			$debug=array(
-				'result'=>$res,
-				'params'=>$parameter,
-			);
-			email_problem("run API Error", "target:".$url, $debug);
-		}
+    function _runApi($url, $parameter=array()){
+        $CI =& get_instance();
+        $CI->load->driver('advforex');
+        $res= $CI->advforex->runApi($url,$parameter);
+        log_info_table('run_api',array('new',$url,count($parameter) ));
+        $result0=isset($res['response'])?$res['response']:false;
+        if($result0===false){
+                $debug=array(
+                        'result'=>$res,
+                        'params'=>$parameter,
+                );
+                email_problem("run API Error", "target:".$url, $debug);
+        }
         else{
             logCreate( 'runAPI: '.json_encode($result0));
         }
 		return (array)$result0;
-	}
+    }
 
 	function _runApi_old($url, $parameter=array()){
 	global $maxTime;

@@ -361,7 +361,7 @@ where u.u_email is null and a.email !=''
         if(isset($params['agent'])&&$params['agent']!=''){
                 $param['agentid']	= $data_table['reg_agent'] = $params['agent'];
         }
-
+        
         ///===========SAVE REGISTER
         $data_table['reg_password']='----';
         $data_table['reg_investorpassword']='---';
@@ -376,25 +376,30 @@ where u.u_email is null and a.email !=''
 //		return array($res, $data_table);
         dbInsert($tableRegis, $data_table);
 
-        if(defined('LOCAL')){
-                $res['account']=array(
-                        'AccountID'=>'2000fake',
-                        'MasterPassword'=>'xxxxxx',
-                        'InvestorPassword'=>'zzzzzzz',
-                        'ResponseCode'=>0,
+ 
+        
+        logCreate('run register => account (0):'.$url."=".json_encode(array_keys($param)));
+        $url.="?".http_build_query($param);
+       if(defined('LOCAL')){
+                $res['account']= $run =
+                array(
+                    'AccountID'=>'2000fake',
+                    'MasterPassword'=>'xxxxxx',
+                    'InvestorPassword'=>'zzzzzzz',
+                    'ResponseCode'=>0,
                 );
                 return $res;
         }
-        logCreate('run register => account (0):'.$url."=".json_encode(array_keys($param)));
-        $url.="?".http_build_query($param);
-
-        $run=_runApi($url);//,$param);
+        else{
+            $run=_runApi($url);//,$param);
+        }
+        
         $res[]=$run;
         if(isset($run['ResponseCode'])&&(int)$run['ResponseCode']==0){
-                $res['account']=$run;
-                logCreate('SUCCESS create account (1):'.json_encode($run));
-                $res['save']=$this->save_table_account($run, $data_table);
-                return $res;
+            $res['account']=$run;
+            logCreate('SUCCESS create account (1):'.json_encode($run));
+            $res['save']=$this->save_table_account($run, $data_table);
+            return $res;
         }
 
         logCreate('FAILED create account (2):'.json_encode($run));
@@ -405,10 +410,10 @@ where u.u_email is null and a.email !=''
         $run= _runApi($url);//,$param);
         $res[]=$run;
         if(isset($run['ResponseCode'])&&(int)$run['ResponseCode']==0){
-                logCreate('SUCCESS create account (4):'.json_encode($run));
-                $res['account']=$run;
-                $res['save']=$this->save_table_account($run, $data_table);
-                return $res;
+            logCreate('SUCCESS create account (4):'.json_encode($run));
+            $res['account']=$run;
+            $res['save']=$this->save_table_account($run, $data_table);
+            return $res;
         }
         else{}
 
@@ -418,11 +423,14 @@ where u.u_email is null and a.email !=''
         return $res;
     }
 	
-	private function save_table_account($result, $register){
+	private function save_table_account($result, $register)
+        {
+            logCreate('advforex_register save_table_account result:'.json_encode($result)." |register:".  json_encode($register));
             $CI =& get_instance();
             $tableRegis= $CI->account_model->tableRegis;
             $tableAccount= $CI->account_model->tableAccount;
             $tableAccountDetail= $CI->account_model->tableAccountDetail;
+            
             $sql="update  `$tableRegis` set `reg_status`=0 where reg_id='{$register['reg_id']}'";
             dbQuery($sql);
             $id=dbId();
@@ -436,17 +444,20 @@ where u.u_email is null and a.email !=''
                     'email'=>$register['reg_email'],
                     'created'=>date('Y-m-d')
             );
+            
             if(isset($register['reg_agent'])){
                     $data_table['agent']=$data_table['reg_agent'];
             }
+            
             $data_table['type']='MEMBER';
             dbInsert($tableAccount, $data_table);
+            logCreate('advforex_register save_table_account insert:'.$tableAccount." |data:".  json_encode($data_table));
 
             //email====
             $email_data=array(
-                    'username'=>$register['reg_email'],
-                    'email'=>$register['reg_email'],
-                    'password'=>false
+                'username'=>$register['reg_email'],
+                'email'=>$register['reg_email'],
+                'password'=>false
             );
 
             $email_data['account']=array(
@@ -455,14 +466,25 @@ where u.u_email is null and a.email !=''
             );
 
             $email_data['show']=true;
+            logCreate('advforex_register save_table_account send email register |data: '.  json_encode($email_data));
             $CI->load->view('email/emailRegister_email',$email_data);
 
             $result[]=$data_table;
             $input=array();
             $input['detail']=json_encode($data_table);
             $input['username']=$result['AccountID'];
+            
             dbInsert($tableAccountDetail, $input);
+            logCreate('advforex_register save_table_account insert:'.$tableAccountDetail." |data:".  json_encode($input));
             $result[]=$input;
+    //===================Update ACCOUNT ALL=================
+            $driver_name='update_detail';
+            $row=array( $register['reg_email'] );
+            $func_name='execute';
+            $result_register=$CI->{$driver_core}->{$driver_name}->{$func_name}($row);
+            logCreate('advforex_register save_table_account update:'.$driver_name." |data:".  json_encode($row));
+            
             return $result;
+            
 	}
 }

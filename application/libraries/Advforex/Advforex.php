@@ -20,7 +20,7 @@ Daftar Fungsi Yang Tersedia :
 		//log_message('info','driver:'.json_encode( $this->valid_drivers ));
     }
 
-	function runApi($url, $parameter=array()){
+    function runApi($url, $parameter=array()){
 	$CI =& get_instance();
 	$CI->load->model('forex_model' );
 	$CI->load->library('session');
@@ -39,15 +39,15 @@ Daftar Fungsi Yang Tersedia :
 	if(count($parameter)){
 		$logTxt="advforex -> runApi | url:{$url}| param:".json_encode($parameter);
 		$metode='POST';
-        $param=array();
-        foreach($parameter as $name=>$val){
-            $param[$name]= is_string($val)?trim($val):$val;
-        }
+            $param=array();
+            foreach($parameter as $name=>$val){
+                $param[$name]= is_string($val)?trim($val):$val;
+            }
 		//.http_build_query($parameter,'','&'); 
 
-		logCreate('runApi clean parameter');
+            logCreate('runApi clean parameter');
 
-		$parameter = $param;
+            $parameter = $param;
 	}
 	else{ 
 		$logTxt="advforex -> runApi | url:{$url}"; 
@@ -169,7 +169,7 @@ Daftar Fungsi Yang Tersedia :
 			'response'=>$response
 		) ;
 
-	}
+    }
 
 	function check_param($params){
 		$err='';
