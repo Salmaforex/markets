@@ -25,21 +25,27 @@ public $CI;
 			'privatekey'=>ciConfig('privatekey'),
 			'accountid'=>$accountid
 		);
+                
 		if(defined('LOCAL')){
 			$json='{"AccountID":"'.$accountid.'", "Balance":"10.000000","Credit":"30.000000","Equity":"0.000000","FreeMargin":"0.000000","ResponseCode":"0","ResponseText":"Get margin success"}';
 			$result['margin']=json_decode($json,true);
 		}
 		else{
-			$res=_runApi($url,$params);
-			$result['time'][ ]=microtime(true);
-			$result['raw']=$res;
-			logCreate('time forex balance:'.json_encode($result['time']));
-			if((int)$res['ResponseCode']==0){
-				$result=array('margin'=>$res);
-			}
-			else{
-				$result=array('margin'=>array(),'raw'=>$res );
-			}
+                    $res=_runApi($url,$params);
+                    $result['time'][ ]=microtime(true);
+                    $result['raw']=$res;
+                    logCreate('time forex balance:'.json_encode($result['time']));
+                    if((int)$res['ResponseCode']==0){
+                            $result=array('margin'=>$res);
+                    }
+                    else{
+                            $result=array('margin'=>array(),'raw'=>$res );
+                    }
+
+
+                    $url=$urls['get_account'];
+                    $result['account_forex'] = _runApi($url,$params);
+
 		}
 		$result['time'][ ]=microtime(true);
 		return $result;

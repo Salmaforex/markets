@@ -35,6 +35,34 @@ private $db_main;
         $this->get_all_bad_account();
     }
     
+    function get_account($accountid=null){
+        $this->load->helper('api');
+        $driver_core = 'advforex';
+        $func_name='execute';
+        $driver_name='forex_balance';
+        $this->load->driver($driver_core);
+        $result =  $this->{$driver_core}->{$driver_name}->{$func_name}(array($accountid));
+        echo '<pre>'.print_r($result,1);
+        
+        $urls= ciConfig('apiForex_url');
+        $url=$urls['update'];
+        $params=array(
+                    'privatekey'=>ciConfig('privatekey','forexConfig_new'),
+                    'accountid'=>$accountid,
+                  //  'country'=>'Indonesia',
+                    'allowlogin'=>0,
+                    'allowtrading'=>0
+                );
+
+        //$result = _runApi($url,$params);
+        $url=$urls['get_account'];
+        //echo'xx<pre>';print_r($result);
+        //$result = _runApi($url,$params);
+        //print_r($result);
+        echo '--done--';
+
+    }
+    
     function get_all_bad_account(){
         $driver_core = "mujur";
         $driver_name = "fix_country";
@@ -58,6 +86,7 @@ private $db_main;
            foreach($run as $n=>$row){
                $res =array($n);
                //$res[]=_runApi($row[0],$row[1]);
+               
                echo "\ndate:".date("Y-m-d H:i:s");
                if(isset($res['Country'])){
                    $country=$res['Country'];
