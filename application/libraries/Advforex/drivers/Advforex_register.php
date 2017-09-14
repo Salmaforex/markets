@@ -362,6 +362,8 @@ where u.u_email is null and a.email !=''
                 $param['agentid']	= $data_table['reg_agent'] = $params['agent'];
         }
         
+        $param['country'] = isset($params['country'])?$params['country']:'Indonesia';
+        
         ///===========SAVE REGISTER
         $data_table['reg_password']='----';
         $data_table['reg_investorpassword']='---';
@@ -379,7 +381,7 @@ where u.u_email is null and a.email !=''
  
         
         logCreate('run register => account (0):'.$url."=".json_encode(array_keys($param)));
-        $url.="?".http_build_query($param);
+        //$url.="?".http_build_query($param);
        if(defined('LOCAL')){
                 $res['account']= $run =
                 array(
@@ -391,7 +393,7 @@ where u.u_email is null and a.email !=''
                 return $res;
         }
         else{
-            $run=_runApi($url);//,$param);
+            $run=_runApi($url ,$param);
         }
         
         $res[]=$run;

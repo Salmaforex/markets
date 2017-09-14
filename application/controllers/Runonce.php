@@ -40,9 +40,10 @@ private $db_main;
         $driver_name = "fix_country";
         $func_name="account";
         $urls=ciConfig('apiForex_url');
-        $url_update=$urls['update'];
+    //    $url_update=$urls['update'];
         $total=100;
         $start=0;
+        
         echo "\n<pre>date:".date("Y-m-d H:i:s");
         $limit =3;
         
@@ -51,7 +52,7 @@ private $db_main;
             
             $params['start']=$start;
             $raw = driver_run($driver_core, $driver_name, $func_name, $params);
-           echo ' params '.print_r($params,1).'<br/>result:'.print_r($raw,1) ;
+           //echo ' params '.print_r($params,1).'<br/>result:'.print_r($raw,1) ;
            echo "\ndate:".date("Y-m-d H:i:s");
            $run = $raw['data']['run'];
            foreach($run as $n=>$row){
@@ -64,6 +65,7 @@ private $db_main;
                        $row[1]['country']='Indonesia';
                        //$res[]=_runApi($url_update,$row[1]);
                        echo "\ndate:".date("Y-m-d H:i:s");
+                       
                    }
                    
                }
@@ -76,7 +78,7 @@ private $db_main;
            $start+=$limit;
            $total=$raw['data']['total'];
            die;
-           echo "\nstart: $start|limit:$limit\ndate:".date("Y-m-d H:i:s");sleep(1);
+           sleep(1);echo "\nstart: $start|limit:$limit\ndate:".date("Y-m-d H:i:s");sleep(1);
         }
     }
         
