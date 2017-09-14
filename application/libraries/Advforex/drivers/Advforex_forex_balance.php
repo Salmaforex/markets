@@ -36,17 +36,20 @@ public $CI;
                     $result['raw']=$res;
                     logCreate('time forex balance:'.json_encode($result['time']));
                     if((int)$res['ResponseCode']==0){
-                            $result=array('margin'=>$res);
+                        $result=array('margin'=>$res);
                     }
                     else{
-                            $result=array('margin'=>array(),'raw'=>$res );
+                        $result=array('margin'=>array(),'raw'=>$res );
                     }
 
 
                     $url=$urls['get_account'];
                     $result['account_forex'] = _runApi($url,$params);
+                    $url=$urls['sum_trading'];
+                    $result['sum_trading'] = _runApi($url,$params);
 
 		}
+                
 		$result['time'][ ]=microtime(true);
 		return $result;
 	}

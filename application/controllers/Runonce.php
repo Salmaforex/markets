@@ -33,6 +33,7 @@ private $db_main;
         //$this->cloneAccount();
         //$this->updateDetail();
         $this->get_all_bad_account();
+        //$this->get_account('7901808');
     }
     
     function get_account($accountid=null){
