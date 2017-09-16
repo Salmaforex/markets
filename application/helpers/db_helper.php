@@ -60,12 +60,12 @@ if ( ! function_exists('dbId')){
             $code='';
             $len = strlen($num);
             
-            for($i=0;$i<=$len;$i+=5){
-                $str = substr($num, $i,5);
+            for($i=0;$i<=$len;$i+=6){
+                $str = substr($num, $i,6);
                 $code .=dechex($str);//."|".$str."-".$i;
             }
             //die($code."xx".$len);
-            $data['code']=$code;
+            $data['code']=  strtoupper($code);
             ////$sql = $CI->db->update_string($name, $data, $where);
             //dbQuery($sql);
             dbInsert($name, $data);

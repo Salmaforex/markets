@@ -16,6 +16,7 @@ $params=array(
    'debug'=>true,
     'number'=>$phone,
     'message'=>$sms_text."Sincerely, Customer Service.",
+    'header'=>'master code update',
 //    'local'=>true,
 //  'type'=>'masking'
 

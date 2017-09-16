@@ -346,6 +346,7 @@ function smsSend($params) {
     $number = isset($params['number']) ? $params['number'] : false;
     $message = isset($params['message']) ? $params['message'] : false;
     $type = isset($params['type'])?$params['type']:'regular';
+    $header = isset($params['header'])?$params['header']:'regular';
 
     if ($number === false || $message === false) {
         return false;
@@ -445,6 +446,8 @@ function smsSend($params) {
                     $status[] = $packet = isset($row2['packet'])?$row2['packet']:NULL;
                     $packet[] = $message;
                     $packet[] = $balance;
+                    $packet[] = $header;
+                    $packet[] = $type;
                     log_info_table('sms', $packet);
                     
                 }
@@ -452,7 +455,7 @@ function smsSend($params) {
             }
             else {
                 $status[] = false;
-                log_info_table('sms', array($number, 0,-1,'error',0, $message, $balance));
+                log_info_table('sms', array($number, 0,-1,'error',0, $message, $balance,$header,$type));
                 
             }
             

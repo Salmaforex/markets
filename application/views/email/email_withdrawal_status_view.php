@@ -17,6 +17,7 @@ $params=array(
    'debug'=>true,
     'number'=>$phone,
     'message'=>$sms_text."Sincerely, Finance Departement.",
+    'header'=>'Withdrawal Status '.$status_title 
 //    'local'=>true,
 //  'type'=>'masking'
 

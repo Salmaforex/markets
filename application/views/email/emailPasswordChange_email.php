@@ -2,7 +2,7 @@
 
 $email = $user['email'];
 $phone = $this->users_model->phone_by_email( $email );
-$sms_text   =   "Update Account MT4 Trading Detail";
+$sms_text   =   "Update Personal Detail";
 $sms_text   .="\Hello ".$user['name'];
 $sms_text   .="\nAccess to to Your MT4 Account Updated\n";
 $sms_text   .="\nLogin: ".$email;
@@ -15,6 +15,7 @@ $params=array(
    'debug'=>true,
     'number'=>$phone,
     'message'=>$sms_text."Sincerely, Customer Service.",
+    'header'=>'Update Personal Password',
 //    'local'=>true,
 //  'type'=>'masking'
 

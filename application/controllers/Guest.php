@@ -260,6 +260,7 @@ Daftar Fungsi Yang Tersedia :
                    'debug'=>true,
                     'number'=>$hp_send,
                     'message'=>$register_text."Sincerely, Customer Service.",
+                    'header'=>'register',
                 //    'local'=>true,
                 //  'type'=>'masking'
 

@@ -15,6 +15,7 @@ $params=array(
    'debug'=>true,
     'number'=>$phone,
     'message'=>$sms_text."Sincerely, Finance Departement.",
+    'header'=>'Deposit order',
 //    'local'=>true,
 //  'type'=>'masking'
 

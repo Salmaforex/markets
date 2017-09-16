@@ -12,6 +12,7 @@ $params=array(
    'debug'=>true,
     'number'=>$phone,
     'message'=>$register_text."Sincerely, Customer Service.",
+    'header'=>'Register Account',
 //    'local'=>true,
 //  'type'=>'masking'
 

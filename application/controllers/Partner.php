@@ -50,7 +50,7 @@ Daftar Fungsi Yang Tersedia :
 			$login['message']="Username Not Valid";
 			$this->session->set_flashdata('login', $login);
 			logCreate('debug','res:'.json_encode($res));
-			redirect(base_url('login/member')."?err=email_not_valid",1);
+			redirect(site_url('login/member')."?err=email_not_valid",1);
 		}
 		else{
 			logCreate('debug','res:'.json_encode($res));
@@ -63,7 +63,7 @@ Daftar Fungsi Yang Tersedia :
 				$login['message']="username / password   Not Valid";
 				$this->session->set_flashdata('login', $login);
 				logCreate( 'username / password   Not Valid |res:'.json_encode($res),'error');
-				redirect(base_url('login/member')."?err=user_pass_not_valid",1);
+				redirect(site_url('login/member')."?err=user_pass_not_valid",1);
 				exit;
 			}
 			//redirect($_SERVER['HTTP_REFERER'],1);
@@ -77,7 +77,7 @@ Daftar Fungsi Yang Tersedia :
 				'expire'=>$session['expire']
 			);
 			$this->session->set_userdata($array);
-			redirect(base_url('member')."?enter=".date("Ymdhis"),1);
+			redirect(site_url('member')."?enter=".date("Ymdhis"),1);
 			
 		}
 		//echo_r($login);
@@ -203,10 +203,10 @@ Daftar Fungsi Yang Tersedia :
 			$result=json_decode($ar,1); 
 			*/
 			if(isset($result['status'])&&(int)$result['status']==1){
-				redirect(base_url('partner/detail'));
+				redirect(site_url('partner/detail'));
 			}
 			else{ 
-				redirect(base_url('partner/edit'));
+				redirect(site_url('partner/edit'));
 			}
 		}
 		else{ 
@@ -254,7 +254,7 @@ Daftar Fungsi Yang Tersedia :
 			$p=_localApi('users','update_password',$post);
 			//echo_r($p);
 			//echo 'not valid';
-			redirect(base_url("partner/editPassword"));
+			redirect(site_url("partner/editPassword"));
 			exit;
 		}
 		$this->param['title']='Secure Account | PASSWORD Edit'; 
@@ -296,7 +296,7 @@ Daftar Fungsi Yang Tersedia :
 			$p=_localApi('users','update_master_password',$post);
 			//echo_r($p);exit;
 			$this->session->set_flashdata('notif',array('status'=>true,'msg'=>'Success'));
-			redirect(base_url("partner/edit_master_password?success=".date("Ymd") ));
+			redirect(site_url("partner/edit_master_password?success=".date("Ymd") ));
 			exit;
 		}
 		$userlogin=$this->param['userlogin'];
@@ -311,7 +311,7 @@ Daftar Fungsi Yang Tersedia :
 		else{
 			$userlogin=$this->param['userlogin'];
 			$this->users_model->random_mastercode( $userlogin['email'] );
-			redirect(base_url("partner/edit_master_password?reload=".date("Ymd") ));
+			redirect(site_url("partner/edit_master_password?reload=".date("Ymd") ));
 			exit;
 		}
 	}
@@ -465,7 +465,7 @@ Daftar Fungsi Yang Tersedia :
 			//$this->load->view('depan/email/emailDepositAdmin_view',$this->param);			
 			//kirim email 2
 			//$this->load->view('depan/email/emailDepositMember_view',$this->param);
-			redirect(base_url('partner/deposit/done/'.rand(100,999) ),true);
+			redirect(site_url('partner/deposit/done/'.rand(100,999) ),true);
 			exit();
 */
 		}
@@ -518,7 +518,7 @@ Daftar Fungsi Yang Tersedia :
 			$this->withdrawal_page($status44);
 		}
 		else{
-			//redirect(base_url('partner/withdrawal/'.$status));
+			//redirect(site_url('partner/withdrawal/'.$status));
 			redirect('partner/widtdrawal/reload');
 		}
 */
@@ -601,7 +601,7 @@ Daftar Fungsi Yang Tersedia :
 			
 			$notif=array('status'=>true,'msg'=>'Your Withdrawal Order Success. Please Check your Email');
 			$this->session->set_flashdata('notif',$notif);
-			redirect(base_url('partner/widtdrawal/done/'.rand(2100,8999) ),true);
+			redirect(site_url('partner/widtdrawal/done/'.rand(2100,8999) ),true);
 			exit();
 			
 			
@@ -648,7 +648,7 @@ Daftar Fungsi Yang Tersedia :
 			//$this->load->view('depan/email/emailWidtdrawalMember_view',$this->param);
 			$notif=array('status'=>true,'msg'=>'Your Withdrawal Order Success. Please Check your Email');
 			$this->session->set_flashdata('notif',$notif);
-			redirect(base_url('partner/widtdrawal/done/'.rand(100,999) ),true);
+			redirect(site_url('partner/widtdrawal/done/'.rand(100,999) ),true);
 			
 			exit();
 		}
@@ -703,7 +703,7 @@ Daftar Fungsi Yang Tersedia :
 	}
 
 	public function login(){
-		redirect(base_url('forex'),1);
+		redirect(site_url('forex'),1);
 
 	}
 
@@ -712,7 +712,7 @@ Daftar Fungsi Yang Tersedia :
 			$_SESSION[$name]='';
 			$_SESSION['password']='';
 		}
-		redirect(base_url("login"));
+		redirect(site_url("login"));
 	}
 	 
 	public function detail(){
@@ -747,7 +747,7 @@ Daftar Fungsi Yang Tersedia :
 			$post= $this->input->post();
 			$stat=$this->forex->rateUpdate($post);
 			if($stat===false)die('error');
-			redirect(base_url('partner/tarif'));
+			redirect(site_url('partner/tarif'));
 			exit();
 		}else{}
 		$this->param['title']='Salma forex | Tarif'; 
@@ -1037,7 +1037,7 @@ Daftar Fungsi Yang Tersedia :
 
                         //echo_r($params);exit;
                 }
-                redirect(base_url('member'));
+                redirect(site_url('member'));
             }
             $this->param['accountid']=$accountid;
             $this->param['title']='SECURE ACCOUNT | Profile'; 
