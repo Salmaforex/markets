@@ -390,7 +390,7 @@ function smsSend($params) {
 
     $responjson = '{"sending_respon":[{"globalstatus":10,"globalstatustext":"Success","datapacket":[{"packet":{"number":"' . $number . '","sendingid":9999,"sendingstatus":10,"sendingstatustext":"success","price":0}}]}]}';
     if (!$local) {
-    //    $responjson = $sms->send();
+        $responjson = $sms->send();
     }
 
     $raw[] = 'json:' . microtime();
