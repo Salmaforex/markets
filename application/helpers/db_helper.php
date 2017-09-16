@@ -5,26 +5,33 @@ membutuhkan helper log
 work with basic db connection
 */
 if ( ! function_exists('dbId')){
-    function dbId($name="id",$start=10,$counter=1){
+    function dbId($label="id",$start=10,$counter=1){
     $CI =& get_instance();
         $CI->load->dbforge();
+        /*
         if($name=='')$name='id';
         if($name!='id'){
                 $name.="_id";
         }else{}
-        
-        $name = 'id';
+        */
+        $name = 'my_id';
         
         if(!$CI->db->table_exists($name)){
             $CI->dbforge->add_field('id');
             $CI->dbforge->create_table($name,TRUE);
-            $str = $CI->db->last_query();			 
+            $str = $CI->db->last_query();
+            
             logConfig("create table:$str",'logDB');
+            $sql="ALTER TABLE {$name} ENGINE='MyISAM'";
+            dbQuery($sql);
 
         }else{}
         
         if (!$CI->db->field_exists('created', $name)){
             $sql="ALTER TABLE `{$name}` ADD `created` TIMESTAMP;";dbQuery($sql);
+        }
+        if (!$CI->db->field_exists('label', $name)){
+            $sql="ALTER TABLE `{$name}` ADD `label` varchar(255);";dbQuery($sql);
         }
         if (!$CI->db->field_exists('code', $name)){
             $sql="ALTER TABLE `{$name}` ADD `code` varchar(30);";dbQuery($sql);
@@ -43,6 +50,8 @@ if ( ! function_exists('dbId')){
 
         if($data['c']==0){
             $data=array('id'=>$start);
+            $data['label']= $label;
+            $data['code']= "-";
             dbInsert($name, $data);
             //$sql = $CI->db->insert_string($name, $data);
             //dbQuery($sql);
@@ -66,6 +75,7 @@ if ( ! function_exists('dbId')){
             }
             //die($code."xx".$len);
             $data['code']=  strtoupper($code);
+            $data['label']= $label;
             ////$sql = $CI->db->update_string($name, $data, $where);
             //dbQuery($sql);
             dbInsert($name, $data);
@@ -167,12 +177,28 @@ if ( ! function_exists('dbFetch')){
 }else{}
 
 if ( ! function_exists('dbInsert')){
-	function dbInsert($table, $data){
-	$CI =& get_instance();
-		$sql=$CI->db->insert_string($table,$data);
-	//	logCreate($sql,'query');
-		dbQuery($sql);
+    function dbInsert($table, $data){
+        $CI =& get_instance();
+        $sql=db_insert_ignore($table, $data); //$CI->db->insert_string($table,$data);
+    //	logCreate($sql,'query');
+        dbQuery($sql);
+    }
+}
+
+function db_insert_ignore($table, $data){
+	$CI = & get_instance();
+	$table_name = $CI->db->dbprefix($table );
+        
+	foreach($data as $head=>$val ){
+            $header[]=trim($head);
+            $value[]=addslashes($val);
 	}
+        
+	$headers = "`".implode("`, `",$header)."`";
+	$values = "'".implode("', '",$value)."'";
+	$sql="Insert ignore into `{$table_name}` ({$headers}) values({$values});";
+	//$CI->db->query($sql);
+	return $sql;
 }
 
 if ( ! function_exists('saveTableLog')){

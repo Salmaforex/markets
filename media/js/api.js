@@ -372,8 +372,8 @@ try{
         "processing": true,
         "serverSide": true,
 		"lengthMenu": [
-                [3,5, 10,15, 20, 35],
-                [3,5, 10,15, 20, "max 35"] // change per page values here
+                [2,3,5, 10,15, 20, 35],
+                [2,3,5, 10,15, 20, "max 35"] // change per page values here
             ],
         "ajax": {
             "url": urlAPI,
@@ -384,24 +384,75 @@ try{
             { "data": "tmp8"},
             { "data": "tmp1"},
             { "data": "msg" },
-            { "data": "tmp7" },
+            { "data": "balance" },
             { "data": "tmp9" }           
         ]
     } );
 	//console.log('table widtdrawal ready');
-        /*
-         * <th>Date</th>
-							<th>Header</th>8
-							<th>No</th>
-							<th>Pesan</th>6
-							<th>Balance</th>7
-							<th>Type</th>9
-         */
+
 }
 catch(err){
 //	 console.log('not table Widtdrawal');
 //	 console.log(err);
 }
+//====================BATCH EMAIL
+
+try{	
+    tableWidtdrawal=jQuery('#tableEmail').DataTable( {
+		"columnDefs": [
+            { 
+			
+            }
+		],
+		"order": [[ 0, "desc" ]],
+        "processing": true,
+        "serverSide": true,
+		"lengthMenu": [
+                [2,3,5, 10,15, 20, 35],
+                [2,3,5, 10,15, 20, "max 35"] // change per page values here
+            ],
+        "ajax": {
+            "url": urlAPI,
+            "type": "POST"
+        },
+        "columns": [
+            { "data": "modified"},
+            { "data": "tmp1"},
+            { "data": "tmp2"},           
+        ]
+    } );
+    
+    tableWidtdrawal=jQuery('#tableEmailLogs').DataTable( {
+		"columnDefs": [
+            { 
+			
+            }
+		],
+		"order": [[ 0, "desc" ]],
+        "processing": true,
+        "serverSide": true,
+		"lengthMenu": [
+                [2,3,5, 10,15, 20, 35],
+                [2,3,5, 10,15, 20, "max 35"] // change per page values here
+            ],
+        "ajax": {
+            "url": urlAPILogs,
+            "type": "POST"
+        },
+        "columns": [
+            { "data": "tgl"},
+            { "data": "status"},
+            { "data": "jumlah"},           
+        ]
+    } );
+	//console.log('table widtdrawal ready');
+
+}
+catch(err){
+//	 console.log('not table Widtdrawal');
+//	 console.log(err);
+}
+
 
 try{
 //history-table

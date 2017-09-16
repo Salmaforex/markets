@@ -10,6 +10,6 @@ $config['valid_drivers']=array(
             'account_update_password',
             'forex_account','forex_summary','forex_balance','forex_update_balance_credit',
 
-             'sms'
+             'sms','email','email_logs'
 
     );

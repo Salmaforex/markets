@@ -3,7 +3,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /*
 Advforex_forex_balance
 */
-class Advforex_sms extends CI_Driver {
+class Advforex_email extends CI_Driver {
 private $urls,$privatekey;
 public $CI;
 	function execute($params){
@@ -22,7 +22,7 @@ public $CI;
 		'created','username0','username','email'
 		);
             $year = date('Y');
-                $sql="select count(id) c from `y_smss{$year}`";
+                $sql="select count(id) c from `y_batchmails{$year}`";
 		$dt=dbFetchOne($sql);
 		$result['time'][ ]=microtime(true);
 		$result['sql'][]=$sql;
@@ -61,7 +61,7 @@ public $CI;
 		if($search!=''&&strlen($search)>3){
 			$where="tmp6 like '%{$search}%'";
 			//$where.="or ud.ud_detail like '{$search}%'";
-			$sql="select count(id) c from `y_smss{$year}`			
+			$sql="select count(id) c from `y_batchmails{$year}`			
 			where  ($where) ";
 		/*
 		left join mujur_accountdetail ad 
@@ -80,7 +80,7 @@ public $CI;
 
 		$where2='';//' and u_email like "gundambison%" ';
 		$sql="select * from 
-                    `y_smss{$year}`
+                    `y_batchmails{$year}`
                     where  ($where) $where2
 
 		$orders limit $start, $limit";
@@ -100,9 +100,7 @@ public $CI;
 		logCreate('total :'.count($data));
 		foreach($dt as $row){
 			$result['time'][ ]=microtime(true);
-                        $row['msg']=  nl2br($row['tmp6']);
-                        $row['balance']='balance:'.$row['tmp7']."<br/> panjang huruf:".
-                                strlen($row['tmp6']);
+                         
 
 			$data[]=$row;
 		}

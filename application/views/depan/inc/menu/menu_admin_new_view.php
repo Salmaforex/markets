@@ -41,6 +41,9 @@
       <li><a href="<?=site_url('admin/listApi/sms');?>#"><span class="fa fa-triangle-right"></span>
               SMS
 	  </a></li>
+      <li><a href="<?=site_url('admin/listApi/email');?>#"><span class="fa fa-triangle-right"></span>
+              E-Mail
+	  </a></li>
 
     </ul>
   </li>

@@ -25,7 +25,7 @@ Daftar Fungsi Yang Tersedia :
 *	__construct()
 ***/
 public $tableRegis='mujur_register'; 
-public $tableLog='mujur_logs'; 
+public $tableLog='zv_logs'; 
 public $tableWorld='mujur_country'; 
 public $tableAccount='mujur_account';
 public $tableAccountDetail='mujur_accountdetail';
@@ -208,6 +208,9 @@ public $emailAdmin='admin@dev.salmaforex.com';
 		$dt['currency']=$data['currency'];
                 $dt['id']= dbId('flow',170918000);
 		dbInsert ($this->tableFlowlog,$dt);
+                
+                unset($dt['param']);
+                log_info_table('trans', $dt);
 		//$this->db->insert($this->tableFlowlog,$dt);
 		return true;
 	}
@@ -926,23 +929,30 @@ from mujur_account a left join mujur_accountdocument ad on a.email=ad.email wher
                 $sql="ALTER TABLE {$this->tableBatchEmail} ENGINE='MyISAM'";
                 dbQuery($sql);
         }
-        if(!$this->db->table_exists('mujur_logs')){
+        if(!$this->db->table_exists($this->tableLog)){
                 $fields = array(
                   'id'=>array( 
                         'type' => 'BIGINT','auto_increment' => TRUE), 		   
                   'controller'=>array( 
-                        'type' => 'VARCHAR',  
-                        'constraint' => '200'),
-                  'function'=>array( 'type' => 'text'),
-                  'param'=>array( 'type' => 'text'),
+                        'type' => 'longtext'),
+                  'function'=>array( 'type' => 'longtext'),
+                  'param'=>array( 'type' => 'longtext'),
                   'created'=>array( 'type' => 'timestamp'),
                 );
+                
                 $this->dbforge->add_field($fields);
                 $this->dbforge->add_key('id', TRUE);
-                $this->dbforge->create_table('mujur_logs',TRUE);
+                $this->dbforge->create_table($this->tableLog,TRUE);
                 $str = $this->db->last_query();			 
                 logConfig("create table:$str");
                 $this->db->reset_query();	
+            $sql="ALTER TABLE {$this->tableLog} ENGINE='MyISAM'";
+            dbQuery($sql);
+            $sql="ALTER TABLE `{$this->tableLog}` ADD FULLTEXT(`controller`);";
+            dbQuery($sql);
+            $sql="ALTER TABLE `{$this->tableLog}` ADD FULLTEXT(`function`);";
+            dbQuery($sql);
+            
         }
 
         if(!$this->db->table_exists('rest_temp')){

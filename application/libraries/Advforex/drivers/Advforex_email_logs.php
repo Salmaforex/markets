@@ -3,7 +3,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /*
 Advforex_forex_balance
 */
-class Advforex_sms extends CI_Driver {
+class Advforex_email_logs extends CI_Driver {
 private $urls,$privatekey;
 public $CI;
 	function execute($params){
@@ -22,10 +22,11 @@ public $CI;
 		'created','username0','username','email'
 		);
             $year = date('Y');
-                $sql="select count(id) c from `y_smss{$year}`";
+                $sql="select count(*) c from (SELECT count(*) c FROM `zbatch_email` group by status, date(created)) as c";
 		$dt=dbFetchOne($sql);
 		$result['time'][ ]=microtime(true);
-		$result['sql'][]=$sql;
+		$result['sql'][]=array($sql,$dt);
+                //$result['db_res'][]=$dt;
 		$times['count all'] =microtime();
 		$result['recordsTotal']=$dt['c'];
 		$result['recordsFiltered']=$dt['c']; //karena tidak ada filter?!
@@ -41,7 +42,7 @@ public $CI;
                         $col2=$post0['columns'][$col]['data'];
 
                         if($col==0){
-                                $col2='modified';
+                                $col2='tgl';
                         //	$order='desc';
                         }
                         if($col==3){
@@ -61,7 +62,7 @@ public $CI;
 		if($search!=''&&strlen($search)>3){
 			$where="tmp6 like '%{$search}%'";
 			//$where.="or ud.ud_detail like '{$search}%'";
-			$sql="select count(id) c from `y_smss{$year}`			
+			$sql="select count(id) c from `zbatch_email`			
 			where  ($where) ";
 		/*
 		left join mujur_accountdetail ad 
@@ -79,11 +80,12 @@ public $CI;
 		}
 
 		$where2='';//' and u_email like "gundambison%" ';
-		$sql="select * from 
-                    `y_smss{$year}`
-                    where  ($where) $where2
-
-		$orders limit $start, $limit";
+		$sql="select count(*) jumlah, date(created) tgl, status from 
+                    `zbatch_email`
+                    group by date(created), status
+                      $orders limit $start, $limit
+                    
+                   ";
 		/*
                  * 		group by u_email
 		left join mujur_accountdetail ad 
@@ -100,9 +102,7 @@ public $CI;
 		logCreate('total :'.count($data));
 		foreach($dt as $row){
 			$result['time'][ ]=microtime(true);
-                        $row['msg']=  nl2br($row['tmp6']);
-                        $row['balance']='balance:'.$row['tmp7']."<br/> panjang huruf:".
-                                strlen($row['tmp6']);
+                         
 
 			$data[]=$row;
 		}

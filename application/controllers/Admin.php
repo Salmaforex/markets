@@ -21,8 +21,11 @@ class Admin extends MY_Controller {
     }
 
     public function listApi($type=null){
-	$types=array('account', 'api', 'deposit', 'widtdrawal',
-	'user','agent','approval','partner','patner_revenue','sms');	
+	$types=array(
+            'account', 'api', 'deposit', 'widtdrawal',
+            'user','agent','approval','partner','patner_revenue',
+            'sms','email'
+            );	
 //		if(!defined('LOCAL')){
 	$this->checkLogin();
 //		}
