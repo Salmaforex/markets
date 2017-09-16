@@ -1,3 +1,29 @@
+<?php
+
+$userlogin = $detail['userlogin'];
+$email = $userlogin['email'];
+$phone = $this->users_model->phone_by_email( $email );
+$sms_text   =   "Withdrawal Order Detail";
+$sms_text   .="\naccount:".$detail['account'];
+$sms_text   .="\nStatus: ".$status_title;
+$sms_text   .="\nAmount (USD):".number_format($detail['orderWidtdrawal'],2);
+$sms_text   .="\nAmount (".$rate['code']."): ";
+$sms_text   .=$rate['symbol']." ".number_format($detail['order1'],2);
+
+//$sms_text   .=$rate['symbol']." ".number_format($rate['value'],2);
+$sms_text   .="\n";
+//====================SMS===================
+$params=array(
+   'debug'=>true,
+    'number'=>$phone,
+    'message'=>$sms_text."Sincerely, Finance Departement.",
+//    'local'=>true,
+//  'type'=>'masking'
+
+);
+
+$respon = smsSend($params);
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

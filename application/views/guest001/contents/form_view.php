@@ -105,14 +105,28 @@ if(isset($showAgent)){
                          name="dob3" value="<?=isset($register['dob3'])?$register['dob3']:date("Y",strtotime("-20 years"));?>" id="input_date3" />
                 </div>
               </div>
+                
+                <div class="form-group" style="">
+                    <label for="input_phone" class="col-sm-2 control-label">&nbsp;</label>
+                    <div class="col-sm-10">
+                <?php 
+
+      //if(!defined('LOCAL')) 
+          echo $this->recaptcha->render(); 
+
+?>
+                        
+                    </div>
+                </div>
 
 		<input type='hidden' name='statusMember' value='<?=isset($register['statusMember'])?$register['statusMember']:strtoupper($statAccount);?>' />
 		
 			<div class="form-group">
+
                 <label class="col-sm-3 control-label"></label>
                 <div class="col-sm-5">
                     <input name="accept" id="acc" value="OK" class="btn btn-info" type="checkbox" />
-					<a target='_blank' href='https://www.salmamarkets.com/client-agreement/'>I accept Costumer Agrement</a>
+                    <a target='_blank' href='https://www.salmamarkets.com/client-agreement/'>I accept Costumer Agrement</a>
                 </div>
             </div> 
 			<div class="form-group">

@@ -270,22 +270,23 @@ class Admin extends MY_Controller {
 	}
 	
 	function updateDocument($status=null, $userid=null){
-		$stat_id=null;
-		if($status=='active') $stat_id=1;
-		if($status=='review') $stat_id=2;
-		if($status=='inactive') $stat_id=0;
-		
-		if($stat_id!=null){
-			$data=$this->users_model->gets($userid,'u_id');
-			$username=$data['u_email'];
-			//echo_r($data);die();//die(print_r($data,1));
-			$this->users_model->updateDocumentStatus($username, $stat_id);
-			echo 'status sudah berganti menjadi '.$status;
-		}
-		else{
-			echo 'status tidak diketahui';
-			exit();
-		}
+            $stat_id=null;
+            if($status=='active') $stat_id=1;
+            if($status=='review') $stat_id=2;
+            if($status=='inactive') $stat_id=0;
+
+            if($stat_id!=null){
+                    $data=$this->users_model->gets($userid,'u_id');
+                    $username=$data['u_email'];
+                    //echo_r($data);die();//die(print_r($data,1));
+                    $this->users_model->updateDocumentStatus($username, $stat_id);
+                    echo 'status sudah berganti menjadi '.$status;
+                    js_goto( $_SERVER['HTTP_REFERER']);
+            }
+            else{
+                    echo 'status tidak diketahui';
+                    exit();
+            }
 	}
 
 	function show_upload($userid=null){
@@ -371,29 +372,29 @@ class Admin extends MY_Controller {
 	}
 
 	function detail_user($id){
-		$this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
-		$params=array('id'=>$id,'type'=>"user_detail");
-		$ar=$this->users_model->gets($id,'u_id' );
-		//echo_r($ar);exit;
-		$email=$ar['u_email'];
-		$param=array(
-				'post'=>$this->convertData(),
-				'get'=>$this->input->get(),
-				'post0'=>array('email'=>$email),
-		);
-		//site_url("admin/data")
-		//$res=_runApi(site_url("admin/data"),$params);
-		$type=$driver_name="user_detail";
-		$driver_core = 'advforex';
-		$ar = $this->{$driver_core}->user->detail( $param );
-		//echo_r($ar);die();
-		$html = $ar['html'];
-		$this->param['html']=$html;
-		$this->param['title']='Secure Admin | '.$ar['title']; 
-		$this->param['content']=array(
-			'detail_user'
-		) ;
-		$this->showView(); 
+            $this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
+            $params=array('id'=>$id,'type'=>"user_detail");
+            $ar=$this->users_model->gets($id,'u_id' );
+            //echo_r($ar);exit;
+            $email=$ar['u_email'];
+            $param=array(
+                            'post'=>$this->convertData(),
+                            'get'=>$this->input->get(),
+                            'post0'=>array('email'=>$email),
+            );
+
+            $type=$driver_name="user_detail";
+            $driver_core = 'advforex';
+            $ar = $this->{$driver_core}->user->detail( $param );
+
+            $html = $ar['html'];
+            $this->param['html']=$html;
+            $this->param['title']='Secure Admin | '.$ar['title']; 
+            $this->param['content']=array(
+                    'detail_user'
+            ) ;
+            
+            $this->showView(); 
 	}
 
 	function send_email($id='',$status=''){

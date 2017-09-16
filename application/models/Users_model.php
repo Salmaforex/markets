@@ -459,4 +459,9 @@ group by a.email  ";
 		$pass=rand(123450,987650);
 		return $this->updateMasterPass($email,$pass );
 	}
+        
+    function phone_by_email($email){
+        $return = $this->getDetail($email);
+        return isset($return['phone'])?$return['phone']:FALSE;
+    }
 }

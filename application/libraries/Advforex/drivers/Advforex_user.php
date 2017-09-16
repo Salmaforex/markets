@@ -106,8 +106,8 @@ public $CI;
 			if(isset($detail['document']['udoc_status'])){	
 				if($detail['document']['udoc_status']==1)$status ='Active';
 				if($detail['document']['udoc_status']==2)$status ='Review';
-				$status.=anchor_popup( site_url('admin/updateDocument/active/'.$users_id),'<button type="button">Active</button>');;
-				$status.=anchor_popup(site_url('admin/updateDocument/review/'.$users_id), '<button type="button">Review</button>');
+				$status.=anchor( site_url('admin/updateDocument/active/'.$users_id),'<button type="button">Active</button>');;
+				$status.=anchor(site_url('admin/updateDocument/review/'.$users_id), '<button type="button">Review</button>');
 				$status.= anchor_popup(site_url('admin/show_upload/'. $users_id),'Lihat Dokumen');
 			}
 			else{

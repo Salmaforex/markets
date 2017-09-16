@@ -177,6 +177,7 @@ public $emailAdmin='admin@dev.salmaforex.com';
 				$this->db->reset_query();	
 				 
 		}
+                
 		$sql="select * from {$this->tableFlowlog} limit 1";
 		$row=$this->db->query($sql)->row_array();
 		//if(!isset($row['status'])){
@@ -205,6 +206,7 @@ public $emailAdmin='admin@dev.salmaforex.com';
 		$dt['email']=isset($data['userlogin']['email'])?$data['userlogin']['email']:'-';
 		$dt['accountid']=isset($data['accountid'])?$data['accountid']:'-';
 		$dt['currency']=$data['currency'];
+                $dt['id']= dbId('flow',170918000);
 		dbInsert ($this->tableFlowlog,$dt);
 		//$this->db->insert($this->tableFlowlog,$dt);
 		return true;

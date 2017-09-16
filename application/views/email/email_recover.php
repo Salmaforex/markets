@@ -40,7 +40,8 @@ else{
         </table>
         <p>Thank you for submitting Recovery form, Here your detail:.<br />
     </p>
-        <p><a href="<?=site_url('guest/recover/'.$recoverid);?>" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=id&amp;q=https://secure.salmamarkets.com/recover/<?=$recoverid;?>&amp;source=gmail&amp;ust=1485588468725000&amp;usg=AFQjCNGbTlfjFeOSWSl3ARJN_yuMwl11LA">Click Here to Generate Your Recovery Password</a>. The link Expired Soon<br />
+        <p><a href="<?=site_url('guest/recover/'.$recoverid);?>" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=id&amp;q=https://secure.salmamarkets.com/recover/<?=$recoverid;?>&amp;source=gmail&amp;ust=1485588468725000&amp;usg=AFQjCNGbTlfjFeOSWSl3ARJN_yuMwl11LA">
+                Click Here to Generate Your Recovery Password</a>. The link Expired Soon<br />
           <br />
           Ignore if you not request this <br />
         </p>

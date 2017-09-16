@@ -25,7 +25,8 @@
     <tr>
       <td height="342"><p>Confirmation to Recover Personal Area password<br />
         <br />
-        Hello <?=$user['name'];?>,<br />
+        Hello <?=$user['name'];?>,
+        <br />
       </p>
         <table width="641" border="0">
           <tr>

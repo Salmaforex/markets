@@ -104,6 +104,8 @@ Daftar Fungsi Yang Tersedia :
             if(count($post)==0) redirect('welcome');
 
         $ar_key=array('name','city','state','zip','address','phone');
+        $hp_send = $post['phone'];
+        $register_text ="Welcome to Salma Markets\n";
          
         foreach($ar_key as $key){
             $values=isset($post[$key])?trim($post[$key]):'';
@@ -114,6 +116,7 @@ Daftar Fungsi Yang Tersedia :
                     logCreate('parameter invalid: please click check:'.$key,'error');
                     redirect($_SERVER['HTTP_REFERER'],1);
             }
+            
         }
         
 //==========email valid=================
@@ -232,8 +235,9 @@ Daftar Fungsi Yang Tersedia :
         }
 
         if($email_data){
+            $account_data=array();
                 if($res_account['account']!=false){
-                        $email_data['account']=$res_account['account'];
+                    $email_data['account']=$account_data=$res_account['account'];
                 }
                 //$email_data['show']=true;
                 $email_data['name']=$post['name'];
@@ -245,6 +249,24 @@ Daftar Fungsi Yang Tersedia :
                 }
 
                 logCreate('email_data:'.print_r($email_data,1));
+                
+                $register_text .="Hello {$email_data['name']}\n";
+                $register_text .="Your personal area ".base_url('login/member');
+                $register_text .="\nLogin: {$email_data['username']}\n";
+                $register_text .="Password: {$email_data['password']}\n";
+                $register_text .="Master code: {$email_data['mastercode']}\n";
+    //====================SMS===================
+                $params=array(
+                   'debug'=>true,
+                    'number'=>$hp_send,
+                    'message'=>$register_text."Sincerely, Customer Service.",
+                //    'local'=>true,
+                //  'type'=>'masking'
+
+                );
+
+                $respon = smsSend($params);
+
                 $this->load->view('email/emailRegister_email',$email_data);
                 $this->load->view('email/emailRegister_account',$email_data);
 
@@ -256,7 +278,11 @@ Daftar Fungsi Yang Tersedia :
                     'email'=>$email_data,
                     'post'=>$post
                 );
+            
+
+                
                 $this->session->set_userdata($register);
+                
                 logCreate('register:'.print_r($register,1));
                 logCreate('register sukses','info');
                 redirect(site_url('guest/success'));
@@ -344,15 +370,40 @@ Daftar Fungsi Yang Tersedia :
 			$this->param['raw']=$params;
 			$this->param['respon']=$respon;
 			//array('code'=>266,'message'=>'Please Check you email');
+                        $email = $params['user']['email'];
+                        
+                        $respon_user = driver_run('advforex', 'user_detail','detail',array($email));
+                        $phone_user = isset($respon_user['user_detail']['phone'])?$respon_user['user_detail']['phone']:FALSE;
+                        
 			$email_data=array();
 			$email_data['params']=$params;
 			$email_data['users']=$params['user'];
 			$email_data['masterpassword']=$params['masterpassword'];
 			$email_data['mastercode']=$params['user']['users']['u_mastercode'];
-		//	echo_r($email_data);exit;
+                        
+                        $sms_text="Confirmation to Recover Personal Area password\nHello {$params['user']['name']},\n";
+                        $sms_text.="Thank you for submitting, Here your detail:";
+		//	echo_r($email_data);exit; $users['email']
+                        
+                        $sms_text .="\nLogin: {$params['user']['email']}\n";
+                        $sms_text .="Password: {$email_data['masterpassword']}\n";
+                        $sms_text .="Master code: {$email_data['mastercode']}\n";
+                        
+                        //====================SMS===================
+                        $params=array(
+                           'debug'=>true,
+                            'number'=>$phone_user,
+                            'message'=>$sms_text."Sincerely, System.",
+                        //    'local'=>true,
+                        //  'type'=>'masking'
+
+                        );
+
+                        $respon = smsSend($params);
+                        
 			$pesan=$this->load->view('email/email_recover_email',$email_data,true);
 		//	die($pesan);
-			_send_email($params['user']['email'],$subject='[Salmamarkets] New User Detail',$pesan);
+			_send_email($email, $subject='[Salmamarkets] New User Detail',$pesan);
 		}
 		else{ 
 			$this->param['raw']=array('invalid');
@@ -366,39 +417,65 @@ Daftar Fungsi Yang Tersedia :
 	public function forgot(){
 		$post=$this->input->post();
 		if($post){
+                    $respon = driver_run('advforex', 'user_detail','detail',array($post['email']));
+                    $phone_user = isset($respon['user_detail']['phone'])?$respon['user_detail']['phone']:FALSE;
+                    //echo_r($respon);die('stop');
+                    $sms_text =isset($respon['user_detail']['name'])?"Hello ".$respon['user_detail']['name'].",\n":"Recover Password.\n";
+                    
 //			echo 'proses melakukan forgot password '.print_r($post,1);
-			$forgot = array('status'=>false, 'message'=>'Email Not Found');
+                    $forgot = array('status'=>false, 'message'=>'Email Not Found');
         //=================DRIVER
                     $this->load->driver('advforex'); /*gunakan hanya bila diperlukan*/
                     $driver_core = 'advforex';
                     $driver_name='recover';
                     $func_name='requesting';
                     if( !method_exists($this->{$driver_core}->{$driver_name},$func_name) ){
-                            $output=array('function "'.$func_name.'" unable to declare');
-                            die(json_encode($output));
+                        $output=array('function "'.$func_name.'" unable to declare');
+                        die(json_encode($output));
                     }
                     else{
-                            $row=$params=$post['email'];
-                            $params=$this->{$driver_core}->{$driver_name}->{$func_name}($row);
+                        $row=$params=$post['email'];
+                        $params=$this->{$driver_core}->{$driver_name}->{$func_name}($row);
 
 							//print_r($post);print_r($params);
-							$respon = $params['data']['result'];
+                        $respon = $params['data']['result'];
+                        //echo_r($respon);die('stop'.$phone_user);
+                        
                     }
 			//echo_r($respon);die("{$driver_core}->{$driver_name}->{$func_name}");
-			if($respon['status']==1){
-				$token=dbId('token');
-				//exit;
-				$ar=array('email'=>$post['email'], 'token'=>$respon['recoverid']);
-				$json=json_encode($ar);
-				$url=site_url('guest/forgot_process')."?t=".base64_encode($json);
-				redirect($url,1);
+                    if($respon['status']==1){
+                        $token=dbId('token');
+                        //exit;
+                        $ar=array('email'=>$post['email'], 'token'=>$respon['recoverid']);
+                        $json=json_encode($ar);
+                        $url=site_url('guest/forgot_process')."?t=".base64_encode($json);
+                        
+                        $sms_text.="Thank you for submitting Recovery form, Here your detail:\n";
+                        $sms_text.=site_url('guest/recover/'.$recoverid);
+                        $sms_text.="\nClick Here to Generate Your Recovery Password. The link Expired Soon\nIgnore if you not request this";
+                        
+                        //====================SMS===================
+                        $params=array(
+                           'debug'=>true,
+                            'number'=>$phone_user,
+                            'message'=>$sms_text."Sincerely, System.",
+                        //    'local'=>true,
+                        //  'type'=>'masking'
+
+                        );
+
+                        $respon = smsSend($params);
+                
+                        redirect($url,1);
+                        //==============success
+                            
 				$email_data=array( );
 				$email_data['show_html']=true;
 				//$this->load->view('email/email_recover',$email_data);
 				die('---');
 				$forgot = array('status'=>true, 'message'=>'Please check your Inbox or Spam Folder');
 				//'Silakan periksa email anda. Terutama pada SPAM'
-			}
+                    }
  
 			$this->session->set_flashdata('forgot', $forgot);
 			redirect($_SERVER['HTTP_REFERER'],1);

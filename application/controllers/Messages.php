@@ -1,13 +1,39 @@
 <?php 
-require_once APPPATH.'/libraries/Api_sms_class.php';
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 date_default_timezone_set('Asia/Jakarta');
 //require_once(APPPATH.'/libraries/SmtpApi.php');
 class Messages extends CI_Controller {
     function index(){
+        $api= ciConfig('sms_api','forexConfig_new');
+        $example_hp = ciConfig('sms_example_hp','forexConfig_new');
+        $ipserver = ciConfig('sms_server');
         //redirect('welcome');
-        $api= config_site('sms_api','forexConfig_new');
-        $example_hp = config_site('sms_example_hp','forexConfig_new');
+        $params=array(
+           'debug'=>true,
+            'number'=>$example_hp,
+            'message'=>'testing pesan (3) dikirim '.date("Y-m-d H:i:s")." www.salmamarkets.com",
+            'local'=>true,
+        //  'type'=>'masking'
+            
+        );
+        
+        $respon = smsSend($params);
+        echo '<pre>';
+        print_r($respon);die;
+/*
+ *     //====================SMS===================
+                $params=array(
+                   'debug'=>true,
+                    'number'=>$hp_send,
+                    'message'=>$register_text."Sincerely, Customer Service.",
+                //    'local'=>true,
+                //  'type'=>'masking'
+
+                );
+
+                $respon = smsSend($params);
+ */       
         $target ='{
 "apikey":"your_api_key",
 "callbackurl":"your_url_for_get_auto_update_status_sms",
@@ -51,13 +77,15 @@ class Messages extends CI_Controller {
         $sms = new sms_class_reguler_json();
         echo"\n";
         $sms->status();
-/*                
+                
         $sms->setIp($ipserver);
-        $sms->setData($senddata);
-        $responjson = $sms->send();
-        header('Content-Type: application/json');
-        echo $responjson;
-*/
+        $sms->setData($arr);
+        $responjson =  '{"sending_respon":[{"globalstatus":10,"globalstatustext":"Success","datapacket":[{"packet":{"number":"628568132429","sendingid":1068487,"sendingstatus":10,"sendingstatustext":"success","price":120}}]}]}';
+        ////$sms->send();
+        $arr_json = json_decode($responjson);
+//        header('Content-Type: application/json');
+        print_r($arr_json);
+
     }
     
     function returns(){
@@ -67,6 +95,20 @@ class Messages extends CI_Controller {
         $get = $this->input->post();
         logCreate($txtMessage.'get:'.  json_encode($get));
         
+        $respondata=json_decode(file_get_contents('php://input'),TRUE);
+        if (!empty($respondata))
+        {
+            foreach($respondata['status_respon'] as $data){
+                $sendingid          = $data['sendingid'];
+                $number             = $data['number'];
+                $deliverystatus     = $data['deliverystatus'];
+                $deliverystatustext = $data['deliverystatustext'];
+
+                logCreate($txtMessage.'post2:'.  json_encode($data));
+                // here ..... insert/update ....sql....table   
+            }
+        }
+        
     }
     
     function error404(){
@@ -75,6 +117,7 @@ class Messages extends CI_Controller {
     
     function __CONSTRUCT(){
 	parent::__construct();
+        $this->load->helper('api');
 
     }        
 }

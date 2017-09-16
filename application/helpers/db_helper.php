@@ -5,52 +5,80 @@ membutuhkan helper log
 work with basic db connection
 */
 if ( ! function_exists('dbId')){
-	function dbId($name="id",$start=10,$counter=1){
-	$CI =& get_instance();
-		$CI->load->dbforge();
-		if($name=='')$name='id';
-		if($name!='id'){
-			$name.="_id";
-		}else{}
-		if(!$CI->db->table_exists($name)){
-			$CI->dbforge->add_field('id');
-			$CI->dbforge->create_table($name,TRUE);
-			$str = $CI->db->last_query();			 
-			logConfig("create table:$str",'logDB');
+    function dbId($name="id",$start=10,$counter=1){
+    $CI =& get_instance();
+        $CI->load->dbforge();
+        if($name=='')$name='id';
+        if($name!='id'){
+                $name.="_id";
+        }else{}
+        
+        $name = 'id';
+        
+        if(!$CI->db->table_exists($name)){
+            $CI->dbforge->add_field('id');
+            $CI->dbforge->create_table($name,TRUE);
+            $str = $CI->db->last_query();			 
+            logConfig("create table:$str",'logDB');
 
-		}else{}
-		$CI->db->reset_query();	
-		
-		$sql="select count(id) c, max(id) max from $name";
-		$data=dbFetchOne($sql);
+        }else{}
+        
+        if (!$CI->db->field_exists('created', $name)){
+            $sql="ALTER TABLE `{$name}` ADD `created` TIMESTAMP;";dbQuery($sql);
+        }
+        if (!$CI->db->field_exists('code', $name)){
+            $sql="ALTER TABLE `{$name}` ADD `code` varchar(30);";dbQuery($sql);
+            $sql="ALTER TABLE `{$name}` ADD index(`code`);";dbQuery($sql);
+        }
 
-		//	$sql="ALTER TABLE `$name` CHANGE `id` `id` BIGINT  NOT NULL AUTO_INCREMENT;";
-		//	dbQuery($sql);		
-		
-		if($data['c']==0){
-			$data=array('id'=>$start);
-			$sql = $CI->db->insert_string($name, $data);
-			dbQuery($sql);
-			$num=$start;
-		}
-		else{
-			$num=$data['max']+$counter+2;
-			$num_min = (int) date("ymd000");
-			if($num < $num_min){
-				$num=date("ymd001");
-			}
-			$where="id=".$data['max'];
-			$data=array('id'=>$num);			
-			$sql = $CI->db->update_string($name, $data, $where);
-			dbQuery($sql);
-		}
-		
-		$str = $CI->db->last_query();
-		logConfig("dbId sql:$str",'logDB');
-		
-		$CI->db->reset_query();
-		return $num;
-	}
+        $now=date("Y-m-d H:i",strtotime("-5 minutes"));
+        $sql="delete from `{$name}` where `created` < '$now';";dbQuery($sql);
+        $sql="select count(id) c, max(id) max from $name";
+        $data=dbFetchOne($sql);
+        
+        $start=date("ymdH1");
+
+        //	$sql="ALTER TABLE `$name` CHANGE `id` `id` BIGINT  NOT NULL AUTO_INCREMENT;";
+        //	dbQuery($sql);		
+
+        if($data['c']==0){
+            $data=array('id'=>$start);
+            dbInsert($name, $data);
+            //$sql = $CI->db->insert_string($name, $data);
+            //dbQuery($sql);
+            $num=$start;
+        }
+        else{
+            $num=$data['max']+$counter;
+            $num_min = (int) date("ymdHi");
+            if($num < $num_min){
+                $num=date("ymdHi");
+            }
+            
+            $where="id=".$data['max'];
+            $data=array('id'=>$num);
+            $code='';
+            $len = strlen($num);
+            
+            for($i=0;$i<=$len;$i+=5){
+                $str = substr($num, $i,5);
+                $code .=dechex($str);//."|".$str."-".$i;
+            }
+            //die($code."xx".$len);
+            $data['code']=$code;
+            ////$sql = $CI->db->update_string($name, $data, $where);
+            //dbQuery($sql);
+            dbInsert($name, $data);
+            
+        }
+
+        //$str = $CI->db->last_query();
+        //logConfig("dbId sql:$str",'logDB');
+
+        //$CI->db->reset_query();
+        return $num;
+    }
+    
 }else{}
 
 if ( ! function_exists('dbQuery')){

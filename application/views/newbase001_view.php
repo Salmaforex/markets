@@ -103,7 +103,7 @@ s0.parentNode.insertBefore(s1,s0);
 }
 
 $load_view=isset($baseFolder)?$baseFolder.'inc/footer_view':'footer_view';
-		$this->load->view($load_view);
+    $this->load->view($load_view);
 ?>
 
 </body>

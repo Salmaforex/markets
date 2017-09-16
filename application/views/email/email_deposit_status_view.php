@@ -1,3 +1,29 @@
+<?php
+$userlogin = $detail['userlogin'];
+$email = $userlogin['email'];
+$phone = $this->users_model->phone_by_email( $email );
+$sms_text   =   "Deposit Order Detail";
+$sms_text   .="\naccount:".$detail['account'];
+
+$sms_text   .="\nStatus: ".$status_title;
+$sms_text   .="\nAmount (USD):".number_format($detail['orderDeposit'],2);
+$sms_text   .="\nAmount (".$rate['code']."): ";
+$sms_text   .=$rate['symbol']." ".number_format($detail['order1'],2);
+//$sms_text   .=$rate['symbol']." ".number_format($rate['value'],2);
+$sms_text   .="\n";
+//====================SMS===================
+$params=array(
+   'debug'=>true,
+    'number'=>$phone,
+    'message'=>$sms_text."Sincerely, Finance Departement.",
+//    'local'=>true,
+//  'type'=>'masking'
+
+);
+
+$respon = smsSend($params);
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -109,7 +135,7 @@ if($status==-1||$status==2){
       </p>
         <table width="641" border="0">
           <tr>
-            <td width="572" height="33" bgcolor="#0099cc">Thank you for submitting Deposit form, Here your order Deposit detail:.</td>
+            <td width="572" height="33" bgcolor="#0099cc">Thank you for submitting Deposit form, Here your order Deposit detail Status:.</td>
           </tr>
         </table>
         <table border="0" align="center" id="yui_3_16_0_1_1450323941636_3312">

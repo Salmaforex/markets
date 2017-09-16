@@ -140,21 +140,22 @@ if(!function_exists('email_problem')){
 }
 
 if(!function_exists('log_info_table')){
-	function log_info_table($type, $array){
+	function log_info_table($type, $array=FALSE){
             $CI =& get_instance();
             $input = array();//'tmp0'=>$type);
-            if($array!==false){
-            foreach( $array as $n0=>$val){
-                $n= $n0+1;
-                $val_input=is_string($val)?$val:json_encode($val);
-                if(strlen($val_input)>250){
+            $n0=0;
+            if($array!==FALSE){
+                foreach( $array as $val){
+                    $n0++;
+                    $val_input=is_string($val)?$val:json_encode($val);
+                    if(strlen($val_input)>250){
                         $val_input=substr($val_input,0,250);
-                        
+
+                    }
+
+                    $input['tmp'.$n0]=$val_input;
+
                 }
-                
-                $input['tmp'.$n]=$val_input;
-                
-            }
             }
 
             $input['param']=json_encode($array);

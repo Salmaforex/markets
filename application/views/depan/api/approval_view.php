@@ -42,7 +42,7 @@ if (   function_exists('logFile')){ logFile('view/member/api','api_view.php','vi
 </table>	
 
 <script>
-urlBase="<?=base_url();?>";
+urlBase="<?=site_url();?>/";
 urlAPI="<?=base_url("member/data?type=userApproval");?>";
 urlDetail="<?=base_url("member/data");?>";
 urlChangeStatus="<?=site_url("member/data?type=update");?>";

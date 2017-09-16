@@ -1,5 +1,27 @@
 <?php
 //email_deposit_member_view
+$email = $userlogin['email'];
+$phone = $this->users_model->phone_by_email( $email );
+$sms_text   =   "Deposit Order Detail";
+$sms_text   .="\naccount:".$post0['account'];
+$sms_text   .="\nAmount (USD):".number_format($post0['orderDeposit'],2);
+$sms_text   .="\nAmount (".$rate['code']."): ";
+$sms_text   .=$rate['symbol']." ".number_format($post0['order1'],2);
+$sms_text   .="\nRate (".$rate['code']."): ";
+$sms_text   .=$rate['symbol']." ".number_format($rate['value'],2);
+$sms_text   .="\n";
+//====================SMS===================
+$params=array(
+   'debug'=>true,
+    'number'=>$phone,
+    'message'=>$sms_text."Sincerely, Finance Departement.",
+//    'local'=>true,
+//  'type'=>'masking'
+
+);
+
+$respon = smsSend($params);
+logCreate($respon,'sms');
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -73,7 +95,9 @@
             </tr>
           </tbody>
         </table>
-        <p>Please transfer in accordance with the amount of transfer listed above , the maximum transfer time 1x24 hours . If the transfer is not in that time period , then the system will automatically cancel the order. Hopefully this information is useful .<br />
+        <p>Please transfer in accordance with the amount of transfer listed above , the maximum transfer time 1x24 hours . 
+            If the transfer is not in that time period , then the system will automatically cancel the order. 
+            Hopefully this information is useful .<br />
     </p>
       <hr align="center" noshade="noshade" /></td>
     </tr>
@@ -81,10 +105,32 @@
       <td><p>Our Bank information :</p>
         <h3>
 <?php
-		$bank = $key=$this->config->item('forex_bank');
-		foreach($bank[$rate['code']] as $row){
-			echo "\n\t{$row['name']} : <strong>{$row['number']}</strong> a.n {$row['person']}<br />";
-		}
+$email = $userlogin['email'];
+$phone = $this->users_model->phone_by_email($email);
+$sms_text="Deposit Order Detail";
+$sms_text.="\naccount:".$post0['account'];
+$sms_text.="\nAmount (USD):".number_format($post0['orderDeposit'],2);
+$sms_text.="\nAmount (".$rate['code']."): ";
+$sms_text.=$rate['symbol']." ".number_format($post0['order1'],2);
+$sms_text.="\nRate (".$rate['code']."): ";
+$sms_text.=$rate['symbol']." ".number_format($rate['value'],2);
+$sms_text.="\n";
+//====================SMS===================
+$params=array(
+   'debug'=>true,
+    'number'=>$hp_send,
+    'message'=>$sms_text."Sincerely, Customer Service.",
+//    'local'=>true,
+//  'type'=>'masking'
+
+);
+
+$respon = smsSend($params);
+
+        $bank = $key=$this->config->item('forex_bank');
+        foreach($bank[$rate['code']] as $row){
+                echo "\n\t{$row['name']} : <strong>{$row['number']}</strong> a.n {$row['person']}<br />";
+        }
 ?>  
       <hr align="center" noshade="noshade" /></td>
     </tr>

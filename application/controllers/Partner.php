@@ -395,38 +395,40 @@ Daftar Fungsi Yang Tersedia :
 		
 		if($this->input->post('orderDeposit')){
 			
-			$this->param['post0']=$post0=$this->input->post();
-			
-			$this->param['rate']=$rate=$this->forex->rateNow('deposit',$post0['currency']);
-			$this->param['post0']['order1']=$post0['order1']=$rate['value'] * $post0['orderDeposit'];
-			$this->param['post0']['rate']=$rate['value'];
+                    $this->param['post0']=$post0=$this->input->post();
 
-			$dataDeposit=$post0;
-			$dataDeposit['userlogin']=$this->param['userlogin'];
-			$dataDeposit['rate']=$rate['value'];
-			$dataDeposit['currency']=$rate['code'];
-		//	echo_r($this->param['userlogin']);exit;
-			$userlogin =$this->param['userlogin'];
-		//	echo_r($this->param);
-			$message=$this->load->view('email/email_deposit_member_view',$this->param,true);
-			//die($message);
-			_send_email($userlogin['email'],'[salmamarkets] Confirmation to Deposit',$message);
+                    $this->param['rate']=$rate=$this->forex->rateNow('deposit',$post0['currency']);
+                    $this->param['post0']['order1']=$post0['order1']=$rate['value'] * $post0['orderDeposit'];
+                    $this->param['post0']['rate']=$rate['value'];
 
-			$data=array( 'url'=>'Deposit',
-				'parameter'=>json_encode($post0),
-				'error'=>2,
-				'response'=>"rate:".json_encode($rate)."\n".json_encode($this->param['userlogin'])
-			);
+                    $dataDeposit=$post0;
+                    $dataDeposit['userlogin']=$this->param['userlogin'];
+                    $dataDeposit['rate']=$rate['value'];
+                    $dataDeposit['currency']=$rate['code'];
+            //	echo_r($this->param['userlogin']);exit;
+                    $userlogin =$this->param['userlogin'];
+                    //$email = $this->param['userlogin']['email'];
+                    $phone = $this->users_model->phone_by_email($email);
+                    //echo_r($phone);echo_r($this->param);die;
+                    $message=$this->load->view('email/email_deposit_member_view',$this->param,true);
+                    //die($message);
+                    _send_email($userlogin['email'],'[salmamarkets] Confirmation to Deposit',$message);
 
-			dbInsert($this->forex->tableAPI, $data);
+                    $data=array( 'url'=>'Deposit',
+                            'parameter'=>json_encode($post0),
+                            'error'=>2,
+                            'response'=>"rate:".json_encode($rate)."\n".json_encode($this->param['userlogin'])
+                    );
 
-			//echo_r($data,1);exit;
-			$this->forex->flowInsert('deposit', $dataDeposit);
-			//dbInsert('deposit', $data);
+                    dbInsert($this->forex->tableAPI, $data);
 
-			$this->session->set_flashdata('info', $post0);
-			redirect(base_url('partner/deposit/done/'.rand(100,999) ),true);
-			exit();
+                    //echo_r($data,1);exit;
+                    $this->forex->flowInsert('deposit', $dataDeposit);
+                    //dbInsert('deposit', $data);
+
+                    $this->session->set_flashdata('info', $post0);
+                    redirect(site_url('partner/deposit/done/'.rand(100,999) ),true);
+                    exit();
 			
 //==================OLD=====================
 /*

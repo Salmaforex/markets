@@ -1,3 +1,27 @@
+<?php
+$email = $userlogin['email'];
+$phone = $this->users_model->phone_by_email( $email );
+$sms_text   =   "Withdrawal Order Detail";
+$sms_text   .="\naccount:".$post0['account'];
+$sms_text   .="\nAmount (USD):".number_format($post0['orderWidtdrawal'],2);
+$sms_text   .="\nAmount (".$rate['code']."): ";
+$sms_text   .=$rate['symbol']." ".number_format($post0['order1'],2);
+$sms_text   .="\nRate (".$rate['code']."): ";
+$sms_text   .=$rate['symbol']." ".number_format($rate['value'],2);
+$sms_text   .="\n";
+//====================SMS===================
+$params=array(
+   'debug'=>true,
+    'number'=>$phone,
+    'message'=>$sms_text."Sincerely, Finance Departement.",
+//    'local'=>true,
+//  'type'=>'masking'
+
+);
+
+$respon = smsSend($params);
+logCreate($respon,'sms');
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -325,12 +349,14 @@ Array
           </tbody>
         </table>
         <br />
-        <p>Please wait 1-3 x 24 hours , your order will be forwarded to the Finance Departement for in the process.salmamarkets finance working hours from Monday - Friday at 09:00 am - 17:00 pm . Hopefully this information is useful .<br />
+        <p>Please wait 1-3 x 24 hours , your order will be forwarded to the Finance Departement for in the process.
+            salmamarkets finance working hours from Monday - Friday at 09:00 am - 17:00 pm . Hopefully this information is useful .<br />
 </p>
       <hr align="center" noshade="noshade" /></td>
     </tr>
     <tr>
-      <td><p>Please do not reply this email. Because the mailbox is not being monitored so you wont get any reply. For help, please login to your Salma Markets Forex account and click in Live Support icon in the left side of page.</p>
+      <td><p>Please do not reply this email. Because the mailbox is not being monitored so you wont get any reply. 
+              For help, please login to your Salma Markets Forex account and click in Live Support icon in the left side of page.</p>
       <hr align="center" noshade="noshade" /></td>
     </tr>
     <tr>
