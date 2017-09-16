@@ -444,18 +444,18 @@ function smsSend($params) {
             if (isset($row['datapacket'])) {
                 foreach ($row['datapacket'] as $row2) {
                     $status[] = $packet = isset($row2['packet'])?$row2['packet']:NULL;
-                    $packet[] = $message;
+                    $packet[] = $message; //6
                     $packet[] = $balance;
-                    $packet[] = $header;
+                    $packet[] = $header;//8
                     $packet[] = $type;
-                    log_info_table('message', $packet);
+                    log_info_table('sms', $packet);
                     
                 }
                 
             }
             else {
                 $status[] = false;
-                log_info_table('message', array($number, 0,-1,'error',0, $message, $balance,$header,$type));
+                log_info_table('sms', array($number, 0,-1,'error',0, $message, $balance,$header,$type));
                 
             }
             

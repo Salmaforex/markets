@@ -1,6 +1,6 @@
 <?php
 $config['drivers_advforex']=array(
-    'user_login','user_detail'
+    'user_login','user_detail','sms'
 );
 $config['drivers_mujur']=array('user_login','fix_country'
     

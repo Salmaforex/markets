@@ -22,7 +22,7 @@ class Admin extends MY_Controller {
 
     public function listApi($type=null){
 	$types=array('account', 'api', 'deposit', 'widtdrawal',
-	'user','agent','approval','partner','patner_revenue');	
+	'user','agent','approval','partner','patner_revenue','sms');	
 //		if(!defined('LOCAL')){
 	$this->checkLogin();
 //		}
@@ -509,16 +509,16 @@ class Admin extends MY_Controller {
 		$this->showView();
 	}
 //===========================TARIF
-        public function currency($page='',$code=''){		
-            $this->checkLogin();
-            if($this->input->post('name')){
-                    $post= $this->input->post();
-            //        echo_r($post);die();
-                    $stat=$this->forex->currency_new($post);
-            //        if($stat===false)die('error');
-                    redirect(site_url('admin/currency'));
-                    exit();
-            }else{}
+    public function currency($page='',$code=''){		
+        $this->checkLogin();
+        if($this->input->post('name')){
+                $post= $this->input->post();
+        //        echo_r($post);die();
+                $stat=$this->forex->currency_new($post);
+        //        if($stat===false)die('error');
+                redirect(site_url('admin/currency'));
+                exit();
+        }else{}
             
     //=========================
         if($page=='approved'){
@@ -531,21 +531,18 @@ class Admin extends MY_Controller {
             redirect(site_url('admin/currency'));
         }
         
-        
-            
-
-            $this->param['title']='Salma forex | Currency'; 
-            $this->param['content']=array(
-                    'modal',
-                    'currency', 
-            );
+        $this->param['title']='Salma forex | Currency'; 
+        $this->param['content']=array(
+                'modal',
+                'currency', 
+        );
 
 //datatables		
-            $this->param['footerJS'][]='js/jquery.dataTables.min.js';
-            $this->param['footerJS'][]='js/tarif.js';
-            $this->param['fileCss']['dataTable']='css/jquery.dataTables.min.css';
-            $this->showView();
-	}
+        $this->param['footerJS'][]='js/jquery.dataTables.min.js';
+        $this->param['footerJS'][]='js/tarif.js';
+        $this->param['fileCss']['dataTable']='css/jquery.dataTables.min.css';
+        $this->showView();
+    }
 
 	public function index(){
 		logCreate('cek login');
@@ -879,5 +876,39 @@ class Admin extends MY_Controller {
             }
     //	echo_r($login);
     }
+    
+    public function sms($page='',$code=''){		
+        $this->checkLogin();
+        if($this->input->post('name')){
+                $post= $this->input->post();
+        //        echo_r($post);die();
+                $stat=$this->forex->currency_new($post);
+        //        if($stat===false)die('error');
+                redirect(site_url('admin/currency'));
+                exit();
+        }else{}
+            
+    //=========================
+        if($page=='approved'){
+            $this->forex->currency_approve($code);
+            redirect(site_url('admin/currency'));
+        }
+        
+        if($page=='disable'){
+            $this->forex->currency_disable($code);
+            redirect(site_url('admin/currency'));
+        }
+        
+        $this->param['title']='Salma forex | Currency'; 
+        $this->param['content']=array(
+                'modal',
+                'currency', 
+        );
 
+//datatables		
+        $this->param['footerJS'][]='js/jquery.dataTables.min.js';
+        $this->param['footerJS'][]='js/tarif.js';
+        $this->param['fileCss']['dataTable']='css/jquery.dataTables.min.css';
+        $this->showView();
+    }
 }

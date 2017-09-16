@@ -38,6 +38,9 @@
       <li><a href="<?=site_url('admin/currency');?>#"><span class="fa fa-triangle-right"></span>
               Currency
 	  </a></li>
+      <li><a href="<?=site_url('admin/listApi/sms');?>#"><span class="fa fa-triangle-right"></span>
+              SMS
+	  </a></li>
 
     </ul>
   </li>
