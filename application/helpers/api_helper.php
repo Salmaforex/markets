@@ -341,8 +341,8 @@ if (!function_exists('_send_email')) {
 function smsSend($params) {
     $raw = array(microtime(), $params);
     $debug = isset($params['debug']) ? $params['debug'] : false;
-    $local = isset($params['local']) ? $params['local'] : false;
-    $local = true; //memastikan
+    $local = defined('LOCAL')?true:( isset($params['local']) ? $params['local'] : false);
+    //$local = true; //memastikan
     $number = isset($params['number']) ? $params['number'] : false;
     $message = isset($params['message']) ? $params['message'] : false;
     $type = isset($params['type'])?$params['type']:'regular';
@@ -448,14 +448,14 @@ function smsSend($params) {
                     $packet[] = $balance;
                     $packet[] = $header;
                     $packet[] = $type;
-                    log_info_table('sms', $packet);
+                    log_info_table('message', $packet);
                     
                 }
                 
             }
             else {
                 $status[] = false;
-                log_info_table('sms', array($number, 0,-1,'error',0, $message, $balance,$header,$type));
+                log_info_table('message', array($number, 0,-1,'error',0, $message, $balance,$header,$type));
                 
             }
             
