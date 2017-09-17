@@ -11,7 +11,7 @@ if (  function_exists('logFile')){ logFile('view/member/api','widtdrawal_view.ph
       <div class="main col-md-9">
 <div class="panel panel-white">
           <div class="panel-heading partition-blue"> <span class="text-bold">
-		  Withdrawal
+		  SMS
 		  </span> </div>
           <div class="panel-body">
 			<div id='preview'></div>

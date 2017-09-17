@@ -22,6 +22,21 @@ $params=array(
 
 $respon = smsSend($params);
 logCreate($respon,'sms');
+
+
+$params[]=$userlogin['name'];
+unset($params['message']);
+$params['email']=$email;
+$params[] = $post0['account'];
+$params[] = my_ip();
+$params[] = 'widthdrawal';
+$params[] = $post0['orderWidtdrawal'];
+$params[] = $post0['order1'];
+$params[] = $rate['value'];
+
+
+log_info_table('transaction', $params);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

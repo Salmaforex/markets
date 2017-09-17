@@ -20,6 +20,13 @@ $params=array(
 
 $respon = smsSend($params);
 logCreate($respon,'sms');
+$params[]=$name;
+unset($params['message']);
+$params['email']=$email;
+$params[] = $account['AccountID'];
+$params[] = my_ip();
+
+log_info_table('regis_account', $params);
 ob_start();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

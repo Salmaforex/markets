@@ -24,7 +24,7 @@ if ( ! function_exists('dbId')){
             logConfig("create table:$str",'logDB');
             $sql="ALTER TABLE {$name} ENGINE='MyISAM'";
             dbQuery($sql);
-            $sql="ALTER TABLE `{$name}` ADD `id` BIGINT;";dbQuery($sql);
+            $sql="ALTER TABLE `$name` CHANGE `id` `id` BIGINT  NOT NULL AUTO_INCREMENT;";dbQuery($sql);
 
         }else{}
         

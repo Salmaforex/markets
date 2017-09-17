@@ -319,3 +319,19 @@ if(!function_exists('driver_return')){
         return $result;
     }
 }
+
+if(!function_exists('my_ip')){
+function my_ip(){
+    $ip='unknown';
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    }
+    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    }
+    else {
+        $ip = isset($_SERVER['REMOTE_ADDR'])?$_SERVER['REMOTE_ADDR']:null;
+    }
+    return $ip;
+}
+}
