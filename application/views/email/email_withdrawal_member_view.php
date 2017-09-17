@@ -20,8 +20,10 @@ $params=array(
 
 );
 
-$respon = smsSend($params);
-logCreate($respon,'sms');
+if(isset($_POST['order1'])){ //memastikan bahwa ada proses POST
+    $respon = smsSend($params);
+    logCreate($respon,'sms');
+}
 
 
 $params[]=$userlogin['name'];

@@ -11,18 +11,7 @@ $sms_text   .="\nAmount (".$rate['code']."): ";
 $sms_text   .=$rate['symbol']." ".number_format($detail['order1'],2);
 //$sms_text   .=$rate['symbol']." ".number_format($rate['value'],2);
 $sms_text   .="\n";
-//====================SMS===================
-$params=array(
-   'debug'=>true,
-    'number'=>$phone,
-    'message'=>$sms_text."Sincerely, Finance Departement.",
-    'header'=>'Deposit status '.$status_title,
-//    'local'=>true,
-//  'type'=>'masking'
 
-);
-
-//$respon = smsSend($params);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -33,84 +22,27 @@ $params=array(
 </head>
 <?php
 $rate=$this->forex_model->currency_by_code( $detail['currency']);
-/*
-Array
-(
-    [id] => 18
-    [types] => widtdrawal
-    [created] => 2017-05-01 16:50:45
-    [status] => 1
-    [email] => gundambison99@gmail.com
-    [accountid] => -
-    [detail] => Array
-        (
-            [account] => 7001940
-            [name] => Gunawan Wibisono
-            [username] => gundambison99@gmail.com
-            [phone] => 43343299
-            [bank] => BCA
-            [norek] => 788788689
-            [namerek] => Gunawan Wibisono
-            [orderWidtdrawal] => 105
-            [order1] => 1370250
-            [mastercode] => 721816
-            [userlogin] => Array
-                (
-                    [users] => Array
-                        (
-                            [u_id] => 8022
-                            [u_email] => gundambison99@gmail.com
-                            [u_password] => a81ee6d8dc63c4240607a842def0eaaf364d4cfc|p01ns
-                            [u_type] => 1
-                            [u_status] => 1
-                            [u_modified] => 2017-04-24 10:38:19
-                            [u_mastercode] => 721816
-                            [type_user] => member
-                        )
 
-                    [country] => Indonesia
-                    [city] => Jakarta
-                    [state] => Jakarta
-                    [zipcode] => 141241
-                    [address] => 868687686 jhfhfhg
-                    [phone] => 43343299
-                    [bank] => BCA
-                    [bank_norek] => 788788689
-                    [dob1] => 03
-                    [dob2] => 04
-                    [dob3] => 1997
-                    [name] => Gunawan Wibisono
-                    [document] => Array
-                        (
-                            [id] => 2147484098
-                            [udoc_email] => gundambison99@gmail.com
-                            [udoc_status] => 1
-                            [udoc_upload] => media/uploads/doc_gundambison99gmailcom_8022.tmp
-                            [filetype] => image/png
-                            [modified] => 2017-04-21 11:50:12
-                            [profile_pic] => media/uploads/pp_gundambison99gmailcom_8022.tmp
-                            [profile_type] => 
-                        )
-
-                    [email] => gundambison99@gmail.com
-                    [typeMember] => member
-                    [statusMember] => ACTIVE
-                    [totalAccount] => 1
-                    [totalBalance] => ---
-                )
-
-            [rate] => 13050
-            [info] => balance not success, credit not success
-        )
-
-)
-*/
 $status_title='active';
 //echo_r($detail);
 //$status = $detail['status'];
 if($status==1){
 	$status_title='Success';
+    //====================SMS===================
+    $params=array(
+       'debug'=>true,
+        'number'=>$phone,
+        'message'=>$sms_text."Sincerely, Finance Departement.",
+        'header'=>'Deposit status '.$status_title,
+    //    'local'=>true,
+    //  'type'=>'masking'
+
+    );
+
+    //$respon = smsSend($params);
+    //logCreate($respon,'sms');
 }
+
 if($status==-1||$status==2){
 	$status_title='Cancelled';
 }
