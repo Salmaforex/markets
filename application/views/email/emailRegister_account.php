@@ -1,5 +1,6 @@
 <?php
 
+
 $phone = $this->users_model->phone_by_email( $email );
 $register_text =  "Welcome to Salmamarkets ";//"Hello {$name}, ";
 $register_text .="Trading Area Access\n";
@@ -18,8 +19,11 @@ $params=array(
 
 );
 
-$respon = smsSend($params);
-logCreate($respon,'sms');
+if(!isset($no_sms)){
+    $respon = smsSend($params);
+    logCreate($respon,'sms');
+}
+
 $params[]=$name;
 unset($params['message']);
 $params['email']=$email;
