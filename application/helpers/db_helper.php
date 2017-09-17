@@ -58,30 +58,38 @@ if ( ! function_exists('dbId')){
             $num=$start;
         }
         else{
-            $num=$data['max']+$counter;
+            $num= ceil(microtime(true)*10000000000);
+            /*
             $num_min = (int) date("ymdHi");
             if($num < $num_min){
                 $num=date("ymdHi");
             }
-            
+            */
             $where="id=".$data['max'];
-            $data=array('id'=>$num);
-            $code='';
-            $len = strlen($num);
+            $data=array('id'=>NULL);
+            $data['code']='';
+            $data['label']= $label;
+            ////$sql = $CI->db->update_string($name, $data, $where);
+            //dbQuery($sql);
+            unset($data['id']);
+            $num = dbInsert($name, $data);
+            
+        }
+
+        $code='';
+        $len = strlen($num);
             
             for($i=0;$i<=$len;$i+=6){
                 $str = substr($num, $i,6);
                 $code .=dechex($str);//."|".$str."-".$i;
             }
             //die($code."xx".$len);
-            $data['code']=  strtoupper($code);
-            $data['label']= $label;
-            ////$sql = $CI->db->update_string($name, $data, $where);
-            //dbQuery($sql);
-            dbInsert($name, $data);
-            
-        }
-
+        $data=array();
+        $data['code']= strtoupper($code);
+        $where="id=$num";
+        $sql = $CI->db->update_string($name, $data, $where);
+        dbQuery($sql);
+          
         //$str = $CI->db->last_query();
         //logConfig("dbId sql:$str",'logDB');
 
@@ -92,7 +100,7 @@ if ( ! function_exists('dbId')){
 }else{}
 
 if ( ! function_exists('dbQuery')){
-  function dbQuery($sql,$debug=0){
+  function dbQuery($sql,$debug=0,$insert_id=false){
 	$CI =& get_instance(); 
 	$query=$CI->db->query($sql);
 	if (!$query){
@@ -107,7 +115,7 @@ if ( ! function_exists('dbQuery')){
 		logConfig('sql:'.$sql.'|affected:'. $CI->db->affected_rows(),'logDB','query');
 	}	
 	
-	return $query;
+	return  $insert_id?$CI->db->insert_id():$query;
   }
   
 }else{}
@@ -181,7 +189,8 @@ if ( ! function_exists('dbInsert')){
         $CI =& get_instance();
         $sql=db_insert_ignore($table, $data); //$CI->db->insert_string($table,$data);
     //	logCreate($sql,'query');
-        dbQuery($sql);
+        $id=dbQuery($sql,0,true);
+        return $id;
     }
 }
 
