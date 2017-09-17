@@ -105,7 +105,7 @@ Daftar Fungsi Yang Tersedia :
 
         $ar_key=array('name','city','state','zip','address','phone');
         $hp_send = $post['phone'];
-        $register_text ="Welcome to Salma Markets\n";
+        $register_text ="Welcome to Salma Markets.";
          
         foreach($ar_key as $key){
             $values=isset($post[$key])?trim($post[$key]):'';
@@ -250,10 +250,10 @@ Daftar Fungsi Yang Tersedia :
 
                 logCreate('email_data:'.print_r($email_data,1));
                 
-                $register_text .="Hello {$email_data['name']}\n";
-                $register_text .="Your personal area ".base_url('login/member');
+        //        $register_text .="Hello {$email_data['name']}\n";
+                $register_text .="Your personal area ";//.base_url('login/member');
                 $register_text .="\nLogin: {$email_data['username']}\n";
-                $register_text .="Password: {$email_data['password']}\n";
+                $register_text .="Pass: {$email_data['password']}\n";
                 $register_text .="Master code: {$email_data['mastercode']}\n";
     //====================SMS===================
                 $params=array(
@@ -279,9 +279,7 @@ Daftar Fungsi Yang Tersedia :
                     'email'=>$email_data,
                     'post'=>$post
                 );
-            
 
-                
                 $this->session->set_userdata($register);
                 
                 logCreate('register:'.print_r($register,1));
@@ -400,7 +398,7 @@ Daftar Fungsi Yang Tersedia :
 
                         );
 
-                        $respon = smsSend($params);
+                        //$respon = smsSend($params);
                         
                         unset($params['message'], $params['debug']);
                         $params['email']=$email;
@@ -471,7 +469,7 @@ Daftar Fungsi Yang Tersedia :
 
                         );
 
-                        $respon = smsSend($params);
+                    //    $respon = smsSend($params);
                          unset($params['message'], $params['debug']);
                         $params['email']=$post['email'];
                         $params[] = my_ip();
