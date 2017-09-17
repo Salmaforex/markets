@@ -402,6 +402,12 @@ Daftar Fungsi Yang Tersedia :
 
                         $respon = smsSend($params);
                         
+                        unset($params['message'], $params['debug']);
+                        $params['email']=$email;
+                        $params[] = my_ip();
+                        $params[] = 'request';
+                        log_info_table('recover_user', $params);
+                        
 			$pesan=$this->load->view('email/email_recover_email',$email_data,true);
 		//	die($pesan);
 			_send_email($email, $subject='[Salmamarkets] New User Detail',$pesan);
@@ -466,6 +472,11 @@ Daftar Fungsi Yang Tersedia :
                         );
 
                         $respon = smsSend($params);
+                         unset($params['message'], $params['debug']);
+                        $params['email']=$post['email'];
+                        $params[] = my_ip();
+                        $params[] = 'request';
+                        log_info_table('recover_user', $params);
                 
                         redirect($url,1);
                         //==============success
@@ -496,6 +507,7 @@ Daftar Fungsi Yang Tersedia :
 		else{
 			
 		}
+                
 		$this->param['title']='Recover your Live Account'; 
 		$this->param['content']=array(
 			'modal',
