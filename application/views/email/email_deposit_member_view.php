@@ -4,11 +4,11 @@ $email = $userlogin['email'];
 $phone = $this->users_model->phone_by_email( $email );
 $sms_text   =   "Deposit Order Detail";
 $sms_text   .="\naccount:".$post0['account'];
-$sms_text   .="\nAmount (USD):".number_format($post0['orderDeposit'],2);
-$sms_text   .="\nAmount (".$rate['code']."): ";
-$sms_text   .=$rate['symbol']." ".number_format($post0['order1'],2);
-$sms_text   .="\nRate (".$rate['code']."): ";
-$sms_text   .=$rate['symbol']." ".number_format($rate['value'],2);
+$sms_text   .="\nAmount(USD):".number_format($post0['orderDeposit'],2);
+$sms_text   .="\nAmount(".$rate['code']."):";
+$sms_text   .= number_format($post0['order1'],2);//$rate['symbol']." ".
+$sms_text   .="\nRate(".$rate['code']."):";
+$sms_text   .= number_format($rate['value'],2);
 $sms_text   .="\n";
 //====================SMS===================
 $params=array(
@@ -25,8 +25,6 @@ if(isset($_POST['order1'])){ //memastikan bahwa ada proses POST
     $respon = smsSend($params);
     logCreate($respon,'sms');
 }
-
-
 
 $params[]=$userlogin['name'];
 unset($params['message']);

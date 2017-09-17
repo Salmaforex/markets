@@ -7,6 +7,7 @@ membutuhkan config logConfig.php
 if ( ! function_exists('logConfig'))
 {
   function logConfig($txt,$config0='',$type='debug'){
+      if($config0=='') return FALSE;
 	$CI =& get_instance();
 	$config = $CI->config->item($config0);
 	log_message('info','config:'.$config0 );
@@ -18,7 +19,7 @@ if ( ! function_exists('logConfig'))
 		}else{ log_message('info',"log config not write"); }
 	}
 	else{		
-		$txtError='tidak ditemukan config :'.$config0;
+		$txtError='tidak ditemukan config (1):'.$config0;
 		log_message('info',$txtError);
 		logCreate($txt,$type);		
 		logCreate($txtError,'error');

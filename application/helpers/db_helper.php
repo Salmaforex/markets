@@ -111,11 +111,16 @@ if ( ! function_exists('dbQuery')){
 	}
 	else{ 
 		if($debug==1){ 	
-			logCreate('sql:'.$sql.'|affected:'. $CI->db->affected_rows(),'query');			
+                    logCreate('sql:'.$sql.'|affected:'. $CI->db->affected_rows(),'query');			
 		}else{}
+                
 		logConfig('sql:'.$sql.'|affected:'. $CI->db->affected_rows(),'logDB','query');
 	}	
 	
+        if($insert_id){
+            logCreate('dbQuery id:'. $CI->db->insert_id(),'query');
+        }
+        
 	return  $insert_id?$CI->db->insert_id():$query;
   }
   
@@ -190,7 +195,7 @@ if ( ! function_exists('dbInsert')){
         $CI =& get_instance();
         $sql=db_insert_ignore($table, $data); //$CI->db->insert_string($table,$data);
     //	logCreate($sql,'query');
-        $id=dbQuery($sql,0,true);
+        $id=dbQuery($sql, 1, true);
         return $id;
     }
 }
@@ -208,7 +213,9 @@ function db_insert_ignore($table, $data){
 	$values = "'".implode("', '",$value)."'";
 	$sql="Insert ignore into `{$table_name}` ({$headers}) values({$values});";
 	//$CI->db->query($sql);
+        logCreate($sql,'query');
 	return $sql;
+        
 }
 
 if ( ! function_exists('saveTableLog')){

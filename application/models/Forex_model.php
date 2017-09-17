@@ -990,28 +990,28 @@ from mujur_account a left join mujur_accountdocument ad on a.email=ad.email wher
         dbQuery($sql);
         $date=date('Y-m-d H:i:s',strtotime("-1 days"));
         $sql="delete from `ci_session` where modified <'$date'";
-        logConfig("clean session:$sql");
+        //logConfig("clean session:$sql");
         return dbQuery($sql);
     }
 	//=================FLOW LOG
-	function flow_member($accountid, $sort='created',$sortType='DESC', $limit=50,$start=0){
-		$where="`param` like '%\"account\":\"{$accountid}\"%'";
-		$sql="select count(id) c from `{$this->tableFlowlog}` where $where";
-		$sql.=" order by `{$sort}` {$sortType} limit {$start}, {$limit}";
-		$dt=dbFetchOne($sql);
-		if($dt['c']==0) return false;
-		$return=array('count'=>$dt['c']);
+    function flow_member($accountid, $sort='created',$sortType='DESC', $limit=50,$start=0){
+        $where="`param` like '%\"account\":\"{$accountid}\"%'";
+        $sql="select count(id) c from `{$this->tableFlowlog}` where $where";
+        $sql.=" order by `{$sort}` {$sortType} limit {$start}, {$limit}";
+        $dt=dbFetchOne($sql);
+        if($dt['c']==0) return false;
+        $return=array('count'=>$dt['c']);
 
-		$sql="select types, param, created, status from `{$this->tableFlowlog}` where $where";
-		$dt=dbFetch($sql);
-		foreach($dt as $nm=>$var){
-			$param=json_decode($var['param'],true);
-			$dt[$nm]['param']=$param;
-			$dt[$nm]['user']=isset($dt[$nm]['param']['userlogin'])?$dt[$nm]['param']['userlogin']:false;
-		}
-		$return['data']=$dt;
-		return $return;
-	}
+        $sql="select types, param, created, status from `{$this->tableFlowlog}` where $where";
+        $dt=dbFetch($sql);
+        foreach($dt as $nm=>$var){
+                $param=json_decode($var['param'],true);
+                $dt[$nm]['param']=$param;
+                $dt[$nm]['user']=isset($dt[$nm]['param']['userlogin'])?$dt[$nm]['param']['userlogin']:false;
+        }
+        $return['data']=$dt;
+    return $return;
+    }
 //------------------------EMAIL--------------------
 	function list_email($id, $by='id',$show="*"){
 		$operator = is_int($id)?"=":"like";

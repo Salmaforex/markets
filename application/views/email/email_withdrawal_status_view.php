@@ -20,9 +20,9 @@ if($status==1){
     $sms_text   =   "Withdrawal Order Detail";
     $sms_text   .="\naccount:".$detail['account'];
     $sms_text   .="\nStatus: ".$status_title;
-    $sms_text   .="\nAmount (USD):".number_format($detail['orderWidtdrawal'],2);
-    $sms_text   .="\nAmount (".$rate['code']."): ";
-    $sms_text   .=$rate['symbol']." ".number_format($detail['order1'],2);
+    $sms_text   .="\nAmount(USD):".number_format($detail['orderWidtdrawal'],2);
+    $sms_text   .="\nAmount(".$rate['code']."):";
+    $sms_text   .=number_format($detail['order1'],2);
 
     //$sms_text   .=$rate['symbol']." ".number_format($rate['value'],2);
     $sms_text   .="\n";

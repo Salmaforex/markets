@@ -98,6 +98,7 @@ Daftar Fungsi Yang Tersedia :
     }
 
     public function register(){
+        $time=array(microtime());
     //$this->load->model('users_model');
             $post=$this->input->post();
     //echo_r($post);exit;
@@ -106,7 +107,7 @@ Daftar Fungsi Yang Tersedia :
         $ar_key=array('name','city','state','zip','address','phone');
         $hp_send = $post['phone'];
         $register_text ="Welcome to Salma Markets.";
-         
+        $time[]=  microtime();
         foreach($ar_key as $key){
             $values=isset($post[$key])?trim($post[$key]):'';
             if($values==''){
@@ -118,7 +119,17 @@ Daftar Fungsi Yang Tersedia :
             }
             
         }
-        
+        $time[]=  microtime();
+//==========TELEPON=====================
+        if(strlen($post['phone'])<6){
+                $post['message']='Provide with Valid Phone Number';
+                $this->session->set_flashdata('error_message', 'Provide with Your Phone Number');
+                $this->session->set_flashdata('register', $post);
+                logCreate('parameter invalid: phone |value:'.$post['phone'],'error');
+                redirect($_SERVER['HTTP_REFERER'],1);
+                
+        }
+        $time[]=  microtime();
 //==========email valid=================
         $post['email']=isset($post['email'])?trim($post['email']):'';
         $email = $post['email'];
@@ -127,7 +138,7 @@ Daftar Fungsi Yang Tersedia :
                 $post['message']='Provide with Your Email';
                 $this->session->set_flashdata('error_message', 'Provide with Your Email');
                 $this->session->set_flashdata('register', $post);
-                logCreate('parameter invalid: please click accept','error');
+                logCreate('parameter invalid: email Blank','error');
                 redirect($_SERVER['HTTP_REFERER'],1);
                 
         }
@@ -135,6 +146,7 @@ Daftar Fungsi Yang Tersedia :
                 $post['email']=trim($post['email']);
                 
         }
+        $time[]=  microtime();
 
         if(!isset($post['accept'])){
                 $post['message']='Please Click Accept';
@@ -148,7 +160,7 @@ Daftar Fungsi Yang Tersedia :
         $res=array();
 
         if( defined('LOCAL')){
-                logCreate('Local.. hapus user' );
+                logCreate('Local.. hapus user email:'.$email );
                 //$res= _localApi('users','erase',array($post['email']));
                 $this->users_model->erase($post['email']);
         }
@@ -156,6 +168,7 @@ Daftar Fungsi Yang Tersedia :
         //$res= _localApi('users', 'exist', array($post['email']));
         //echo_r($res);	die('user exist?');
         $res=$this->users_model->exist($post['email']);
+        $time[]=  microtime();
         //echo_r($res);
         //die('user exist?');
 
@@ -165,12 +178,13 @@ Daftar Fungsi Yang Tersedia :
         //no email found
         }
         else{
-                $post['message']='Email Already on Our System';
-                $this->session->set_flashdata('error_message', 'Email Already on Our System');
-                $this->session->set_flashdata('register', $post);
-                logCreate('parameter invalid: email exist','error');
-                redirect($_SERVER['HTTP_REFERER'],1);
+            $post['message']='Email Already on Our System';
+            $this->session->set_flashdata('error_message', 'Email Already on Our System');
+            $this->session->set_flashdata('register', $post);
+            logCreate('parameter invalid: email exist','error');
+            redirect($_SERVER['HTTP_REFERER'],1);
         }
+        $time[]=  microtime();
 
 //==========SAVE REGIS===================
         $res=array();
@@ -178,8 +192,10 @@ Daftar Fungsi Yang Tersedia :
         $res['users']=$this->users_model->register($post,false);
         if($post['statusMember']=='AGENT'){
             $this->users_model->update_type($email, 10 );
+            logCreate('register as agent:'.$email,'agent');
 
         }
+        $time[]=  microtime();
 
         $message='unknown';
         $res['message']=$message;
@@ -194,6 +210,7 @@ Daftar Fungsi Yang Tersedia :
         //$this->load->view('email/emailRegister_email',$email_data);
         logCreate('active email:'.$post['email']);
         $this->users_model->active_email($post['email']);
+        $time[]=  microtime();
 
         //echo_r($res);die();
         //$res_acc= _localApi('account','register',$post);
@@ -205,6 +222,8 @@ Daftar Fungsi Yang Tersedia :
         $driver_core = 'advforex';
         $driver_name='register';
         $func_name='simple_register';
+        logCreate('start Registeration','register');
+        $time[]=  microtime();
         if( !method_exists($this->{$driver_core}->{$driver_name},$func_name) ){
                 $output=array('function "'.$func_name.'" unable to declare');
                 die(json_encode($output));
@@ -213,7 +232,10 @@ Daftar Fungsi Yang Tersedia :
                 $row=$params=false;
                 logCreate("RUN {$driver_core}->{$driver_name}->{$func_name} ");
                 $res_account=$this->{$driver_core}->{$driver_name}->{$func_name}($post);
+                
         }
+        $time[]=  microtime();
+        logCreate('end Registeration','register');
 /*
 [account] => Array
 (
@@ -231,8 +253,10 @@ Daftar Fungsi Yang Tersedia :
                 'InvestorPassword'=>'zzzzzzz',
                 'ResponseCode'=>0,
                 );
+            logCreate('local Registeration','register');
 
         }
+        $time[]=  microtime();
 
         if($email_data){
             $account_data=array();
@@ -255,11 +279,14 @@ Daftar Fungsi Yang Tersedia :
                 $register_text .="\nLogin: {$email_data['username']}\n";
                 $register_text .="Pass: {$email_data['password']}\n";
                 $register_text .="Master code: {$email_data['mastercode']}\n";
+                $register_text .="acc.id: {$account_data['AccountID']}\n";
+                $register_text .="Trading: {$account_data['MasterPassword']}\n";
+                $register_text .="Investor: {$account_data['InvestorPassword']}\n";
     //====================SMS===================
                 $params=array(
                    'debug'=>true,
                     'number'=>$hp_send,
-                    'message'=>$register_text."Sincerely, Customer Service.",
+                    'message'=>$register_text."Sincerely, CS.",
                     'header'=>'register',
                 //    'local'=>true,
                 //  'type'=>'masking'
@@ -267,8 +294,19 @@ Daftar Fungsi Yang Tersedia :
                 );
 
                 $respon = smsSend($params);
+                $time[]=  microtime();
+                logCreate($respon,'sms');
+                
+                $params=array($hp_send, $email_data['username'],$account_data['AccountID']);
+                $params[] = my_ip();
+                $params[] = $time;
+
+                log_info_table('regis_user', $params);
 
                 $this->load->view('email/emailRegister_email',$email_data);
+                $email_data['no_sms']=true;
+//====================SMS ACCOUNT===================
+                
                 $this->load->view('email/emailRegister_account',$email_data);
 
         //	exit();
