@@ -24,6 +24,7 @@ if ( ! function_exists('dbId')){
             logConfig("create table:$str",'logDB');
             $sql="ALTER TABLE {$name} ENGINE='MyISAM'";
             dbQuery($sql);
+            $sql="ALTER TABLE `{$name}` ADD `id` BIGINT;";dbQuery($sql);
 
         }else{}
         
@@ -38,7 +39,7 @@ if ( ! function_exists('dbId')){
             $sql="ALTER TABLE `{$name}` ADD index(`code`);";dbQuery($sql);
         }
 
-        $now=date("Y-m-d H:i",strtotime("-5 minutes"));
+        $now=date("Y-m-d H:i",strtotime("-10 hours"));
         $sql="delete from `{$name}` where `created` < '$now';";dbQuery($sql);
         $sql="select count(id) c, max(id) max from $name";
         $data=dbFetchOne($sql);
