@@ -54,7 +54,9 @@ if($status==-1||$status==2){
       <td><table width="100%" cellpadding="2">
         <tbody>
           <tr>
-            <td width="60%" height="94"><a href="https://www.salmamarkets.com/"><img src="https://www.salmamarkets.com/wp-content/uploads/2017/02/salmamarket240.png" width="254" height="67" /></a></td>
+            <td width="60%" height="94"><a href="https://www.salmamarkets.com/">
+                    <img src="https://www.salmamarkets.com/wp-content/uploads/2017/02/salmamarket240.png" width="254" height="67" />
+                </a></td>
             <td width="40%" align="center"><?=date("Y-m-d H:i:s");?></td>
           </tr>
         </tbody>

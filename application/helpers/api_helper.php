@@ -339,6 +339,7 @@ if (!function_exists('_send_email')) {
 //========================SMS================
 
 function smsSend($params) {
+    $time=array(microtime());
     $raw = array(microtime(), $params);
     $debug = isset($params['debug']) ? $params['debug'] : false;
     $local = defined('LOCAL')?true:( isset($params['local']) ? $params['local'] : false);
@@ -346,9 +347,15 @@ function smsSend($params) {
     $number = isset($params['number']) ? $params['number'] : false;
     $message = isset($params['message']) ? $params['message'] : false;
     $type = isset($params['type'])?$params['type']:'regular';
-    $header = isset($params['header'])?$params['header']:'regular';
+    $header = isset($params['header'])?$params['header']:'???';
 
     if ($number === false || $message === false) {
+        return false;
+    }
+    
+    if($number==''||$number=='-'){
+        $time['failed']=  microtime();
+        log_info_table('sms', array($number, 0,-1,'error',0, $message, '?',$header,$type));
         return false;
     }
 
@@ -367,11 +374,14 @@ function smsSend($params) {
         "message" => $message,
         "sendingdatetime" => date("Y-m-d H:i:s")
     );
+    
     $arr['datapacket'][] = $ar_send;
 
     $raw[] = $arr;
     $raw[] = $ar_send;
 
+    $time['prepare']=  microtime();
+    
     if($type == 'masking'){
         $sms = new sms_class_masking_json();
     }
@@ -379,12 +389,14 @@ function smsSend($params) {
     if(!isset($sms)){
         $sms = new sms_class_reguler_json();
     }
+    $time['load class']=  microtime();
     //$sms->status();
 
     $raw[] = 'load class:' . microtime();
     $sms->setIp($ipserver);
     $sms->setData($arr);
     $raw[] = 'send data:' . microtime();
+    $time['send_data']=  microtime();
 
     logCreate('smsSend |send:' . json_encode($ar_send));
 
@@ -406,6 +418,7 @@ function smsSend($params) {
     //============balance
     $responjson = $local?'none':$sms->balance();
     $raw[] = 'balance:'.microtime();
+    $time['req balance']=  microtime();
     $raw[] = $responjson;
     $json_balance = json_decode($responjson, true);
     $json_balance = is_array($json_balance) ? $json_balance : $responjson;
@@ -448,6 +461,7 @@ function smsSend($params) {
                     $packet[] = $balance;
                     $packet[] = $header;//8
                     $packet[] = $type;
+                    $packet[] = $time;
                     log_info_table('sms', $packet);
                     
                 }
@@ -455,7 +469,7 @@ function smsSend($params) {
             }
             else {
                 $status[] = false;
-                log_info_table('sms', array($number, 0,-1,'error',0, $message, $balance,$header,$type));
+                log_info_table('sms', array($number, 0,-1,'error',0, $message, $balance,$header,$type,$time));
                 
             }
             

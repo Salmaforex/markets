@@ -140,7 +140,8 @@ if(!function_exists('email_problem')){
 }
 
 if(!function_exists('log_info_table')){
-	function log_info_table($type, $array=FALSE){
+    function log_info_table($type, $array=FALSE)
+    {
             $CI =& get_instance();
             $input = array();//'tmp0'=>$type);
             $n0=0;
@@ -183,7 +184,7 @@ if(!function_exists('log_info_table')){
 
 //===========NAMBAH BEBERAPA tmp input============
                 for($i=1;$i<=30;$i++){
-                        $sql="ALTER TABLE `{$tablename}` ADD `tmp{$i}` varchar(255) NULL;";
+                        $sql="ALTER TABLE `{$tablename}` ADD `tmp{$i}` text NULL;";
                         dbQuery($sql);
                 }
 
@@ -195,9 +196,10 @@ if(!function_exists('log_info_table')){
                 $sql = dbInsert($tablename, $input);
                 logCreate('log insert:'.$tablename);
             }
-	}
+    }
         
-    function log_info_table_make($type){
+    function log_info_table_make($type)
+    {
           $CI =& get_instance();
         $tablename='y_'.trim($type)."s".date("Ym");
         for($i=1;$i<=12;$i++){
@@ -220,7 +222,7 @@ if(!function_exists('log_info_table')){
                 $sql="ALTER TABLE `$tablename` ENGINE=MyISAM";
 
 //===========NAMBAH BEBERAPA tmp input============
-                for($i=1;$i<=30;$i++){
+                for($i=1;$i<=50;$i++){
                         $sql="ALTER TABLE `{$tablename}` ADD `tmp{$i}` varchar(255) NULL;";
                         dbQuery($sql);
                 }
@@ -230,4 +232,5 @@ if(!function_exists('log_info_table')){
             }
         }
     }
+    
 }

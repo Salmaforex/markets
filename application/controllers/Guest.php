@@ -393,6 +393,7 @@ Daftar Fungsi Yang Tersedia :
                            'debug'=>true,
                             'number'=>$phone_user,
                             'message'=>$sms_text."Sincerely, System.",
+                            'header'=>'recover user'
                         //    'local'=>true,
                         //  'type'=>'masking'
 
@@ -456,7 +457,7 @@ Daftar Fungsi Yang Tersedia :
                         $url=site_url('guest/forgot_process')."?t=".base64_encode($json);
                         
                         $sms_text.="Thank you for submitting Recovery form, Here your detail:\n";
-                        $sms_text.=site_url('guest/recover/'.$recoverid);
+                        $sms_text.=site_url('guest/recover/'.$respon['recoverid']);
                         $sms_text.="\nClick Here to Generate Your Recovery Password. The link Expired Soon\nIgnore if you not request this";
                         
                         //====================SMS===================
@@ -464,6 +465,7 @@ Daftar Fungsi Yang Tersedia :
                            'debug'=>true,
                             'number'=>$phone_user,
                             'message'=>$sms_text."Sincerely, System.",
+                            'header'=>'request recover'
                         //    'local'=>true,
                         //  'type'=>'masking'
 
