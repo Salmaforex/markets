@@ -275,8 +275,8 @@ Daftar Fungsi Yang Tersedia :
                 logCreate('email_data:'.print_r($email_data,1));
                 
         //        $register_text .="Hello {$email_data['name']}\n";
-                $register_text .="Your personal area ";//.base_url('login/member');
-                $register_text .="\nLogin: {$email_data['username']}\n";
+                //$register_text .="Your personal area ";//.base_url('login/member');
+                $register_text .="\nLogin:{$email_data['username']}\n";
                 $register_text .="Pass: {$email_data['password']}\n";
                 $register_text .="Master code: {$email_data['mastercode']}\n";
                 $register_text .="acc.id: {$account_data['AccountID']}\n";
@@ -286,7 +286,7 @@ Daftar Fungsi Yang Tersedia :
                 $params=array(
                    'debug'=>true,
                     'number'=>$hp_send,
-                    'message'=>$register_text."Sincerely, CS.",
+                    'message'=>$register_text."Sincerely, CS",
                     'header'=>'register',
                 //    'local'=>true,
                 //  'type'=>'masking'

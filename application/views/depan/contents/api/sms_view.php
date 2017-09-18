@@ -43,7 +43,7 @@ if (  function_exists('logFile')){ logFile('view/member/api','widtdrawal_view.ph
                             <thead>
                                     <tr>
                                             <th>Date</th>
-                                            <th>status</th>							
+                                            <th>TYPE</th>							
                                             <th>Jumlah</th>
 
                                     </tr>
@@ -51,9 +51,9 @@ if (  function_exists('logFile')){ logFile('view/member/api','widtdrawal_view.ph
                             <tfooter>
                                     <tr>
                                             <th>Date</th>
-                                            <th>Tujuan</th>
+                                            <th>TYPE</th>
 
-                                            <th>Header</th>
+                                            <th>JUMLAH</th>
                                     </tr>
                             </tfooter>
             </table>

@@ -6,7 +6,7 @@ Advforex_forex_balance
 class Advforex_sms extends CI_Driver {
 private $urls,$privatekey;
 public $CI;
-	function execute($params){
+    function execute($params){
 	$CI =& get_instance();
         $result=array('params'=>$params);
         $result['time'][ ]=microtime(true);
@@ -106,18 +106,18 @@ public $CI;
                 $data[]=$row;
         }
 
-		$result['data']=$data;
-		$result['times']=$times;
-		unset($result['time']);
-		$result['params']=$params;
-		$warning = ob_get_contents();
-		ob_end_clean();
-		if($warning!=''){
-			$result['warning']=$warning;     
-		}
+        $result['data']=$data;
+        $result['times']=$times;
+        unset($result['time']);
+        $result['params']=$params;
+        $warning = ob_get_contents();
+        ob_end_clean();
+        if($warning!=''){
+                $result['warning']=$warning;     
+        }
 
 		return $result;
-	}
+    }
 
 	function __CONSTRUCT(){
 	$CI =& get_instance();
