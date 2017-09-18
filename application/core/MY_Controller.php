@@ -196,6 +196,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				$respon['raw']=array($data,$param,$res );
 				$respon['time']=$aTime;
 				$respon['valid']=isset($respon_valid)?$respon_valid:false;
+                                $respon[]='ok';
+                            if(!defined('LOCAL')){
+                                unset($respon['sql'],$respon['sql'],$respon['params'],$respon['raw']);
+                            }
 			//	logCreate($respon);
 				if(!isset($respon['status'])){ 
 					echo json_encode($respon);
@@ -221,6 +225,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		if(!isset($ok)){
 			$this->errorMessage('266',$message);
 		}
+                
+                
 		
 		$this->succesMessage($respon);
 	}
@@ -269,6 +275,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	}
 	
 	protected function succesMessage($respon){
+        //    $respon[]='success msg';
+            
 		echo json_encode(
 		  array(
 			'status'=>true,
