@@ -34,6 +34,7 @@ if (  function_exists('logFile')){ logFile('view/member/api','widtdrawal_view.ph
 						</tr>
 					</tfooter>
 			</table>
+                        <hr/>
                         <table id="tableEmailLogs" class="display" cellspacing="0" width="100%">
 					<thead>
 						<tr>

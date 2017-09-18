@@ -362,7 +362,7 @@ catch(err){
 }
 
 try{	
-	tableWidtdrawal=jQuery('#tableSms').DataTable( {
+	tableTop=jQuery('#tableSms').DataTable( {
 		"columnDefs": [
             { 
 			
@@ -382,23 +382,49 @@ try{
         "columns": [
             { "data": "modified"},
             { "data": "tmp8"},
-            { "data": "tmp1"},
-            { "data": "msg" },
-            { "data": "balance" },
+            { "orderable":      false,"data": "tmp1"},
+            { "orderable":      false,"data": "msg" },
+            { "orderable":      false,"data": "balance" },
             { "data": "tmp9" }           
         ]
     } );
-	//console.log('table widtdrawal ready');
+
+    console.log('table SMS ready');
+        tableLogs=jQuery('#tableSmsLogs').DataTable( {
+		"columnDefs": [
+            { 
+			
+            }
+		],
+		"order": [[ 0, "desc" ]],
+        "processing": true,
+        "serverSide": true,
+		"lengthMenu": [
+                [ 3,5, 10,15, 20, 35],
+                [ 3,5, 10,15, 20, "max 35"] // change per page values here
+            ],
+        "ajax": {
+            "url": urlAPILogs,
+            "type": "POST"
+        },
+        "columns": [
+            { "data": "tgl"},
+            { "data": "status","orderable":      false},
+            { "data": "jumlah","orderable":      false},           
+        ],
+        "dom": '<"top"i>rt<"bottom"flp><"clear">'
+    } );
 
 }
 catch(err){
 //	 console.log('not table Widtdrawal');
 //	 console.log(err);
 }
-//====================BATCH EMAIL
 
+
+//====================BATCH EMAIL
 try{	
-    tableWidtdrawal=jQuery('#tableEmail').DataTable( {
+    tableTop=jQuery('#tableEmail').DataTable( {
 		"columnDefs": [
             { 
 			
@@ -422,7 +448,7 @@ try{
         ]
     } );
     
-    tableWidtdrawal=jQuery('#tableEmailLogs').DataTable( {
+    tableLogs=jQuery('#tableEmailLogs').DataTable( {
 		"columnDefs": [
             { 
 			
@@ -441,8 +467,8 @@ try{
         },
         "columns": [
             { "data": "tgl"},
-            { "data": "status"},
-            { "data": "jumlah"},           
+            { "orderable":      false,"data": "status"},
+            { "orderable":      false,"data": "jumlah"},           
         ]
     } );
 	//console.log('table widtdrawal ready');
