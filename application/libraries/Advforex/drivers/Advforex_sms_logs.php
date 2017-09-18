@@ -24,7 +24,7 @@ public $CI;
             'created','username0','username','email'
             );
         
-            $sql="select count(*) c from (SELECT count(*) c FROM $table group by date(modified),tmp9) as c";
+            $sql="select count(*) c from (SELECT count(*) c FROM $table group by date(modified),tmp8) as c";
             $dt=dbFetchOne($sql);
             
             $result['time'][ ]=microtime(true);
@@ -85,7 +85,7 @@ public $CI;
             $where2='';//' and u_email like "gundambison%" ';
             $sql="select count(*) jumlah, date(modified) tgl, tmp8 status from 
                 $table
-                group by date(modified), tmp9
+                group by date(modified), tmp8
                   $orders limit $start, $limit
                ";
             /*
@@ -103,8 +103,8 @@ public $CI;
             $times['run query']=microtime();
             logCreate('total :'.count($data));
             foreach($dt as $row){
-                    $result['time'][ ]=microtime(true);
-                    $data[]=$row;
+                $result['time'][ ]=microtime(true);
+                $data[]=$row;
             }
 
             $result['data']=$data;
