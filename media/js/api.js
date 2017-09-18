@@ -25,9 +25,9 @@ try{
                 [5, 10,15, 20, "max 35"] // change per page values here
             ],
         "columns": [			
-			{ "data": "created"},
+            { "data": "created"},
             { "data": "url" },
-            { "data": "param" },
+            { "data": "param" }
         ]
     } );
 }

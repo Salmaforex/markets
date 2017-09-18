@@ -83,7 +83,7 @@ public $CI;
             }
 
             $where2='';//' and u_email like "gundambison%" ';
-            $sql="select count(*) jumlah, date(modified) tgl, tmp9 status from 
+            $sql="select count(*) jumlah, date(modified) tgl, tmp8 status from 
                 $table
                 group by date(modified), tmp9
                   $orders limit $start, $limit
@@ -104,8 +104,6 @@ public $CI;
             logCreate('total :'.count($data));
             foreach($dt as $row){
                     $result['time'][ ]=microtime(true);
-
-
                     $data[]=$row;
             }
 
