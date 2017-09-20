@@ -959,40 +959,48 @@ Daftar Fungsi Yang Tersedia :
 	}
 
 	public function account_id($accountid=0){
-		$this->checkLogin();
-                $get=$this->input->get();
+            $this->checkLogin();
+            $get=$this->input->get();
 //======BALANCE
-		$array=array('accountid'=>$accountid);		
-		$account_detail = $this->account->detail($accountid,'accountid') ;
-		$array['balance']=  isset($account_detail['balance'])?$account_detail['balance']:array();
-		$array['summary']=isset($account_detail['summary'])?$account_detail['summary']:array();
-		$this->param['userlogin']['accountid']=$accountid;
-		//$array['balance']
-                $balance0 = isset($this->param['userlogin']['balance'])?$this->param['userlogin']['balance']:0;
-
+            $array=array('accountid'=>$accountid);		
+            $account_detail = $this->account->detail($accountid,'accountid') ;
+            $array['balance']=  isset($account_detail['balance'])?$account_detail['balance']:array();
+            $array['summary']=isset($account_detail['summary'])?$account_detail['summary']:array();
+            $this->param['userlogin']['accountid']=$accountid;
+            //$array['balance']
+            $balance0 = isset($this->param['userlogin']['balance'])?$this->param['userlogin']['balance']:0;
+            $session=$this->param['session'];
+            //
+            if( $session['balance']  != $array['balance']   ){
 //		$session=$this->param['session'];echo_r($session);echo_r($array);exit;
-		if( $balance0 != $array['balance'] ||$this->param['userlogin']['summary'] != $array['summary']  ){
-		//	$this->param['userlogin']['balance']=$array['balance'];
-			$this->session->set_userdata($array);
-                    if(!isset($get['act'])){
-                        redirect('partner/account_id/'.$accountid.'?act=save_balance&d='.date("his"));
-                    }
-                    else{
-                        
-                    }
-		}
-		else{
-			$session=$this->param['session'];
-			//echo_r($session);echo_r($array);exit;
-		}
+            //if( $balance0 != $array['balance'] ||$this->param['userlogin']['summary'] != $array['summary']  ){
+            //	$this->param['userlogin']['balance']=$array['balance'];
+                    $this->session->set_userdata($array);
+                if($this->input->get('d')){
+                    redirect('partner');
+                    echo_r($session);echo_r($array);exit;
+                    die('error');
+                }
+                
+                if(!isset($get['act'])){
+                    redirect('partner/account_id/'.$accountid.'?act=save_balance&d='.date("his"));
+                }
+                else{
 
-		$this->param['accountid']=$accountid;
-		$this->param['title']='SECURE ACCOUNT | Profile'; 
-		$this->param['content']=array(
-			'account_detail', 
-		);
-		$this->param['footerJS'][]='js/login.js';
-		$this->showView(); 
+                }
+            }
+            else{
+                    $session=$this->param['session'];
+                    //echo_r($session);echo_r($array);exit;
+            }
+
+            $this->param['accountid']=$accountid;
+            $this->param['title']='SECURE ACCOUNT | Profile'; 
+            $this->param['content']=array(
+                    'account_detail', 
+            );
+            $this->param['footerJS'][]='js/login.js';
+            $this->showView(); 
 		
 	}
 

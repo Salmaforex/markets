@@ -1223,11 +1223,18 @@ Daftar Fungsi Yang Tersedia :
             //$array['balance']
             $this->param['show_account_debug']=$this->input->get('show_account_debug')?true:false;
 
-//		$session=$this->param['session'];echo_r($session);echo_r($array);exit;
-            if( $this->param['userlogin']['balance'] != $array['balance'] ||$this->param['userlogin']['summary'] != $array['summary']  ){
+            $session=$this->param['session'];
+            //
+            if( $session['balance']  != $array['balance']   ){
             //	$this->param['userlogin']['balance']=$array['balance'];
-                    $this->session->set_userdata($array);
-                    redirect('member/account_id/'.$accountid.'?act=save_balance&d='.date("his"));
+                $this->session->set_userdata($array);
+                //echo_r($array);die('stop');
+                if($this->input->get('d')){
+                    redirect('member');
+                    echo_r($session);echo_r($array);exit;
+                    die('error');
+                }
+                redirect('member/account_id/'.$accountid.'?act=save_balance&d='.date("his"));
             }
             else{
                     $session=$this->param['session'];
