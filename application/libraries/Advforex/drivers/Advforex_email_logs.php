@@ -22,7 +22,8 @@ public $CI;
 		'created','username0','username','email'
 		);
             $year = date('Y');
-                $sql="select count(*) c from (SELECT count(*) c FROM `zbatch_email` group by status, date(created)) as c";
+                $sql="select count(*) c from (SELECT count(*) c FROM `zbatch_email` group by  date(created), hour(created)) "
+                        . "as c";
 		$dt=dbFetchOne($sql);
 		$result['time'][ ]=microtime(true);
 		$result['sql'][]=array($sql,$dt);
@@ -80,9 +81,9 @@ public $CI;
 		}
 
 		$where2='';//' and u_email like "gundambison%" ';
-		$sql="select count(*) jumlah, date(created) tgl, status from 
+		$sql="select count(*) jumlah, date(created) tgl,  hour(created) as hour from 
                     `zbatch_email`
-                    group by date(created), status
+                    group by date(created), hour(created)
                       $orders limit $start, $limit
                     
                    ";
@@ -101,10 +102,9 @@ public $CI;
 		$times['run query']=microtime();
 		logCreate('total :'.count($data));
 		foreach($dt as $row){
-			$result['time'][ ]=microtime(true);
-                         
-
-			$data[]=$row;
+                    $result['time'][ ]=microtime(true); 
+                    $row['status']=$row['hour'].":00";
+                    $data[]=$row;
 		}
  
 		$result['data']=$data;
@@ -113,6 +113,7 @@ public $CI;
 		$result['params']=$params;
 		$warning = ob_get_contents();
 		ob_end_clean();
+                
 		if($warning!=''){
 			$result['warning']=$warning;     
 		}
