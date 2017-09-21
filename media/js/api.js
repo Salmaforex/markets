@@ -20,7 +20,7 @@ try{
             "url": urlAPI,
             "type": "POST"
         },
-		"lengthMenu": [
+        "lengthMenu": [
                 [5, 10,15, 20, 35],
                 [5, 10,15, 20, "max 35"] // change per page values here
             ],

@@ -14,12 +14,16 @@ function config_site($name,$config_file='site_config'){
     return $config_value;
 }
 
+function is_local(){
+	return is_file('default.php')?true:false;
+}
+
 function echo_r($param=array()){
-    if(defined('LOCAL')){
+    if(is_local('LOCAL')){
 	echo '<pre>'.print_r($param,1).'</pre>';
     }
     else{
-		logCreate('param |echo_r |total param='.count($param) );
+	logCreate('param |echo_r |total param='.count($param) );
     }
 }
 
