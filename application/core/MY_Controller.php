@@ -192,38 +192,40 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			}
 			//echo_r($ar);exit();
 			if(is_array($ar)){
-				$respon=$ar;
-				$respon['raw']=array($data,$param,$res );
-				$respon['time']=$aTime;
-				$respon['valid']=isset($respon_valid)?$respon_valid:false;
-                                $respon[]='ok';
-                            if(!defined('LOCAL')){
+                            $respon=$ar;
+                           // $respon['raw']=array($data,$param,$res );
+                            $respon['time']=$aTime;
+                            $respon['valid']=isset($respon_valid)?$respon_valid:false;
+                            $respon[]='ok';
+                            
+                            if(ENVIRONMENT != 'development'){
                                 unset($respon['sql'],$respon['sql'],$respon['params'],$respon['raw']);
+                                $respon['clean']=true;
                             }
 			//	logCreate($respon);
-				if(!isset($respon['status'])){ 
-					echo json_encode($respon);
-					exit(); 
-				}
-				
-				if($respon['status']==true){
-					$ok=1;
-				}
-				else{
-					$message=isset($respon['message'])?$respon['message']:false;
-				}
+                            if(!isset($respon['status'])){ 
+                                echo json_encode($respon);
+                                exit(); 
+                            }
+
+                            if($respon['status']==true){
+                                    $ok=1;
+                            }
+                            else{
+                                    $message=isset($respon['message'])?$respon['message']:false;
+                            }
 			}
 			else{
-				logCreate("unknown :".json_encode($raw));
-				$this->errorMessage('267',$raw,$message);
+                            logCreate("unknown :".json_encode($raw));
+                            $this->errorMessage('267',$raw,$message);
 			}
 		}
 		else{
-			logCreate("unknown :".$open);
+                    logCreate("unknown :".$open);
 		}
 		
 		if(!isset($ok)){
-			$this->errorMessage('266',$message);
+                    $this->errorMessage('266',$message);
 		}
                 
                 

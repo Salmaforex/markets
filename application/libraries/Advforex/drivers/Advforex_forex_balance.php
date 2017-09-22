@@ -29,7 +29,7 @@ public $CI;
 		);
                 
 		if(defined('LOCAL')){
-			$json='{"AccountID":"'.$accountid.'", "Balance":"10.000000","Credit":"30.000000","Equity":"0.000000","FreeMargin":"0.000000","ResponseCode":"0","ResponseText":"Get margin success"}';
+			$json='{"AccountID":"'.$accountid.'", "Balance":"103.000000","Credit":"30.000000","Equity":"0.000000","FreeMargin":"0.000000","ResponseCode":"0","ResponseText":"Get margin demo success"}';
 			$result['margin']=json_decode($json,true);
 		}
 		else{

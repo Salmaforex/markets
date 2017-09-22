@@ -7,7 +7,7 @@ $driver_core = 'advforex';
 $func_name='execute';
 $driver_name='forex_balance';
 $result =  $this->{$driver_core}->{$driver_name}->{$func_name}(array($detail['account']));
-//echo_r($result);
+echo'<pre>';print_r($result);echo'</pre>';
 $balance = isset($result['margin']['Balance'])?$result['margin']['Balance']:0;
 ?>
 <table width="650" border="0" align="center" cellpadding="2" cellspacing="2">
@@ -85,10 +85,12 @@ $balance = isset($result['margin']['Balance'])?$result['margin']['Balance']:0;
       <td><p>Our Bank information :</p>
         <h3>
 <?php
-		$bank = $key=$this->config->item('forex_bank');
-		foreach($bank[$rate['code']] as $row){
-			echo "\n\t{$row['name']} : <strong>{$row['number']}</strong>  {$row['person']}<br />";
-		}
+        $bank = $key=$this->config->item('forex_bank');
+        if(isset($bank[$rate['code']])&&  is_array($bank[$rate['code']])){        
+            foreach($bank[$rate['code']] as $row){
+                    echo "\n\t{$row['name']} : <strong>{$row['number']}</strong>  {$row['person']}<br />";
+            }
+        }
 ?>  
       <hr align="center" noshade="noshade" /></td>
     </tr>

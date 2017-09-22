@@ -42,5 +42,5 @@ $config['logAlto']=array(
 //============email admin=========
 $config['email_for_report']=array(
 	'gundambison@gmail.com',
-    'ducthien84@gmail.com'
+//    'ducthien84@gmail.com'
 );

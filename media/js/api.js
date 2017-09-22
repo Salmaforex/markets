@@ -81,8 +81,8 @@ try{
         "processing": true,
         "serverSide": true,
 		"lengthMenu": [
-                [3,5, 10,15, 20, 35],
-                [3,5, 10,15, 20, "max 35"] // change per page values here
+                [3,5, 10],
+                [3,5, 10] // change per page values here
             ],
         "ajax": {
             "url": urlAPI,
@@ -91,9 +91,9 @@ try{
         "columns": [
 			{ "data": "created"},
 			{ "data": "accountid"},
-            { "data": "raw.username" },
-            { "data": "raw.name" },
-            { "data": "raw.orderWidtdrawal" },
+            { "data": "dt.username" },
+            { "data": "dt.name" },
+            { "data": "dt.orderWidtdrawal" },
             { "data": "detail" },
             { "data": "status" },
             { "data": "action" },             

@@ -19,6 +19,11 @@ if($userlogin['u_type']==7){
 }
 */
 
+//==============DRIVER OPTION==========
+$driver_core = 'advforex';
+$func_name='execute';
+$driver_name='forex_balance';
+
 $sql="select count(id) c from mujur_flowlog where
 types='widtdrawal' $where_currency";
 
@@ -42,23 +47,45 @@ foreach($dt as $row){
 	//$row['url']=substr($row['rawUrl'],0,30);
 	//$row['param']=substr($row['rawParam'],0,30);
 	$row['raw']=json_decode($row['param']);
+        
+        
 //========account id
 	$row['accountid'] = isset($row['raw']->account )?$row['raw']->account:$row['accountid'];
+        $result =  $this->{$driver_core}->{$driver_name}->{$func_name}(array($row['accountid']));
+        $balance = isset($result['margin']['Balance'])?$result['margin']['Balance']:0;
+        $row['raw']->margin=isset($result['margin'] )?$result['margin']:array();
+        $row['balance']=$balance;//isset($result['margin'] )?$result['margin']:array();
 
 	if(!isset($row['raw']->username)){
-		$row['raw']->username='-';
-		$row['status']=-1;
+            $row['raw']->username='-';
+            $row['status']=-1;
 	}
+        
 	if(isset($row['raw']->userlogin->accountid)&&$row['raw']->userlogin->accountid!='')
 		$row['raw']->username=$row['raw']->userlogin->accountid.".";
 	
-	$row['action']=$row['status']==0?'<input type="button" onclick="widtdrawalApprove('.
-	$row['id'].');" value="approved" />
-	  <input 
-	type="button" onclick="widtdrawalCancel('.
-	  $row['id'].');" value="Cancel" />':'--';
-//=========ACTION YG DIGUNAKAN=========	  
-	$row['action'].=$row['status']==0?'<a target="_blank" href="'.site_url('admin/widthdrawal/detail/'.$row['id']).'"><input type="button" value="Detail" /></a>':'';
+	
+//=========ACTION YG DIGUNAKAN=========
+        if($balance > $row['raw']->orderWidtdrawal){
+            $row['action']=$row['status']==0?'<input type="button" onclick="widtdrawalApprove('.
+                $row['id'].');" value="approved" />
+                  <input 
+                type="button" onclick="widtdrawalCancel('.
+                  $row['id'].');" value="Cancel" />':'-.-';
+        
+        }
+        else{
+            $warn="<br/>Warning: review Balance!<br/> ";
+             $row['action']=$row['status']==0?'<input type="button" onclick="widtdrawalApprove('.
+                $row['id'].');" value="approved (warn)" />'.$warn. ' 
+                  <input 
+                type="button" onclick="widtdrawalCancel('.
+                  $row['id'].');" value="Cancel" />':'-!-';
+                
+          
+        }
+          $row['action'].=$row['status']==0?'<a target="_blank" href="'.
+                    site_url('admin/widthdrawal/detail/'.$row['id']).'"><input type="button" value="Detail" /></a>':'';
 	  
 	$status0=$row['status']==0?'open':'close';
 	if($row['status']==1){
@@ -84,15 +111,18 @@ foreach($dt as $row){
 	//$row['flowid']=sprintf("%s%04s",date("ymd",strtotime($row['created']) ),$row['id']);
         //=======new========
         $row['currency_detail']=$currency=$this->forex->currency_by_code($row['currency']);
-	$row['raw']->orderWidtdrawal0 = $row['raw']->orderWidtdrawal;
-	$row['raw']->orderWidtdrawal ='$'.number_format($row['raw']->orderWidtdrawal,2).'<br/> '.$currency['symbol'].number_format($row['raw']->order1,2) .'<br/>Rate  '.$currency['symbol'].number_format($row['raw']->rate,2).'<BR/>'.$currency['name'];
+        $row['dt'] = new stdClass();
+        $row['dt']->username = $row['raw']->username;
+        $row['dt']->name=$row['raw']->name;
+	$row['dt']->orderWidtdrawal0 = $row['raw']->orderWidtdrawal;
+	$row['dt']->orderWidtdrawal ='$'.number_format($row['raw']->orderWidtdrawal,2).'<br/> '.$currency['symbol'].number_format($row['raw']->order1,2) .'<br/>Rate  '.$currency['symbol'].number_format($row['raw']->rate,2).'<BR/>'.$currency['name'];
 	$row['flowid']=sprintf("%s%04s",date("ymd",strtotime($row['created']) ),$row['id']);
-        
+        unset($row['raw'],$row['currency_detail']);
 	$data[]=$row;
 }
 
 $respon['data']=$data;
-$respon['-']=$post0; 
+$respon['debug']=$post0; 
 $respon['time'][]=microtime(true);
 //echo '<pre>'.print_r($data,1);die();
 $warning = ob_get_contents();
@@ -101,10 +131,11 @@ if($warning!=''){
     $respon['warning']=$warning;
 }
 
-unset($respon['raw'],$respon['raw2']);
+unset($respon['raw'],$respon['raw2'],$respon['debug']);
 
 if(isset($respon)){ 
-	echo json_encode($respon);
-}else{
-	echo json_encode(array());
+    echo json_encode($respon);
+}
+else{
+    echo json_encode(array());
 }
