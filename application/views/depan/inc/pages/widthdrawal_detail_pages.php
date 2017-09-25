@@ -7,7 +7,7 @@ $driver_core = 'advforex';
 $func_name='execute';
 $driver_name='forex_balance';
 $result =  $this->{$driver_core}->{$driver_name}->{$func_name}(array($detail['account']));
-echo'<pre>';print_r($result);echo'</pre>';
+//echo'<pre>';print_r($result);echo'</pre>';
 $balance = isset($result['margin']['Balance'])?$result['margin']['Balance']:0;
 ?>
 <table width="650" border="0" align="center" cellpadding="2" cellspacing="2">
