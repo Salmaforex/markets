@@ -13,15 +13,21 @@ $rate=$this->forex_model->currency_by_code( $detail['currency']);
 $status_title='';
 if($status==1){
 	$status_title='Success';
+}
+if($status<0||$status==2){
+	$status_title='Cancelled';
+}
+
         //====================SMS===================
+if($status==1){
     $userlogin = $detail['userlogin'];
     $email = $userlogin['email'];
     $phone = $this->users_model->phone_by_email( $email );
     $sms_text   =   "Withdrawal Order Detail";
-    $sms_text   .="\naccount:".$detail['account'];
-    $sms_text   .="\nStatus: ".$status_title;
-    $sms_text   .="\nAmount(USD):".number_format($detail['orderWidtdrawal'],2);
-    $sms_text   .="\nAmount(".$rate['code']."):";
+    $sms_text   .="\nAccount id : ".$detail['account'];
+    $sms_text   .="\nStatus : ".$status_title;
+    $sms_text   .="\nAmount(USD) : ".number_format($detail['orderWidtdrawal'],2);
+    $sms_text   .="\nAmount(".$rate['code'].") : ";
     $sms_text   .=number_format($detail['order1'],2);
 
     //$sms_text   .=$rate['symbol']." ".number_format($rate['value'],2);
@@ -29,18 +35,16 @@ if($status==1){
     $params=array(
        'debug'=>true,
         'number'=>$phone,
-        'message'=>$sms_text."Sincerely, Finance Departement.",
-        'header'=>'Withdrawal Status '.$status_title 
+        'message'=>$sms_text."Sincerely, Finance Departement",
+        'header'=>'Withdrawal Status '.$status_title ,
     //    'local'=>true,
-    //  'type'=>'masking'
+      'type'=>'masking'
     );
     $respon = smsSend($params);
     logCreate($respon,'sms');
 }
 //==========================
-if($status<0||$status==2){
-	$status_title='Cancelled';
-}
+
 ?>
 <body>
 <table width="650" border="0" align="center" cellpadding="2" cellspacing="2">

@@ -21,11 +21,11 @@ if($status==1){
         $email = $userlogin['email'];
         $phone = $this->users_model->phone_by_email( $email );
         $sms_text   =   "Deposit Order Detail";
-        $sms_text   .="\naccount:".$detail['account'];
+        $sms_text   .="\nAccount id : ".$detail['account'];
 
-        $sms_text   .="\nStatus: ".$status_title;
-        $sms_text   .="\nAmount(USD):".number_format($detail['orderDeposit'],2);
-        $sms_text   .="\nAmount(".$rate['code']."):";
+        $sms_text   .="\nStatus : ".$status_title;
+        $sms_text   .="\nAmount(USD) : ".number_format($detail['orderDeposit'],2);
+        $sms_text   .="\nAmount(".$rate['code'].") : ";
         $sms_text   .=number_format($detail['order1'],2);
         //$sms_text   .=$rate['symbol']." ".number_format($rate['value'],2);
         $sms_text   .="\n";
@@ -34,10 +34,10 @@ if($status==1){
     $params=array(
        'debug'=>true,
         'number'=>$phone,
-        'message'=>$sms_text."Sincerely, Finance Departement.",
+        'message'=>$sms_text."Sincerely, Finance Departement",
         'header'=>'Deposit status '.$status_title,
     //    'local'=>true,
-    //  'type'=>'masking'
+      'type'=>'masking'
 
     );
 

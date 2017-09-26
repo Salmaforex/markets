@@ -56,7 +56,9 @@ if(isset($name)){
 			<p>Your Personal Area at 
 			<a href="<?=site_url('login/member');?>">
 			<?=base_url('login/member');?></a> 
-			is your best tool to manage your account(s). You can deposit your account, withdraw from your account, view stats, take part in contests and many more.<br />
+			is your best tool to manage your account(s). 
+                        You can deposit your account, withdraw from your account, view stats, 
+                        take part in contests and many more.<br />
 			</p>
 		  <hr align="center" noshade="noshade" /></td>
 		</tr>

@@ -18,7 +18,7 @@ $params=array(
     'message'=>$sms_text."Sincerely, Customer Service.",
     'header'=>'account password update',
 //    'local'=>true,
-//  'type'=>'masking'
+  'type'=>'masking'
 
 );
 

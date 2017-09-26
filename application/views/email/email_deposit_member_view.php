@@ -3,26 +3,26 @@
 $email = $userlogin['email'];
 $phone = $this->users_model->phone_by_email( $email );
 $sms_text   =   "Deposit Order Detail";
-$sms_text   .="\naccount:".$post0['account'];
-$sms_text   .="\nAmount(USD):".number_format($post0['orderDeposit'],2);
-$sms_text   .="\nAmount(".$rate['code']."):";
+$sms_text   .="\nAccount id : ".$post0['account'];
+$sms_text   .="\nAmount(USD) : ".number_format($post0['orderDeposit'],2);
+$sms_text   .="\nAmount(".$rate['code'].") : ";
 $sms_text   .= number_format($post0['order1'],2);//$rate['symbol']." ".
-$sms_text   .="\nRate(".$rate['code']."):";
+$sms_text   .="\nRate(".$rate['code'].") : ";
 $sms_text   .= number_format($rate['value'],2);
 $sms_text   .="\n";
 //====================SMS===================
 $params=array(
    'debug'=>true,
     'number'=>$phone,
-    'message'=>$sms_text."Sincerely, Finance Departement.",
+    'message'=>$sms_text."Sincerely, Finance Departement",
     'header'=>'Deposit order',
 //    'local'=>true,
-//  'type'=>'masking'
+  'type'=>'masking'
 
 );
 
 if(isset($_POST['order1'])){ //memastikan bahwa ada proses POST
-    $respon = smsSend($params);
+    $respon = smsSend($params); //ok
     logCreate($respon,'sms');
 }
 
@@ -137,11 +137,11 @@ $params=array(
     'number'=>$hp_send,
     'message'=>$sms_text."Sincerely, Customer Service.",
 //    'local'=>true,
-//  'type'=>'masking'
+  'type'=>'masking'
 
 );
 
-$respon = smsSend($params);
+//$respon = smsSend($params);
 
         $bank = $key=$this->config->item('forex_bank');
         foreach($bank[$rate['code']] as $row){

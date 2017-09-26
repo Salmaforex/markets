@@ -106,7 +106,7 @@ Daftar Fungsi Yang Tersedia :
 
         $ar_key=array('name','city','state','zip','address','phone');
         $hp_send = $post['phone'];
-        $register_text ="Welcome to Salma Markets.";
+        $register_text ="Welcome to Salma Markets.\n";
         $time[]=  microtime();
         foreach($ar_key as $key){
             $values=isset($post[$key])?trim($post[$key]):'';
@@ -274,22 +274,25 @@ Daftar Fungsi Yang Tersedia :
 
                 logCreate('email_data:'.print_r($email_data,1));
                 
-        //        $register_text .="Hello {$email_data['name']}\n";
-                //$register_text .="Your personal area ";//.base_url('login/member');
-                $register_text .="\nLogin:{$email_data['username']}\n";
-                $register_text .="Pass: {$email_data['password']}\n";
-                $register_text .="Master code: {$email_data['mastercode']}\n";
-                $register_text .="acc.id: {$account_data['AccountID']}\n";
-                $register_text .="Trading: {$account_data['MasterPassword']}\n";
-                $register_text .="Investor: {$account_data['InvestorPassword']}\n";
+                $register_text .="Hello {$email_data['name']}\n";
+                
+                $register_text .="Your personal area Access\n".base_url('login/member');
+                $register_text .="\nLogin : {$email_data['username']}\n";
+                $register_text .="Pass : {$email_data['password']}\n";
+                $register_text .="Master code : {$email_data['mastercode']}\n";
+                $register_text .="Please Update Your Personal Area Password and MT4 Account\n";
+                $register_text .="Account id : {$account_data['AccountID']}\n";
+                $register_text .="Trading : {$account_data['MasterPassword']}\n";
+                $register_text .="Investor : {$account_data['InvestorPassword']}\n";
+                $register_text .="For help, please login to your Salma Markets account and click in Live Support icon for Support.";
     //====================SMS===================
                 $params=array(
-                   'debug'=>true,
+                    'debug'=>true,
                     'number'=>$hp_send,
-                    'message'=>$register_text."Sincerely, CS",
+                    'message'=>$register_text."\nPlease do not reply this messages, the message generate automatic\nSincerely, CS.",
                     'header'=>'register',
                 //    'local'=>true,
-                //  'type'=>'masking'
+                    'type'=>'masking'
 
                 );
 
@@ -297,7 +300,7 @@ Daftar Fungsi Yang Tersedia :
                 $time[]=  microtime();
                 logCreate($respon,'sms');
                 
-                $params=array($hp_send, $email_data['username'],$account_data['AccountID']);
+                $params=array($hp_send, $email_data['username'], $account_data['AccountID']);
                 $params[] = my_ip();
                 $params[] = $time;
 

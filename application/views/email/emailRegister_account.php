@@ -5,9 +5,9 @@ $phone = $this->users_model->phone_by_email( $email );
 $register_text =  "Welcome to Salmamarkets ";//"Hello {$name}, ";
 $register_text .="Trading Area Access\n";
 
-$register_text .="acc id: {$account['AccountID']}\n";
-$register_text .="Trading: {$account['MasterPassword']}\n";
-$register_text .="Investor: {$account['InvestorPassword']}\n";
+$register_text .="Account id : {$account['AccountID']}\n";
+$register_text .="Trading : {$account['MasterPassword']}\n";
+$register_text .="Investor : {$account['InvestorPassword']}\n";
 //====================SMS===================
 $params=array(
    'debug'=>true,
@@ -15,7 +15,7 @@ $params=array(
     'message'=>$register_text."Sincerely, Customer Service.",
     'header'=>'Register Account',
 //    'local'=>true,
-//  'type'=>'masking'
+  'type'=>'masking'
 
 );
 
