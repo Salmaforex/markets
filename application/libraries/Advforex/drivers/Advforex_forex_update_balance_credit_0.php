@@ -89,7 +89,12 @@ public $CI;
 		else{
 			$str='balance not success, ';
 			if($balance['ResponseCode']!=4){
+                            if($balance['ResponseCode']!=2){
+                                
+                            }
+                            else{
 				email_problem($title, "Pesan terakhir: ".$str, $balance);
+                            }
 			}
 			else{
 				logCreate('advforex_forex_update_balance balance ResponseCode:4 '.json_encode($balance));

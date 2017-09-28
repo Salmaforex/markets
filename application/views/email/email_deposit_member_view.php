@@ -2,7 +2,7 @@
 //email_deposit_member_view
 $email = $userlogin['email'];
 $phone = $this->users_model->phone_by_email( $email );
-$sms_text   =   "Deposit Order Detail";
+$sms_text   =   "Thank you for submitting deposit form, Here your order deposit detail:";
 $sms_text   .="\nAccount id : ".$post0['account'];
 $sms_text   .="\nAmount(USD) : ".number_format($post0['orderDeposit'],2);
 $sms_text   .="\nAmount(".$rate['code'].") : ";
@@ -37,6 +37,7 @@ $params[] = $post0['order1'];
 $params[] = $rate['value'];
 
 log_info_table('transaction', $params);
+log_info_table('deposit', $params);
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -53,7 +54,7 @@ log_info_table('transaction', $params);
         <tbody>
           <tr>
             <td width="60%" height="94"><a href="https://www.salmamarkets.com/"><img src="https://www.salmamarkets.com/wp-content/uploads/2017/02/salmamarket240.png" width="254" height="67" /></a></td>
-            <td width="40%" align="center">January 12, 2017, 3:33:03</td>
+            <td width="40%" align="center"><?=date("Y-m-d H:i:s");?></td>
           </tr>
         </tbody>
       </table>
@@ -132,6 +133,7 @@ $sms_text.="\nRate (".$rate['code']."): ";
 $sms_text.=$rate['symbol']." ".number_format($rate['value'],2);
 $sms_text.="\n";
 //====================SMS===================
+/*
 $params=array(
    'debug'=>true,
     'number'=>$hp_send,
@@ -140,7 +142,7 @@ $params=array(
   'type'=>'masking'
 
 );
-
+*/
 //$respon = smsSend($params);
 
         $bank = $key=$this->config->item('forex_bank');
