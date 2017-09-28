@@ -276,7 +276,7 @@ Daftar Fungsi Yang Tersedia :
                 
                 $register_text .="Hello {$email_data['name']}\n";
                 
-                $register_text .="Your personal area Access\n".base_url('login/member');
+                //$register_text .="Your personal area Access\n".base_url('login/member');
                 $register_text .="\nLogin : {$email_data['username']}\n";
                 $register_text .="Pass : {$email_data['password']}\n";
                 $register_text .="Master code : {$email_data['mastercode']}\n";
@@ -284,12 +284,12 @@ Daftar Fungsi Yang Tersedia :
                 $register_text .="Account id : {$account_data['AccountID']}\n";
                 $register_text .="Trading : {$account_data['MasterPassword']}\n";
                 $register_text .="Investor : {$account_data['InvestorPassword']}\n";
-                $register_text .="For help, please login to your Salma Markets account and click in Live Support icon for Support.";
+                //$register_text .="For help, please login to your Salma Markets account and click in Live Support icon for Support.";
     //====================SMS===================
                 $params=array(
                     'debug'=>true,
                     'number'=>$hp_send,
-                    'message'=>$register_text."\nPlease do not reply this messages, the message generate automatic\nSincerely, CS.",
+                    'message'=>$register_text."\nSincerely, CS.",
                     'header'=>'register',
                 //    'local'=>true,
                     'type'=>'masking'

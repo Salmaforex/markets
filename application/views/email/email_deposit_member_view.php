@@ -2,7 +2,7 @@
 //email_deposit_member_view
 $email = $userlogin['email'];
 $phone = $this->users_model->phone_by_email( $email );
-$sms_text   =   "Thank you for submitting deposit form, Here your order deposit detail:";
+$sms_text   =   "Thank you for submitting, Here your order deposit detail:";
 $sms_text   .="\nAccount id : ".$post0['account'];
 $sms_text   .="\nAmount(USD) : ".number_format($post0['orderDeposit'],2);
 $sms_text   .="\nAmount(".$rate['code'].") : ";
@@ -17,7 +17,7 @@ $params=array(
     'message'=>$sms_text."Sincerely, Finance Departement",
     'header'=>'Deposit order',
 //    'local'=>true,
-  'type'=>'masking'
+//  'type'=>'masking'
 
 );
 
