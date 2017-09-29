@@ -67,7 +67,7 @@ public $CI;
             );
             
             logCreate('param:'.json_encode($param2) );
-            $result['balance']=$balance=$this->balance($param2);
+            $result['balance']= $balance=$this->balance($param2);
             $str='';
             $status=false;
             $title='update balance';
@@ -213,9 +213,10 @@ public $CI;
                     'params'=>$params,
                     'row'=>$row
                 );
+                
                 if((int)$res['ResponseCode'] ==2 ){
                     logCreate('advforex_forex_update_balance |balance ResponseCode:2 '.json_encode($res));
-                    return false;
+                    //return false;
                 }
                 elseif((int)$res['ResponseCode']!=4){
                         email_problem("API response balance", "target:".$url, $debug);
