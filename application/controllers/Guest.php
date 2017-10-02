@@ -14,7 +14,7 @@ Daftar Fungsi Yang Tersedia :
     {
         $params = array('home', $agents, $raw);
         $params['debug']=true;
-        $params['agent_num']=$this->input->get('agent');
+        $params['agent_code']=$this->input->get('agent');
         //$result=driver_run_action('salma', 'guest', $params);
         
         $options =array(
@@ -28,13 +28,15 @@ Daftar Fungsi Yang Tersedia :
         $result = $this->basic->driver_action($options);
         //driver_run_action
         //libraries/salma/drivers/salma_guest_home
-        //echo_r($result);exit;
+         
         if(isset($result['data'])){
             $this->parse_params($result['data']);
             
         }
         
+        $this->param['get'] = $this->input->get();
         
+        //echo '<pre>';print_r($this->param);exit;
         $this->showView('newbase001_view');
     }
     

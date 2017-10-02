@@ -90,7 +90,7 @@ $route['media/(:any)/(:any)/(:any:)'] = 'media/dirs_img/$1/$1/$1';
 $route['agent'] = 'guest/register_agent';
 $route['register_agent/(:any)'] = 'guest/home/$1';//'guest/register_agent/$1';
 $route['register_agent/(:any)/(:any)'] = 'guest/home/$1/$1';//'guest/register_agent/$1/$1';
-$route['register/(:any)'] = 'guest/home/$1';//'forex/register/$1/$1';
+$route['register/(:any)'] = 'guest/home/$1/partner';//'forex/register/$1/$1';
 $route['register/(:any)/(:any)'] = 'forex/register/$1/$1';
 
 /*
