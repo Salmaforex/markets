@@ -6,7 +6,7 @@ if (!isset($showForm)) {
     $showForm = 1;
 }
 
-$agent = isset($get['agent']) ? $get['agent'] : false;
+$agent = isset($get['agent']) ? base64_decode( $get['agent'] ): false;
 //var_dump();die;
 if (isset($register['agent']) && trim($register['agent']) == '') {
     $register['agent'] = $agent;

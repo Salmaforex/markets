@@ -10,11 +10,11 @@ Daftar Fungsi Yang Tersedia :
 *	forgot()
 *	__CONSTRUCT()
 ***/
-    public function home($agents=null, $raw=null)
+    public function home($agents=null, $raw=0)
     {
         $params = array('home', $agents, $raw);
         $params['debug']=true;
-        $params['agent_code']=$this->input->get('agent');
+        //$params[1]=$this->input->get('agent');
         //$result=driver_run_action('salma', 'guest', $params);
         
         $options =array(
@@ -25,6 +25,7 @@ Daftar Fungsi Yang Tersedia :
         //    'mode'=>'api'
         );
         
+        //print_r($options);die;
         $result = $this->basic->driver_action($options);
         //driver_run_action
         //libraries/salma/drivers/salma_guest_home
@@ -35,7 +36,7 @@ Daftar Fungsi Yang Tersedia :
         }
         
         $this->param['get'] = $this->input->get();
-        
+        //echo 'https://secure.salmamarkets.com/register/7901875_Gunawan-Wibisono';
         //echo '<pre>';print_r($this->param);exit;
         $this->showView('newbase001_view');
     }

@@ -83,7 +83,7 @@ private $db_log;
         $driver_core = isset($options['parent'])?$options['parent']:false;
         $driver_name = isset($options['sub'])?$options['sub']:false;
         $params = isset($options['params'])?$options['params']:array();
-        
+       
     //==============OTHER
         $show_debug = isset($options['debug'])?$options['debug']:false;
         $mode = isset($options['mode'])?$options['mode']:false; //api
@@ -95,6 +95,7 @@ private $db_log;
         
     //==============Executed
         $this->load->driver($driver_core);
+        // print_r($params); print_r($driver_name);
         $result=$this->{$driver_core}->{$driver_name}($params);
         
         if($show_debug){
