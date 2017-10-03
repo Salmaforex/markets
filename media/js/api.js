@@ -48,8 +48,8 @@ try{
         },
 		"order": [[ 0, "desc" ]],
 		"lengthMenu": [
-                [3,5, 10,15, 20, 35],
-                [3,5, 10,15, 20, "max 35"] // change per page values here
+                [3,5, 10,15, 20, 35,50,100],
+                [3,5, 10,15, 20, "max 35",50,100] // change per page values here
             ],
         "columns": [
 			{ "data": "created"},
@@ -81,8 +81,8 @@ try{
         "processing": true,
         "serverSide": true,
 		"lengthMenu": [
-                [3,5, 10],
-                [3,5, 10] // change per page values here
+                [3,5, 10,35,50,100],
+                [3,5, 10,35,50,100] // change per page values here
             ],
         "ajax": {
             "url": urlAPI,
