@@ -104,7 +104,7 @@ Daftar Fungsi Yang Tersedia :
         $time=array(microtime());
     //$this->load->model('users_model');
             $post=$this->input->post();
-    //echo_r($post);exit;
+    //print_r($post);exit;
             if(count($post)==0) redirect('welcome');
 
         $ar_key=array('name','city','state','zip','address','phone');

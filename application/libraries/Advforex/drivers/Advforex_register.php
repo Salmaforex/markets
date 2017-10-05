@@ -369,19 +369,19 @@ where u.u_email is null and a.email !=''
         $data_table['reg_investorpassword']='---';
         $data_table['reg_detail']='---';
         $data_table['reg_created']=date("Y-m-d H:i:s");
-        $data_table['reg_agent']=isset($params['agent'])&&$params['agent']!=''?$param['agentid']:'';
+        $data_table['reg_agent']=isset($params['agent'])&&$params['agent']!=''?$params['agent']:'';
 
         $res[]=$data_table;
         $url=$this->urls['register'];
         $res[]="run url:".$url;
         $res[]=$param;
 //		return array($res, $data_table);
+        //echo '<pre>'; print_r($param);print_r($params);print_r($res);die;
         dbInsert($tableRegis, $data_table);
 
- 
-        
-        logCreate('run register => account (0):'.$url."=".json_encode(array_keys($param)));
-        $url.="?".http_build_query($param);
+        logCreate('run register => account (0a):'.$url."=".json_encode( $param )  );
+        logCreate('run register => account (0b):'.$url."=".json_encode( $params )  );
+        //$url.="?".http_build_query($param);
        if(defined('LOCAL')){
                 $res['account']= $run =
                 array(
@@ -390,10 +390,12 @@ where u.u_email is null and a.email !=''
                     'InvestorPassword'=>'zzzzzzz',
                     'ResponseCode'=>0,
                 );
+                
                 return $res;
         }
         else{
-            $run=_runApi($url );//,$param);
+            $run=_runApi($url,$param);
+            
         }
         
         $res[]=$run;
@@ -407,9 +409,11 @@ where u.u_email is null and a.email !=''
         logCreate('FAILED create account (2):'.json_encode($run));
         unset($param['agentid'],$data_table['reg_agent']);
         $url=$this->urls['register'];
-        logCreate('run register create account (3):'.$url."=".json_encode(array_keys($param)));
-        $url.="?".http_build_query($param);
-        $run= _runApi($url);//,$param);
+        //logCreate('run register create account (3):'.$url."=".json_encode(array_keys($param)));
+        logCreate('run register => account (3a):'.$url."=".json_encode( $param )  );
+        
+        //$url.="?".http_build_query($param);
+        $run= _runApi($url, $param);
         $res[]=$run;
         
         if(isset($run['ResponseCode'])&&(int)$run['ResponseCode']==0){
@@ -424,6 +428,7 @@ where u.u_email is null and a.email !=''
         logCreate('FAILED create account(5):'.json_encode($run));
         //=====================allowlogin dan allowtrading dilakukan via update =====
         return $res;
+
     }
 	
 	private function save_table_account($result, $register)
