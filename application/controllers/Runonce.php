@@ -10,7 +10,42 @@ class Runonce extends CI_Controller {
 
     function index() {
         echo "start";
-        $this->list_agent();
+        $this->send_msg_to_agent();
+    }
+    
+    function send_msg_to_agent(){
+        $this->load->model('account_model');
+        $agent = $this->account_model->all_agent(' email ');
+        $agent_email=array();
+        foreach($agent as $row){
+            $email=  strtolower($row['email']);
+            
+            if($email!='')
+                $agent_email[$email]=1;
+        }
+        ksort($agent_email);
+        print_r($agent_email);
+        foreach( array_keys($agent_email) as $email){
+            $user = $this->users_model->getDetail($email);
+            //print_r($user );
+            $phone = $user['phone'];
+            $account = $this->account_model->get_by_email($email);
+            //print_r($account);
+            $data=array(
+                'username'=>$email,
+                'account'=>$account,
+                'phone'=>$phone
+                
+            );
+            $str=$this->load->view('email/email_info_agent',$data,true);
+            //die($str);
+            //echo $str;
+            echo "\n$email\ttotal:".count($account);
+            if( count($account)>2)die($str);
+            batchEmail($email,'Account List for Agent',$str);
+            
+        }
+        
     }
     
     function list_agent(){
