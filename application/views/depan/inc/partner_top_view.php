@@ -48,17 +48,17 @@ if (isset($patnerShowPanel)) {
             <h4><strong>Link Affiliation</strong></h4>
 
             <?php
-            foreach ($account as $row0) {
-                $account_id = $row0['accountid'];
-                if (true) { //strtoupper($row0['type']) == 'AGENT'
-                    ?>
-                    <div class="well"><p><?= anchor(base_url('register/' . $account_id . '_' . url_title($name))); ?></p></div>
-                            <?php
-                        }
+                foreach ($account as $row0) {
+                    $account_id = $row0['accountid'];
+                    if (strtoupper($row0['type']) == 'AGENT') {
                         ?>
+                        <div class="well"><p><?= anchor(base_url('register/' . $account_id . '_' . url_title($name))); ?></p></div>
                         <?php
                     }
                     ?>
+                    <?php
+                }
+                ?>
 
         </div>
     </div>

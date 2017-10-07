@@ -195,7 +195,7 @@ if ( ! function_exists('dbInsert')){
         $CI =& get_instance();
         $sql=db_insert_ignore($table, $data); //$CI->db->insert_string($table,$data);
     //	logCreate($sql,'query');
-        $id=dbQuery($sql, 1, true);
+        $id=dbQuery($sql, 1);
         return $id;
     }
 }
