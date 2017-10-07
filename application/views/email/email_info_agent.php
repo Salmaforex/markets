@@ -5,7 +5,7 @@ foreach($account as $row){
         $account_agent[]=$row['accountid'];
     }
     else{
-        $account_agent[]=$row['accountid'];
+        $account_member[]=$row['accountid'];
     }
 }
 if(true){
@@ -107,8 +107,8 @@ if(true){
 
 $sms_text="Account validation for $username\n";
 $sms_text.="This message only to inform list of your account.\n";
-$sms_text.="Agent: ". implode('\n',$account_agent);
-$sms_text.="member: ". implode('\n',$account_member);
+$sms_text.="\nAgent: ". implode("\n",$account_agent);
+$sms_text.="\nMember: ". implode("\n",$account_member);
 
 $sms_text.="\nIf the account list not valid, inform our CS";
 //====================SMS===================
@@ -121,5 +121,9 @@ $params=array(
 //  'type'=>'masking'
 
 );
-
-$respon = smsSend($params);
+if (isset($allow_sms)) {
+    $respon = smsSend($params);
+}
+else{
+    echo 'no sms send';
+}

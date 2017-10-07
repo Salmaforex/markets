@@ -831,6 +831,15 @@ class Account_model extends CI_Model {
 
         return dbFetch($sql);
     }
+    
+    function all_member($field = '*', $group = false) {
+        $sql = "select {$field} from {$this->tableAccount} where type like 'member'";
+        if ($group) {
+            $sql.=" group by `$group`";
+        }
+
+        return dbFetch($sql);
+    }
 
     function update_to_agent($email) {
         $sql = "update `{$this->tableAccount}` set type='AGENT' where `email` like '$email'";

@@ -10,10 +10,59 @@ class Runonce extends CI_Controller {
 
     function index() {
         echo "start";
+        //$this->send_msg_to_member();
         $this->send_msg_to_agent();
     }
     
+    function send_msg_to_member(){
+         
+        $this->load->model('account_model');
+        $acc = $this->account_model->all_member(' email ');
+        echo "total:".count($acc)."\n";
+        foreach($acc as $row){
+            $email=  strtolower($row['email']);
+            
+            if($email!='')
+                $member_email[$email]=1;
+            
+            $this->send_msg_member($email);
+            die;
+        }
+        
+    }
+    
+    function send_msg_member($email) {
+        $user = $this->users_model->getDetail($email);
+        print_r($user);
+        $phone = $user['phone'];
+        $account = $this->account_model->get_by_email($email);
+        print_r($account);
+        $account_agent = $account_member = array();
+        foreach ($account as $row) {
+            if ($row['type'] == 'AGENT') {
+                $account_agent[] = $row['accountid'];
+            } else {
+                $account_member[] = $row['accountid'];
+            }
+        }
+
+        if (count($account_agent) != 0) {
+            echo "\n=".count($account_agent);
+            return false; //sudah di kirim
+        }
+        $data = array(
+            'username' => $email,
+            'account' => $account,
+            'phone' => $phone,
+            // 'allow_sms'=>true,
+        );
+        $str = $this->load->view('email/email_info_member', $data, true);
+        die($str);
+        print_r($data);
+    }
+
     function send_msg_to_agent(){
+        //exit;
         $this->load->model('account_model');
         $agent = $this->account_model->all_agent(' email ');
         $agent_email=array();
