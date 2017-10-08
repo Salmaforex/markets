@@ -10,6 +10,14 @@ class Runonce extends CI_Controller {
 
     function index() {
         echo "start";
+        $params=array(
+            'api'=>'users',
+            'function'=>'exist',
+            'data'=>array('admin')
+        );
+        $p=_runApi('http://demo.salmamarkets.com/index.php/rest/users',$params);
+        print_r($p);
+        die;
         //$this->send_msg_to_member();
         $this->send_msg_to_agent();
     }

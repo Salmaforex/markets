@@ -22,8 +22,8 @@ if (isset($patnerShowPanel)) {
     <div class="row">
         <div class="col-md-4 col-xs-6">
             <ul class="list-group text-dark panel-shadow">
-                <a href="#" class="list-group-item active partition-blue"> View Partners <i class="fa fa-15x fa-arrow-circle-right pull-right"></i> </a>
-                <li class="list-group-item "> <a href="#" class="block text-center"><h5><strong><?= $total_members; ?> Partners</strong></h5></a> </li>
+                <a href="#" class="list-group-item active partition-blue"> View Members <i class="fa fa-15x fa-arrow-circle-right pull-right"></i> </a>
+                <li class="list-group-item "> <a href="#" class="block text-center"><h5><strong><?= $total_members; ?> Member(s)</strong></h5></a> </li>
             </ul>
         </div>
         <div class="col-md-4 col-xs-6">
@@ -48,17 +48,17 @@ if (isset($patnerShowPanel)) {
             <h4><strong>Link Affiliation</strong></h4>
 
             <?php
-                foreach ($account as $row0) {
-                    $account_id = $row0['accountid'];
-                    if (strtoupper($row0['type']) == 'AGENT') {
+            foreach ($account as $row0) {
+                $account_id = $row0['accountid'];
+                if (strtoupper($row0['type']) == 'AGENT') {
+                    ?>
+                    <div class="well"><p><?= anchor(base_url('register/' . $account_id . '_' . url_title($name))); ?></p></div>
+                            <?php
+                        }
                         ?>
-                        <div class="well"><p><?= anchor(base_url('register/' . $account_id . '_' . url_title($name))); ?></p></div>
                         <?php
                     }
                     ?>
-                    <?php
-                }
-                ?>
 
         </div>
     </div>

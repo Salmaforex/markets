@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $rand_num= 8;//rand(1000, 9000);
+$shortlink = base_url();
 ?>
 <!doctype html>
 <html>
@@ -56,9 +57,9 @@ if(!defined('LOCAL')){
             <div class="col-md-4 text-right hpadding-20 visible-md visible-lg small">
             	Copyright @ Salma Forex 2017 All Rights Reserved
             </div>
-            <div class="col-md-12 small opacity-5">
-            	<p><strong>RISK WARNING:</strong> Trading foreign exchange, foreign exchange options, foreign exchange forwards, contracts for difference, bullion and other over-the-counter products carries a high level of risk and may not be suitable for all investors. Past performance of an investment is no guide to its performance in the future. Investments, or income from them, can go down as well as up. You may not necessarily get back the amount you invested.</p>
-                <p>All opinions, news, analysis, prices or other information contained on this website are provided as general market commentary and does not constitute investment advice, nor a solicitation or recommendation for you to buy or sell any over-the-counter product or other financial instrument.</p>
+            <div class="col-md-12 small opacity-5 ">
+            	<p class='hide'><strong>RISK WARNING:</strong> Trading foreign exchange, foreign exchange options, foreign exchange forwards, contracts for difference, bullion and other over-the-counter products carries a high level of risk and may not be suitable for all investors. Past performance of an investment is no guide to its performance in the future. Investments, or income from them, can go down as well as up. You may not necessarily get back the amount you invested.</p>
+                <p class='hide'>All opinions, news, analysis, prices or other information contained on this website are provided as general market commentary and does not constitute investment advice, nor a solicitation or recommendation for you to buy or sell any over-the-counter product or other financial instrument.</p>
                 <div class="vspace-15"></div>
                 <hr/>
             </div>
