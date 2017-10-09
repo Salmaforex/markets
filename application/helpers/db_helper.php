@@ -39,7 +39,7 @@ if ( ! function_exists('dbId')){
             $sql="ALTER TABLE `{$name}` ADD index(`code`);";dbQuery($sql);
         }
 
-        $now=date("Y-m-d H:i",strtotime("-10 hours"));
+        $now=date("Y-m-d H:i",strtotime("-19 hours"));
         $sql="delete from `{$name}` where `created` < '$now';";dbQuery($sql);
         $sql="select count(id) c, max(id) max from $name";
         $data=dbFetchOne($sql);
@@ -74,7 +74,7 @@ if ( ! function_exists('dbId')){
             //dbQuery($sql);
             unset($data['id']);
             $num = dbInsert($name, $data);
-            
+            //die("n=".$num);
         }
 
         $code='';
@@ -84,7 +84,7 @@ if ( ! function_exists('dbId')){
                 $str = substr($num, $i,6);
                 $code .=dechex($str);//."|".$str."-".$i;
             }
-            //die($code."xx".$len);
+        //    die($name."xx".$num.print_r($data,1));
         $data=array();
         $data['code']= strtoupper($code);
         $where="id=$num";
@@ -193,9 +193,10 @@ if ( ! function_exists('dbFetch')){
 if ( ! function_exists('dbInsert')){
     function dbInsert($table, $data){
         $CI =& get_instance();
-        $sql=db_insert_ignore($table, $data); //$CI->db->insert_string($table,$data);
+        $sql=$CI->db->insert_string($table,$data);
+                //db_insert_ignore($table, $data); //
     //	logCreate($sql,'query');
-        $id=dbQuery($sql, 1);
+        $id=dbQuery($sql, 1,true);
         return $id;
     }
 }
