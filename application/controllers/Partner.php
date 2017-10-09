@@ -378,8 +378,8 @@ class Partner extends MY_Controller {
         }
 
         if (isset($notAllow)) {
-            echo_r($uDetail);
-            exit;
+            //echo_r($uDetail);
+            //exit;
             //	$this->session->set_flashdata('notif', array('status' => false, 'msg' => 'Update nomor rekening!'));
             redirect(site_url("partner/edit/warning"), 1);
         }
@@ -476,6 +476,7 @@ class Partner extends MY_Controller {
                 $this->param['show_done'] = 'deposit_done';
             $this->param['content'][] = 'transaksi/deposit';
         }
+        
         $this->param['footerJS'][] = 'js/login.js';
         $this->showView();
     }
