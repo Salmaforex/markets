@@ -5,28 +5,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 //require_once(APPPATH.'/libraries/SmtpApi.php');
 class Runonce extends CI_Controller {
 
-
     private $db_main;
 
     function index() {
         echo "start";
-        $params=array(
-            'api'=>'users',
-            'function'=>'exist',
-            'data'=>array('admin')
+        $params = array(
+            'api' => 'users',
+            'function' => 'exist',
+            'data' => array('admin')
         );
-        
-        $this->check_account(7000051);
+        for ($i = 7902438; $i >= 7902415; $i--) {
+
+
+            $this->check_account(7000051);
+        }
         //$this->parse_account();
         //die;
-       // $p=_runApi('http://demo.salmamarkets.com/index.php/rest/users',$params);
+        // $p=_runApi('http://demo.salmamarkets.com/index.php/rest/users',$params);
         //print_r($p);
         //die;
         //$this->send_msg_to_member();
         //$this->send_msg_to_agent();
     }
-    
-    function check_account($accountid){
+
+    function check_account($accountid) {
         $urls = ciConfig('apiForex_url');
         $url = $urls['get_account'];
         echo "\n$url";
@@ -36,25 +38,47 @@ class Runonce extends CI_Controller {
         );
         $res = _runApi($url, $params);
         print_r($res);
+        if ($res['AgentID'] != '0' && $res['AgentID'] != '') {
+            $sql = "UPDATE `mujur_account` SET `agent` = '$res[AgentID]' where accountid='$accountid';";
+            dbQuery($sql);
+        }
     }
-    
-    function send_msg_to_member(){
-         
+
+    function send_msg_to_member() {
+
         $this->load->model('account_model');
         $acc = $this->account_model->all_member(' email ');
-        echo "total:".count($acc)."\n";
-        foreach($acc as $row){
-            $email=  strtolower($row['email']);
-            
-            if($email!='')
-                $member_email[$email]=1;
-            
+        echo "total:" . count($acc) . "\n";
+        foreach ($acc as $row) {
+            $email = strtolower($row['email']);
+
+            if ($email != '')
+                $member_email[$email] = 1;
+
             $this->send_msg_member($email);
             die;
         }
-        
     }
-    
+
+    function all_email() {
+        $data = $this->forex_model->emailData(10);
+        $result = array();
+        foreach ($data as $row) {
+            $id = $row['id'];
+            $to = $row['to'];
+            $subject = $row['subject'];
+            $message = $row['messages'];
+            $headers = $row['headers'];
+            //	echo "\n: $id $to";
+            //	batchEmail( $to , $subject , $message , $headers, false);
+            $this->forex_model->emailHide($row['id']);
+            $result[] = array($to, $subject, $message, $headers);
+            log_info_table('email', array($to, $subject));
+            //	$result[]=array(array_keys($row),$row['status'] );
+        }
+        echo json_encode($result);
+    }
+
     function send_msg_member($email) {
         $user = $this->users_model->getDetail($email);
         print_r($user);
@@ -71,196 +95,188 @@ class Runonce extends CI_Controller {
         }
 
         if (count($account_agent) != 0) {
-            echo "\n=".count($account_agent);
+            echo "\n=" . count($account_agent);
             return false; //sudah di kirim
         }
         $data = array(
             'username' => $email,
             'account' => $account,
             'phone' => $phone,
-            // 'allow_sms'=>true,
+                // 'allow_sms'=>true,
         );
         $str = $this->load->view('email/email_info_member', $data, true);
         die($str);
         print_r($data);
     }
 
-    function send_msg_to_agent(){
+    function send_msg_to_agent() {
         //exit;
         $this->load->model('account_model');
         $agent = $this->account_model->all_agent(' email ');
-        $agent_email=array();
-        foreach($agent as $row){
-            $email=  strtolower($row['email']);
-            
-            if($email!='')
-                $agent_email[$email]=1;
+        $agent_email = array();
+        foreach ($agent as $row) {
+            $email = strtolower($row['email']);
+
+            if ($email != '')
+                $agent_email[$email] = 1;
         }
         ksort($agent_email);
         print_r($agent_email);
-        foreach( array_keys($agent_email) as $email){
+        foreach (array_keys($agent_email) as $email) {
             $user = $this->users_model->getDetail($email);
             //print_r($user );
             $phone = $user['phone'];
             $account = $this->account_model->get_by_email($email);
             //print_r($account);
-            $data=array(
-                'username'=>$email,
-                'account'=>$account,
-                'phone'=>$phone
-                
+            $data = array(
+                'username' => $email,
+                'account' => $account,
+                'phone' => $phone
             );
-            $str=$this->load->view('email/email_info_agent',$data,true);
+            $str = $this->load->view('email/email_info_agent', $data, true);
             //die($str);
             //echo $str;
-            echo "\n$email\ttotal:".count($account);
-            if( count($account)>2)die($str);
-            batchEmail($email,'Account List for Agent',$str);
-            
+            echo "\n$email\ttotal:" . count($account);
+            if (count($account) > 2)
+                die($str);
+            batchEmail($email, 'Account List for Agent', $str);
         }
-        
     }
-    
-    function list_user_under_agent(){
-      $file = "tmp/account.csv";
-      //die('1');
-        $row = 1;$agent=array();
+
+    function list_user_under_agent() {
+        $file = "tmp/account.csv";
+        //die('1');
+        $row = 1;
+        $agent = array();
         if (($handle = fopen($file, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 3000, ";")) !== FALSE) {
                 $num = count($data);
                 //echo "<p> $num fields in line $row: <br /></p>\n";
                 $row++;
-               /*  
-                
-               */
-                $pos=15;
-                    $key=trim($data[15]);
-                    if($key != (int)$key){
-                        $key=trim($data[16]);
-                        $pos=16;
-                    }
-                    
-                    if($key=='1 : 1000'){
-                        $pos++;
-                        $key=trim($data[$pos]);
-                        //echo $pos;die($key);
-                    }
-                    
-                    if($key=='1 : 200'){
-                        $pos++;
-                        $key=trim($data[$pos]);
-                        //echo $pos;die($key);
-                    }
-                    
-                if($key!=0){
+                /*
+
+                 */
+                $pos = 15;
+                $key = trim($data[15]);
+                if ($key != (int) $key) {
+                    $key = trim($data[16]);
+                    $pos = 16;
+                }
+
+                if ($key == '1 : 1000') {
+                    $pos++;
+                    $key = trim($data[$pos]);
+                    //echo $pos;die($key);
+                }
+
+                if ($key == '1 : 200') {
+                    $pos++;
+                    $key = trim($data[$pos]);
+                    //echo $pos;die($key);
+                }
+
+                if ($key != 0) {
                     //echo "\n$agent\t{$data[0]}\t".$data[9];
                     //$agent++;
-                    
-                    
-                    if($key != (int)$key){
-                         for ($c=0; $c < $num; $c++) {
-                            echo $c."\t->\t".$data[$c] . "\n";
+
+
+                    if ($key != (int) $key) {
+                        for ($c = 0; $c < $num; $c++) {
+                            echo $c . "\t->\t" . $data[$c] . "\n";
                         }
                         die();
                     }
                     //$agent[ $key ]=isset($agent[ $key ])?$agent[ $key ]:0;
                     //$agent[ $key ]++;
-                    for ($c=0; $c < $num; $c++) {
-                    //    echo $c."\t->\t".$data[$c] . "\n";
+                    for ($c = 0; $c < $num; $c++) {
+                        //    echo $c."\t->\t".$data[$c] . "\n";
                     }
-                    $member[$data[0]]=$key;
+                    $member[$data[0]] = $key;
                     //die($key);
-                    
-                }
-                else{
-                    
-               //    echo "\n$row not agent ".$data[15];
+                } else {
+
+                    //    echo "\n$row not agent ".$data[15];
                 }
                 //if($row>53)exit;
                 //echo "\n\n";
             }
             fclose($handle);
-        }
-        else{
+        } else {
             echo "error?";
         }
         ksort($member);
         //echo "\ntotal:".count($member)."\n".print_r($member,1)."\n";die;
-        foreach($member as $kode=>$agent){
-            $str="dibawah agent:".$agent;//,`detail`='$str'
-            $sql="UPDATE `mujur_account` SET `agent` = '$agent' where accountid='$kode';";
-            echo "\n".$sql;
+        foreach ($member as $kode => $agent) {
+            $str = "dibawah agent:" . $agent; //,`detail`='$str'
+            $sql = "UPDATE `mujur_account` SET `agent` = '$agent' where accountid='$kode';";
+            echo "\n" . $sql;
         }
         //echo "OK";
-        
     }
-    
-    function list_agent(){
+
+    function list_agent() {
         $file = "tmp/account.csv";
-        $row = 1;$agent=array();
+        $row = 1;
+        $agent = array();
         if (($handle = fopen($file, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 3000, ";")) !== FALSE) {
                 $num = count($data);
                 //echo "<p> $num fields in line $row: <br /></p>\n";
                 $row++;
-               /*  
-                for ($c=0; $c < $num; $c++) {
-                    echo $c."\t->\t".$data[$c] . "\n";
+                /*
+                  for ($c=0; $c < $num; $c++) {
+                  echo $c."\t->\t".$data[$c] . "\n";
+                  }
+                 */
+                $pos = 15;
+                $key = trim($data[15]);
+                if ($key != (int) $key) {
+                    $key = trim($data[16]);
+                    $pos = 16;
                 }
-               */
-                $pos=15;
-                    $key=trim($data[15]);
-                    if($key != (int)$key){
-                        $key=trim($data[16]);
-                        $pos=16;
-                    }
-                    
-                    if($key=='1 : 1000'){
-                        $pos++;
-                        $key=trim($data[$pos]);
-                        //echo $pos;die($key);
-                    }
-                    
-                    if($key=='1 : 200'){
-                        $pos++;
-                        $key=trim($data[$pos]);
-                        //echo $pos;die($key);
-                    }
-                    
-                if($key!=0){
+
+                if ($key == '1 : 1000') {
+                    $pos++;
+                    $key = trim($data[$pos]);
+                    //echo $pos;die($key);
+                }
+
+                if ($key == '1 : 200') {
+                    $pos++;
+                    $key = trim($data[$pos]);
+                    //echo $pos;die($key);
+                }
+
+                if ($key != 0) {
                     //echo "\n$agent\t{$data[0]}\t".$data[9];
                     //$agent++;
-                    
-                    
-                    if($key != (int)$key){
-                         for ($c=0; $c < $num; $c++) {
-                            echo $c."\t->\t".$data[$c] . "\n";
+
+
+                    if ($key != (int) $key) {
+                        for ($c = 0; $c < $num; $c++) {
+                            echo $c . "\t->\t" . $data[$c] . "\n";
                         }
                         die();
                     }
-                    $agent[ $key ]=isset($agent[ $key ])?$agent[ $key ]:0;
-                    $agent[ $key ]++;
-                    
-                }
-                else{
-               //    echo "\n$row not agent ".$data[15];
+                    $agent[$key] = isset($agent[$key]) ? $agent[$key] : 0;
+                    $agent[$key] ++;
+                } else {
+                    //    echo "\n$row not agent ".$data[15];
                 }
                 //if($row>53)exit;
                 //echo "\n\n";
             }
             fclose($handle);
-        }
-        else{
+        } else {
             echo "error?";
         }
         ksort($agent);
-        echo "\ntotal:".count($agent)."\n".print_r($agent,1)."\n";
-        foreach($agent as $kode=>$total){
-            $str="total dibawah agent:".$total;
-            $sql="UPDATE `mujur_account` SET `type` = 'AGENT',`detail`='$str' where accountid='$kode';";
-            echo "\n".$sql;
+        echo "\ntotal:" . count($agent) . "\n" . print_r($agent, 1) . "\n";
+        foreach ($agent as $kode => $total) {
+            $str = "total dibawah agent:" . $total;
+            $sql = "UPDATE `mujur_account` SET `type` = 'AGENT',`detail`='$str' where accountid='$kode';";
+            echo "\n" . $sql;
         }
-        
     }
 
     //put your code here
@@ -269,8 +285,8 @@ class Runonce extends CI_Controller {
         date_default_timezone_set('Asia/Jakarta');
     }
 
-    function parse_account(){
-        $str='  
+    function parse_account() {
+        $str = '  
 {"reg_id":true,"username":"Sani Yulianti","investorpassword":"c817aa4e52112c3ead8d1941efbd9919","masterpassword":"d38374d8af0e2aab9b72db6093806664","accountid":"7902417","email":"saniyulianti1976@gmail.com","created":"2017-10-07","agent":null,"type":"MEMBER"}
 {"id":true,"reg_id":true,"username":"Sani Yulianti","investorpassword":"03417e65cd258bcb8ca78e4f404af53e","masterpassword":"39774ac398b1a8ea9287a931761a8b93","accountid":"7902418","email":"saniyulianti1976@gmail.com","created":"2017-10-07","agent":null,"type":"MEMBER"}
 {"id":true,"reg_id":true,"username":"Muhammad Aris Sayuti","investorpassword":"6559db07a8b71c18d5a5a9625ddd116b","masterpassword":"be687c3712d980d07eb46695fdb0d162","accountid":"7902419","email":"arizsayuti86@gmail.com","created":"2017-10-07","agent":null,"type":"MEMBER"}
@@ -295,16 +311,16 @@ class Runonce extends CI_Controller {
 {"id":true,"reg_id":true,"username":"Feri fadli","investorpassword":"6d864aaf6c60f478d85db7d4a4050c75","masterpassword":"46f49f15b556795e136abddcc3232f9c","accountid":"7902438","email":"Fery1407@gmail.com","created":"2017-10-09","agent":null,"type":"MEMBER"}
 {"id":true,"reg_id":true,"username":"Jamaludin yahya","investorpassword":"15409c9aeda42473ab6d44d3930db052","masterpassword":"9a31eb2840457c1c9748453578a2512b","accountid":"7902416","email":"jamaludiny283@yahoo.com","created":"2017-10-07","agent":null,"type":"MEMBER"}
  ';
-        
+
         echo "\n\n";
-        $ar=  explode("\n", trim($str));
-        foreach($ar as $v){
-            $ar2=  json_decode($v,true);
-            
+        $ar = explode("\n", trim($str));
+        foreach ($ar as $v) {
+            $ar2 = json_decode($v, true);
+
             unset($ar2['id']);
-            $ar2['reg_id']=dbId('regis');
+            $ar2['reg_id'] = dbId('regis');
             //print_r($ar2);
-            $sql="insert into mujur_account (";
+            $sql = "insert into mujur_account (";
             $sql.=implode(",", array_keys($ar2));
             $sql.=") vALUES ( '";
             $sql.=implode("',\n '", ($ar2));
@@ -313,4 +329,5 @@ class Runonce extends CI_Controller {
         }
         //INSERT INTO `mujur_account` (`id`, `username`, `email`, `created`, `modified`, `investorpassword`, `masterpassword`, `reg_id`, `accountid`, `status`, `agent`, `type`, `detail`) VALUES ('1610129069', '7902415', 'jamaludiny283@yahoo.com', '2017-10-01', CURRENT_TIMESTAMP, '', '', '1', '7902415', NULL, NULL, 'MEMBER', NULL);
     }
+
 }
