@@ -218,8 +218,9 @@ public $emailAdmin='admin@dev.salmaforex.com';
         dbInsert($this->tableFlowlog, $dt);
 
         unset($dt['param']);
+        ksort($data);
         foreach ($data as $key => $val) {
-            $dt[] = $val;
+            $dt['r_'.$key] = $val;
         }
 
         log_info_table('trans', $dt);
