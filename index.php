@@ -10,8 +10,8 @@ elseif(isset($_SERVER['HTTP_HOST'])&&$_SERVER['HTTP_HOST']=='devel.salmamarkets.
 	define('ENVIRONMENT', 'development'); 
 }
 else{
-	define('ENVIRONMENT', 'development');
-//	define('ENVIRONMENT', 'production'); 
+//	define('ENVIRONMENT', 'development');
+	define('ENVIRONMENT', 'production'); 
 }
 
 	date_default_timezone_set('Asia/Jakarta');
