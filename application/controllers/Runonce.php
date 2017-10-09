@@ -16,13 +16,26 @@ class Runonce extends CI_Controller {
             'data'=>array('admin')
         );
         
-        $this->parse_account();
-        die;
+        $this->check_account(7000051);
+        //$this->parse_account();
+        //die;
        // $p=_runApi('http://demo.salmamarkets.com/index.php/rest/users',$params);
         //print_r($p);
         //die;
         //$this->send_msg_to_member();
-        $this->send_msg_to_agent();
+        //$this->send_msg_to_agent();
+    }
+    
+    function check_account($accountid){
+        $urls = ciConfig('apiForex_url');
+        $url = $urls['get_account'];
+        echo "\n$url";
+        $params = array(
+            'privatekey' => ciConfig('privatekey'),
+            'accountid' => $accountid
+        );
+        $res = _runApi($url, $params);
+        print_r($res);
     }
     
     function send_msg_to_member(){
@@ -105,6 +118,80 @@ class Runonce extends CI_Controller {
             batchEmail($email,'Account List for Agent',$str);
             
         }
+        
+    }
+    
+    function list_user_under_agent(){
+      $file = "tmp/account.csv";
+      //die('1');
+        $row = 1;$agent=array();
+        if (($handle = fopen($file, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 3000, ";")) !== FALSE) {
+                $num = count($data);
+                //echo "<p> $num fields in line $row: <br /></p>\n";
+                $row++;
+               /*  
+                
+               */
+                $pos=15;
+                    $key=trim($data[15]);
+                    if($key != (int)$key){
+                        $key=trim($data[16]);
+                        $pos=16;
+                    }
+                    
+                    if($key=='1 : 1000'){
+                        $pos++;
+                        $key=trim($data[$pos]);
+                        //echo $pos;die($key);
+                    }
+                    
+                    if($key=='1 : 200'){
+                        $pos++;
+                        $key=trim($data[$pos]);
+                        //echo $pos;die($key);
+                    }
+                    
+                if($key!=0){
+                    //echo "\n$agent\t{$data[0]}\t".$data[9];
+                    //$agent++;
+                    
+                    
+                    if($key != (int)$key){
+                         for ($c=0; $c < $num; $c++) {
+                            echo $c."\t->\t".$data[$c] . "\n";
+                        }
+                        die();
+                    }
+                    //$agent[ $key ]=isset($agent[ $key ])?$agent[ $key ]:0;
+                    //$agent[ $key ]++;
+                    for ($c=0; $c < $num; $c++) {
+                    //    echo $c."\t->\t".$data[$c] . "\n";
+                    }
+                    $member[$data[0]]=$key;
+                    //die($key);
+                    
+                }
+                else{
+                    
+               //    echo "\n$row not agent ".$data[15];
+                }
+                //if($row>53)exit;
+                //echo "\n\n";
+            }
+            fclose($handle);
+        }
+        else{
+            echo "error?";
+        }
+        ksort($member);
+        //echo "\ntotal:".count($member)."\n".print_r($member,1)."\n";die;
+        foreach($member as $kode=>$agent){
+            $str="dibawah agent:".$agent;//,`detail`='$str'
+            $sql="UPDATE `mujur_account` SET `agent` = '$agent' where accountid='$kode';";
+            echo "\n".$sql;
+        }
+        //echo "OK";
         
     }
     

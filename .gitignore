@@ -50,3 +50,4 @@ app_api/config/config.php
 app_api/config/forexConfig_new.php
 
 *.tar.gz
+*.report
