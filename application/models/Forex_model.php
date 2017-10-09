@@ -158,62 +158,75 @@ public $emailAdmin='admin@dev.salmaforex.com';
 		return true;
 	}
 
-	function flowInsert($type='',$data=array() ){
-		if(!$this->db->table_exists($this->tableFlowlog)){
-				$fields = array(
-				  'id'=>array( 
-					'type' => 'BIGINT','auto_increment' => TRUE), 		   
-				  'types'=>array( 
-					'type' => 'VARCHAR',  
-					'constraint' => '200'),
-				  'param'=>array( 'type' => 'text'),				   
-				  'created'=>array( 'type' => 'timestamp'),
-				);
-				$this->dbforge->add_field($fields);
-				$this->dbforge->add_key('id', TRUE);
-				$this->dbforge->create_table($this->tableFlowlog,TRUE);
-				$str = $this->db->last_query();			 
-				logConfig("create table:$str");
-				$this->db->reset_query();	
-				 
-		}
-                
-		$sql="select * from {$this->tableFlowlog} limit 1";
-		$row=$this->db->query($sql)->row_array();
-		//if(!isset($row['status'])){
-		if (!$this->db->field_exists('status', $this->tableFlowlog)){
-			$sql="ALTER TABLE `{$this->tableFlowlog}` ADD `status` tinyint default 0;";
-				dbQuery($sql,1);			
-		}
-		if (!$this->db->field_exists('email', $this->tableFlowlog)){
-			$sql="ALTER TABLE `{$this->tableFlowlog}` ADD `email` varchar(255) default '';";dbQuery($sql,1);
-			$sql="ALTER TABLE `{$this->tableFlowlog}` ADD INDEX(`email`);"; dbQuery($sql,1);
-		}
-		
-		if (!$this->db->field_exists('accountid', $this->tableFlowlog)){
-			$sql="ALTER TABLE `{$this->tableFlowlog}` ADD `accountid` varchar(255) default '';";dbQuery($sql,1);
-			$sql="ALTER TABLE `{$this->tableFlowlog}` ADD INDEX(`accountid`);";dbQuery($sql,1);
-		}
-		
-		if (!$this->db->field_exists('currency', $this->tableFlowlog)){
-			$sql="ALTER TABLE `{$this->tableFlowlog}` ADD `currency` varchar(255) default 'IDR';";dbQuery($sql,1);
-			$sql="ALTER TABLE `{$this->tableFlowlog}` ADD INDEX(`currency`);";dbQuery($sql,1);
-		}
-		
-		if($type=='')return false;
-		$dt=array('types'=>$type);
-		$dt['param']=json_encode($data);
-		$dt['email']=isset($data['userlogin']['email'])?$data['userlogin']['email']:'-';
-		$dt['accountid']=isset($data['accountid'])?$data['accountid']:'-';
-		$dt['currency']=$data['currency'];
-                $dt['id']= dbId('flow',170918000);
-		dbInsert ($this->tableFlowlog,$dt);
-                
-                unset($dt['param']);
-                log_info_table('trans', $dt);
-		//$this->db->insert($this->tableFlowlog,$dt);
-		return true;
-	}
+	function flowInsert($type = '', $data = array()) {
+        if (!$this->db->table_exists($this->tableFlowlog)) {
+            $fields = array(
+                'id' => array(
+                    'type' => 'BIGINT', 'auto_increment' => TRUE),
+                'types' => array(
+                    'type' => 'VARCHAR',
+                    'constraint' => '200'),
+                'param' => array('type' => 'text'),
+                'created' => array('type' => 'timestamp'),
+            );
+            $this->dbforge->add_field($fields);
+            $this->dbforge->add_key('id', TRUE);
+            $this->dbforge->create_table($this->tableFlowlog, TRUE);
+            $str = $this->db->last_query();
+            logConfig("create table:$str");
+            $this->db->reset_query();
+        }
+
+        $sql = "select * from {$this->tableFlowlog} limit 1";
+        $row = $this->db->query($sql)->row_array();
+        //if(!isset($row['status'])){
+        if (!$this->db->field_exists('status', $this->tableFlowlog)) {
+            $sql = "ALTER TABLE `{$this->tableFlowlog}` ADD `status` tinyint default 0;";
+            dbQuery($sql, 1);
+        }
+        if (!$this->db->field_exists('email', $this->tableFlowlog)) {
+            $sql = "ALTER TABLE `{$this->tableFlowlog}` ADD `email` varchar(255) default '';";
+            dbQuery($sql, 1);
+            $sql = "ALTER TABLE `{$this->tableFlowlog}` ADD INDEX(`email`);";
+            dbQuery($sql, 1);
+        }
+
+        if (!$this->db->field_exists('accountid', $this->tableFlowlog)) {
+            $sql = "ALTER TABLE `{$this->tableFlowlog}` ADD `accountid` varchar(255) default '';";
+            dbQuery($sql, 1);
+            $sql = "ALTER TABLE `{$this->tableFlowlog}` ADD INDEX(`accountid`);";
+            dbQuery($sql, 1);
+        }
+
+        if (!$this->db->field_exists('currency', $this->tableFlowlog)) {
+            $sql = "ALTER TABLE `{$this->tableFlowlog}` ADD `currency` varchar(255) default 'IDR';";
+            dbQuery($sql, 1);
+            $sql = "ALTER TABLE `{$this->tableFlowlog}` ADD INDEX(`currency`);";
+            dbQuery($sql, 1);
+        }
+
+        if ($type == ''){
+            return FALSE;
+        }
+        $dt = array('types' => $type);
+        $dt['param'] = json_encode($data);
+        $dt['email'] = isset($data['userlogin']['email']) ? $data['userlogin']['email'] : '-';
+        $dt['accountid'] = isset($data['accountid']) ? $data['accountid'] : '-';
+        $dt['currency'] = $data['currency'];
+        $dt['id'] = dbId('flow', 170918000);
+        
+        dbInsert($this->tableFlowlog, $dt);
+
+        unset($dt['param']);
+        foreach ($data as $key => $val) {
+            $dt[] = $val;
+        }
+
+        log_info_table('trans', $dt);
+        //$this->db->insert($this->tableFlowlog,$dt);
+        return true;
+    }
+
 //=================Rate	
 	function rateUpdate($raw){
 		$data=array( 

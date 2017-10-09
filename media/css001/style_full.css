@@ -394,7 +394,7 @@ a.bright:hover{
     opacity: 0.5;
 }
 body{
-    background: #f8f8f8 url("../images/bg.jpg");
+    background: #f8f8f8 url("../images/login-bg.jpg");
     font-family: 'Open Sans';
     font-size: 12px;
     line-height: 150%;

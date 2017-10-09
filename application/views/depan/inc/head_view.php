@@ -1,5 +1,5 @@
 <?php
-$rand_num= 6;//rand(1000, 9000);
+$rand_num= 8;//rand(1000, 9000);
 ?><meta charset="utf-8">
 <title><?php 
 if(isset($title)){ 

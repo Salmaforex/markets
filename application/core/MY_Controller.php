@@ -3,17 +3,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
  class MY_Controller extends CI_Controller {
     function __CONSTRUCT(){
-            parent::__construct(); 
-            $this->load->library('session');
-            $this->load->model('users_model');
-            $session = $this->param['session']=$this->session->all_userdata();
-            logCreate("core/My |path:".current_url()."|session:".json_encode($session));
+            parent::__construct();
+        $this->load->library('session');
+        $this->load->model('users_model');
+        $session = $this->param['session'] = $this->session->all_userdata();
+        logCreate("core/My |path:" . current_url() . "|session:" . json_encode($session));
 //=============BASIC PARAMS=================
         $this->load->library('recaptcha');
         $this->load->library('session');
         date_default_timezone_set('Asia/Jakarta');
-        $this->param['today']=date('Y-m-d');
-        $this->param['folder']='depan/';
+        $this->param['today'] = date('Y-m-d');
+        $this->param['folder'] = 'depan/';
         $this->load->helper('form');
         $this->load->helper('formtable');
         $this->load->helper('language');
@@ -22,26 +22,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 //        $this->load->model('forex_model','forex');
 //        $this->load->model('country_model','country');
 //        $this->load->model('account_model','account');
-        $defaultLang="english";
+        $defaultLang = "english";
         $this->lang->load('forex', $defaultLang);
-        $this->param['fileCss']=array(	
-                'css/style.css',
-                'css/bootstrap.css',
+        $this->param['fileCss'] = array(
+            'css/style.css',
+            'css/bootstrap.css',
         );
-        $this->param['fileJs']=array(
-                'js/jquery-1.7.min.js',
+        $this->param['fileJs'] = array(
+            'js/jquery-1.7.min.js',
         );
 
-        $this->param['shortlink']=site_url();
-        $this->param['footerJS']=array(	 
-                'js/bootstrap.min.js',
-                'js/formValidation.min.js',
-                'js/scripts.js'
+        $this->param['shortlink'] = site_url();
+        $this->param['footerJS'] = array(
+            'js/bootstrap.min.js',
+            'js/formValidation.min.js',
+            'js/scripts.js'
         );
-        $this->param['description']="Trade now with the best and most transparent forex STP broker";
+        $this->param['description'] = "Trade now with the best and most transparent forex STP broker";
 
-        $this->param['emailAdmin']=$this->forex_model->emailAdmin;
-        
+        $this->param['emailAdmin'] = $this->forex_model->emailAdmin;
     }
 //---------Tidak diketahui kegunaannya?	
 	public function runApi(){
