@@ -211,7 +211,7 @@ public $emailAdmin='admin@dev.salmaforex.com';
         $dt = array('types' => $type);
         $dt['param'] = json_encode($data);
         $dt['email'] = isset($data['userlogin']['email']) ? $data['userlogin']['email'] : '-';
-        $dt['accountid'] = isset($data['accountid']) ? $data['accountid'] : '-';
+        $dt['accountid'] = isset($data['account']) ? $data['account'] : '-';
         $dt['currency'] = $data['currency'];
         $dt['id'] = dbId('flow', 170918000);
         
@@ -220,7 +220,9 @@ public $emailAdmin='admin@dev.salmaforex.com';
         unset($dt['param']);
         ksort($data);
         foreach ($data as $key => $val) {
-            $dt['r_'.$key] = $val;
+            if($key!='userlogin'){
+                $dt['r_'.$key] = $val;
+            }
         }
 
         log_info_table('trans', $dt);

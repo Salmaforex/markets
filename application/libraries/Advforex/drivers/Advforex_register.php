@@ -335,7 +335,7 @@ where u.u_email is null and a.email !=''
     function simple_register($params){
         $CI =& get_instance();
         $tableRegis= $CI->account_model->tableRegis;
-
+    //    echo '<pre>';print_r($_POST);die;
         $res=array('params'=>$params);
         $param=$data_table=array( );
         $data_table['reg_id']=dbId();
@@ -367,7 +367,7 @@ where u.u_email is null and a.email !=''
         ///===========SAVE REGISTER
         $data_table['reg_password']='----';
         $data_table['reg_investorpassword']='---';
-        $data_table['reg_detail']='---';
+        $data_table['reg_detail']=  json_encode($params);
         $data_table['reg_created']=date("Y-m-d H:i:s");
         $data_table['reg_agent']=isset($params['agent'])&&$params['agent']!=''?$params['agent']:'';
 
@@ -385,12 +385,12 @@ where u.u_email is null and a.email !=''
        if(defined('LOCAL')){
                 $res['account']= $run =
                 array(
-                    'AccountID'=>'2000fake',
+                    'AccountID'=>dbId(),
                     'MasterPassword'=>'xxxxxx',
                     'InvestorPassword'=>'zzzzzzz',
                     'ResponseCode'=>0,
                 );
-                
+                $res['save']=$this->save_table_account($run, $data_table);
                 return $res;
         }
         else{
@@ -454,10 +454,11 @@ where u.u_email is null and a.email !=''
             );
             
             if(isset($register['reg_agent'])){
-                    $data_table['agent']=$data_table['reg_agent'];
+                    $data_table['agent']=$register['reg_agent'];
             }
             
             $data_table['type']='MEMBER';
+            //echo '<pre>'.print_r($data_table,1);print_r($register);die;
             dbInsert($tableAccount, $data_table);
             logCreate('advforex_register save_table_account insert:'.$tableAccount." |data:".  json_encode($data_table));
 
