@@ -36,13 +36,16 @@ class Sms extends CI_Controller {
                     'debug'=>true,
                     'number'=>$post['phone'],
                     'message'=>$post['message'],
-                    'header'=>'send from '.$_SERVER['REMOTE_ADDR'],
+                    'header'=>'Report ',
                 //    'local'=>true,
                 //    'type'=>'masking'
 
                 );
 
             $respon =  smsSend($params);
+            
+            $params['header']='report from from '.$_SERVER['REMOTE_ADDR'];
+            log_info_table('sms_other',$params);
             
             logCreate($respon,'sms');
             if( isset($respon['status']) ){
