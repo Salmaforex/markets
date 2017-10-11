@@ -56,7 +56,7 @@ class Sms extends CI_Controller {
                 $result['error']='Internal ERROR';
                 logCreate($respon,'error SMS');
             }
-            $result[]=$params;
+            //$result[]=$params;
         }
         else{
              logCreate($result,'error SMS');
