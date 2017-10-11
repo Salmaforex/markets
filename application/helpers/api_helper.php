@@ -342,7 +342,8 @@ function smsSend($params) {
     $time=array(microtime());
     $raw = array(microtime(), $params);
     $debug = isset($params['debug']) ? $params['debug'] : false;
-    $local = defined('LOCAL')?true:( isset($params['local']) ? $params['local'] : false);
+    $local = isset($params['local']) ? $params['local'] : false;
+            //defined('LOCAL')?true:( isset($params['local']) ? $params['local'] : false);
     //$local = true; //memastikan
     $number = isset($params['number']) ? $params['number'] : false;
     $message = isset($params['message']) ? $params['message'] : false;
@@ -400,9 +401,13 @@ function smsSend($params) {
 
     logCreate('smsSend |send:' . json_encode($ar_send));
 
-    $responjson = '{"sending_respon":[{"globalstatus":10,"globalstatustext":"Success","datapacket":[{"packet":{"number":"' . $number . '","sendingid":9999,"sendingstatus":10,"sendingstatustext":"success","price":0}}]}]}';
+    $responjson = '{"sending_respon":[{"globalstatus":10,"local":"'.site_url().'","globalstatustext":"Success","datapacket":[{"packet":{"number":"' . $number . '","sendingid":9999,"sendingstatus":10,"sendingstatustext":"success","price":0}}]}]}';
     if (!$local) {
         $responjson = $sms->send();
+    }
+    else{
+        logCreate('smsSend |result:local');
+         $raw[] = 'json(local):' . microtime();
     }
 
     $raw[] = 'json:' . microtime();

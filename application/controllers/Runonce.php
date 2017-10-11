@@ -329,5 +329,26 @@ class Runonce extends CI_Controller {
         }
         //INSERT INTO `mujur_account` (`id`, `username`, `email`, `created`, `modified`, `investorpassword`, `masterpassword`, `reg_id`, `accountid`, `status`, `agent`, `type`, `detail`) VALUES ('1610129069', '7902415', 'jamaludiny283@yahoo.com', '2017-10-01', CURRENT_TIMESTAMP, '', '', '1', '7902415', NULL, NULL, 'MEMBER', NULL);
     }
+    
+    function send_sms(){
+        $post= $this->input->post();
+        $hp_send ='628568132429';
+        $message ='hello ini test dari localhost';
+        $header = 'dari luar';
+        $params=array(
+                    'debug'=>true,
+                    'number'=>$hp_send,
+                    'message'=>$message,
+                    'header'=>$header,
+                //    'local'=>true,
+                //    'type'=>'masking'
+
+                );
+
+        $respon = smsSend($params);
+        $time[]=  microtime();
+        logCreate($respon,'sms');
+        print_r($respon);
+    }
 
 }
