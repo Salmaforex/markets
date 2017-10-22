@@ -471,7 +471,7 @@ class Member extends MY_Controller {
         //    $res= $this->localApi( 'users','detail',array($session['username']));
         //    $detail=isset($res['data'])?$res['data']:array();
         if ($detail['typeMember'] == 'patners') {
-            redirect('partner/widtdrawal');
+            redirect('member/widtdrawal');
         }
         $res = _localApi('account', 'lists', array($detail['email']));
         //echo_r($res);
@@ -499,15 +499,113 @@ class Member extends MY_Controller {
         $this->showView();
     }
 
-    public function deposit($status = 'none') {
+    //===================DEPOSIT=====================
+        function deposit_result($status = 'NONE', $id_trans) {
+        //echo '<pre>stat=' . $status . "\tid:" . $id_trans;
+        logCreate('deposit_result:' . $status);
+        logCreate($this->input->post(), 'result:' . $status);
+        $post = $this->input->post();
+        //print_r($post);
+        if ($status=='success'){
+            
+            $data=array(
+                'status'=>$status,
+                $post['fp_paidto'],
+                $post['fp_paidby'],
+                $post['fp_fee_amnt'],
+                $post['fp_fee_mode'],
+                $post['fp_currency'],
+                $post['fp_batchnumber'],
+                $post['fp_total'],
+                $post['fp_amnt'],
+                $post['fp_merchant_ref'],
+                $id_trans,
+                $post['yt0']
+            );
+            
+            log_info_table('fasapay', $data);
+            unset($data['status']);
+            log_info_table('fasapay_success',$data);
+            $info = 'Fasapay Payment Has Success number:'.$post['fp_batchnumber'];
+             $aTrans = explode("-", $post['fp_merchant_ref']);
+            $iTrans = $aTrans[1];
+            
+            $this->forex->flow_data_update($iTrans, false, $info);
+            
+            //exit;
+            $info = array(
+                'status' => TRUE,
+                'message' => 'Please Deposit to Our Bank Account and Contact CS for further Information'
+            );
+
+            $this->session->set_flashdata('messages', $info);
+            js_goto(site_url('member/deposit/index/fasapay_success/?date='.date("YmdHis").'&#info_message'), true);
+            
+        }
+        
+        if ($status == 'failed') {
+  
+            $aTrans = explode("-", $post['fp_merchant_ref']);
+            $iTrans = $aTrans[1];
+            //$data = $this->forex->flow_data($id_trans);
+            //print_r($data);
+            $data=array(
+                'status'=>$status,
+                $post['fp_paidto'],
+                $post['fp_amnt'],
+                $post['fp_merchant_ref'],
+                $iTrans,
+                $post['yt0']
+            );
+            
+            log_info_table('fasapay', $data);
+            unset($data['status']);
+            log_info_table('fasapay_failed',$data);
+            
+            $info = 'Failed Fasapay Payment';
+            $this->forex->flow_data_update($iTrans, false, $info);
+            $data = $this->forex->flow_data($id_trans);
+            //print_r($data);
+            //exit;
+            $info = array(
+                'status' => FALSE,
+                'message' => 'Please Deposit to Our Bank Account and Contact CS for further Information'
+            );
+
+            $this->session->set_flashdata('messages', $info);
+            js_goto(site_url('member/deposit/index/failed/?date='.date("YmdHis").'&#info_message'), true);
+        }
+    }
+
+    function deposit_status($id_trans) {
+        echo '<pre>status' . $id_trans;
+        $post = $this->input->post();
+        print_r($post);
+        logCreate('deposit_status:' . $id_trans);
+        logCreate($this->input->post(), 'trans:' . $id_trans);
+    }
+
+    
+    public function deposit($status = 'none',$id_trans=NULL,$tmp=NULL) {
         $this->checkLogin();
+        if($status=='fasapay'){
+            $this->deposit_fasapay($id_trans);
+        }
+        
+        if($status=='result'){
+            $this->deposit_result($id_trans,$tmp);
+        }
+        
+        if($status=='status'){
+            $this->deposit_status($id_trans);
+        }
         //        $session=$this->param['session'];
         //        $res= $this->localApi( 'users','detail',array($session['username']));
         //        $detail=isset($res['data'])?$res['data']:array();
         //    echo_r($this->param['userlogin']);exit;
         $detail = $this->param['userlogin'];
         if ($this->param['userlogin']['typeMember'] == 'patners') {
-            redirect('partner/deposit');
+            redirect('member/deposit');
         }
 
         $this->param['content'] = array();
@@ -567,8 +665,12 @@ class Member extends MY_Controller {
             //$this->db->insert($this->forex->tableAPI,$data);
             dbInsert($this->forex->tableAPI, $data);
 
-            //echo_r($data,1);exit;
-            $this->forex->flowInsert('deposit', $dataDeposit);
+            $id_trans = $this->forex->flowInsert('deposit', $dataDeposit);
+            //dbInsert('deposit', $data);
+            if ($post0['submit'] == 'fasapay') {
+                redirect(site_url('member/deposit/fasapay/' . $id_trans), true);
+            }
+            //$this->forex->flowInsert('deposit', $dataDeposit);
             //dbInsert('deposit', $data);
 
             $this->session->set_flashdata('info', $post0);
@@ -587,12 +689,61 @@ class Member extends MY_Controller {
                 $this->param['show_done'] = 'deposit_done';
             }
             $this->param['content'][] = 'transaksi/deposit';
+            if ($this->input->get('date') == '') {
+                $url = site_url('member/deposit') . "?date=" . date("YmdHis") . "#depositForm";
+                redirect($url);
+            }
+            $this->param['button_fasapay'] = TRUE;
         }
 
         $this->param['footerJS'][] = 'js/login.js';
         $this->showView();
     }
 
+    public function deposit_fasapay($id_trans){
+        $data = $this->forex->flow_data($id_trans);
+
+        $deposit_num = $data['detail']['orderDeposit'];
+        $u_type = isset($data['detail']['userlogin']['users']['u_type']) ? $data['detail']['userlogin']['users']['u_type'] : '00';
+        $account = $data['accountid'];
+        $email = $data['email'];
+        $currency = $data['currency'];
+        $form['target'] = ciConfig('fasapay_url');
+        $param['fp_acc'] = ciConfig('fp_acc');
+        $param['fp_comments'] = 'Deposit $' . $deposit_num;
+        $form['fp_cart'] = array(
+            array(
+                'item' => 'Deposit',
+                'price' => 1,
+                'qty' => $deposit_num
+            )
+        );
+        $param['fp_amnt'] = trim(sprintf("%10.2f", $deposit_num));
+        $param['fp_currency'] = ciConfig('fp_currency');
+        $param['fp_merchant_ref'] = 'DE' . sprintf("%02s-%011s", $u_type, $id_trans);
+
+        $param['fp_success_url'] = site_url('member/deposit/result/success/' . $id_trans);
+        $param['fp_success_method'] = 'POST';
+        $param['fp_fail_url'] = site_url('member/deposit/result/failed/' . $id_trans);
+        $param['fp_fail_method'] = 'POST';
+        $param['fp_status_url'] = site_url('member/deposit/status/' . $id_trans);
+        $param['fp_status_method'] = 'POST';
+        $param['fp_resend_callback'] = 3;
+        $param['fp_item'] = "Deposit $" . $deposit_num . " to account_id {$account} ";
+        //$param['fp_sci_link']=TRUE;
+        //==============additional===============
+        $param['sal_acc'] = $account;
+        $param['sal_email'] = $email;
+        $param['sal_currency'] = $currency;
+        $param['sal_type'] = $data['types'];
+        $param['fp_fee_mode'] = 'FiS';
+
+        $form['params'] = $param;
+
+        $str = $this->load->view('form_auto_post', $form,true);
+        die($str);
+    }
+    
     public function widtdrawal($status44 = null) {
         $this->checkLogin();
         $session = $this->param['session'];
@@ -600,7 +751,7 @@ class Member extends MY_Controller {
         //    $res= $this->localApi( 'users','detail',array($session['username']));
         //    $detail=isset($res['data'])?$res['data']:array();
         if ($detail['typeMember'] == 'patners') {
-            redirect('partner/widtdrawal');
+            redirect('member/widtdrawal');
         }
 
         $notAllow = true;
@@ -1019,7 +1170,7 @@ class Member extends MY_Controller {
                 js_goto($url);
             }
             if ($typeMember == 'partner' || $typeMember == 'patners') {
-                $url = site_url('partner/' . $page) . "?from=member&t=" . microtime();
+                $url = site_url('member/' . $page) . "?from=member&t=" . microtime();
                 js_goto($url);
             }
             //	echo_r($detail);exit;
@@ -1106,11 +1257,11 @@ class Member extends MY_Controller {
 
         if (isset($detail['typeMember']) && $detail['typeMember'] == 'patners') {
             logCreate('member |checkLogin |partners detected');
-            redirect('partner/index/reload');
+            redirect('member/index/reload');
         }
         if (isset($detail['typeMember']) && $detail['typeMember'] == 'partner') {
             logCreate('member |checkLogin |partners detected');
-            redirect('partner/index/reload');
+            redirect('member/index/reload');
         }
         //$detail['name']='';
         $this->param['userlogin'] = $userlogin = $detail;

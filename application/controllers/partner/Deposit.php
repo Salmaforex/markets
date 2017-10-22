@@ -75,7 +75,6 @@ class Deposit extends MY_Partner { //MY_Controller
 
             dbInsert($this->forex->tableAPI, $data);
 
-
             $id_trans = $this->forex->flowInsert('deposit', $dataDeposit);
             //dbInsert('deposit', $data);
             if ($post0['submit'] == 'fasapay') {
@@ -267,7 +266,7 @@ class Deposit extends MY_Partner { //MY_Controller
             $info = 'Failed Fasapay Payment';
             $this->forex->flow_data_update($iTrans, false, $info);
             $data = $this->forex->flow_data($id_trans);
-            print_r($data);
+            //print_r($data);
             //exit;
             $info = array(
                 'status' => FALSE,
