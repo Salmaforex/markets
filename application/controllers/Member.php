@@ -605,7 +605,7 @@ class Member extends MY_Controller {
         //    echo_r($this->param['userlogin']);exit;
         $detail = $this->param['userlogin'];
         if ($this->param['userlogin']['typeMember'] == 'patners') {
-            redirect('member/deposit');
+            redirect('partner/deposit');
         }
 
         $this->param['content'] = array();
