@@ -471,7 +471,7 @@ class Member extends MY_Controller {
         //    $res= $this->localApi( 'users','detail',array($session['username']));
         //    $detail=isset($res['data'])?$res['data']:array();
         if ($detail['typeMember'] == 'patners') {
-            redirect('member/widtdrawal');
+            redirect('partner/widtdrawal');
         }
         $res = _localApi('account', 'lists', array($detail['email']));
         //echo_r($res);
@@ -751,7 +751,7 @@ class Member extends MY_Controller {
         //    $res= $this->localApi( 'users','detail',array($session['username']));
         //    $detail=isset($res['data'])?$res['data']:array();
         if ($detail['typeMember'] == 'patners') {
-            redirect('member/widtdrawal');
+            redirect('partner/widtdrawal');
         }
 
         $notAllow = true;
@@ -1170,7 +1170,7 @@ class Member extends MY_Controller {
                 js_goto($url);
             }
             if ($typeMember == 'partner' || $typeMember == 'patners') {
-                $url = site_url('member/' . $page) . "?from=member&t=" . microtime();
+                $url = site_url('partner/' . $page) . "?from=member&t=" . microtime();
                 js_goto($url);
             }
             //	echo_r($detail);exit;
@@ -1257,11 +1257,11 @@ class Member extends MY_Controller {
 
         if (isset($detail['typeMember']) && $detail['typeMember'] == 'patners') {
             logCreate('member |checkLogin |partners detected');
-            redirect('member/index/reload');
+            redirect('partner');
         }
         if (isset($detail['typeMember']) && $detail['typeMember'] == 'partner') {
             logCreate('member |checkLogin |partners detected');
-            redirect('member/index/reload');
+            redirect('partner');
         }
         //$detail['name']='';
         $this->param['userlogin'] = $userlogin = $detail;
