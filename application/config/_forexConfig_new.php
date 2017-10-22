@@ -85,3 +85,5 @@ $config['email_link']='http://www.salmaforex.com/contact/';
 
 /*=============URL API ====================*/
 $config['salma_api']='http://advance.forex/forex.php/api';
+//==========API_URL=================
+$config['api_url']='http://advance.forex/index.php/';

@@ -86,7 +86,7 @@ class Partner extends MY_Controller {
         //echo_r($login);
     }
 
-    public function uploads($warn = 0) {
+    public function _uploads($warn = 0) {
         $this->checkLogin();
 
         if ($this->input->post('rand')) {
@@ -159,7 +159,7 @@ class Partner extends MY_Controller {
         $this->showView();
     }
 
-    public function edit($warn = 0) {
+    public function _edit($warn = 0) {
         $this->checkLogin();
         if ($this->input->post('rand')) {
             $rand = $this->input->post('rand');
@@ -234,7 +234,7 @@ class Partner extends MY_Controller {
         }
     }
 
-    public function editpassword() {
+    public function _editpassword() {
         $this->checkLogin();
         if ($this->input->post('rand')) {
             $post0 = $this->input->post();
@@ -266,7 +266,7 @@ class Partner extends MY_Controller {
         $this->showView();
     }
 
-    public function edit_master_password() {
+    public function _edit_master_password() {
         $this->checkLogin();
         if ($this->input->post('rand')) {
             $post0 = $this->input->post();
@@ -334,7 +334,7 @@ class Partner extends MY_Controller {
     }
 
 //==================
-    public function history($status = 'none') {
+    public function _history($status = 'none') {
         $this->checkLogin();
         $session = $this->param['session'];
         $res = _localApi('account', 'lists', array($session['username']));
@@ -363,7 +363,7 @@ class Partner extends MY_Controller {
         $this->showView();
     }
 
-    public function deposit($status = 'none') {
+    public function _deposit_old($status = 'none') {
         $this->checkLogin();
         $this->param['content'] = array();
         $uDetail = $userlogin = $this->param['userlogin'];
@@ -380,8 +380,9 @@ class Partner extends MY_Controller {
         if (isset($notAllow)) {
             //echo_r($uDetail);
             //exit;
+            $url=site_url("partner/edit/warning")."#frmLiveAccount3";
             //	$this->session->set_flashdata('notif', array('status' => false, 'msg' => 'Update nomor rekening!'));
-            redirect(site_url("partner/edit/warning"), 1);
+            redirect($url, 1);
         }
 
         $email = $uDetail['email'];
@@ -424,9 +425,14 @@ class Partner extends MY_Controller {
 
             dbInsert($this->forex->tableAPI, $data);
 
-            //echo_r($data,1);exit;
-            $this->forex->flowInsert('deposit', $dataDeposit);
+            
+            $id_trans=$this->forex->flowInsert('deposit', $dataDeposit);
             //dbInsert('deposit', $data);
+            if($post0['submit']=='fasapay'){
+                redirect(site_url('partner/deposit_fasapay/' . $id_trans), true);
+            }
+            
+            echo "<pre>".print_r($post0,1);exit;
 
             $this->session->set_flashdata('info', $post0);
             redirect(site_url('partner/deposit/done/' . rand(100, 999)), true);
@@ -472,15 +478,145 @@ class Partner extends MY_Controller {
              */
         } else {
             $this->param['title'] = 'Secure Account | Deposit ';
-            if ($status == 'done')
+            if ($status == 'done'){
                 $this->param['show_done'] = 'deposit_done';
+            }
+            
             $this->param['content'][] = 'transaksi/deposit';
+            if($this->input->get('date')==''){
+                $url = site_url('partner/deposit')."?date=".date("YmdHis")."#depositForm";
+                redirect($url); 
+            }
+            $this->param['button_fasapay']=TRUE;
         }
         
         $this->param['footerJS'][] = 'js/login.js';
         $this->showView();
     }
 
+    public function _deposit_fasapay($id_trans){
+        $data= $this->forex->flow_data($id_trans);
+        
+        $deposit_num=$data['detail']['orderDeposit'];
+        $u_type = isset($data['detail']['userlogin']['users']['u_type'])?$data['detail']['userlogin']['users']['u_type']:'00';
+        $account = $data['accountid'];
+        $email = $data['email'];
+        $currency = $data['currency'];
+        $form['target']=    ciConfig('fasapay_url');
+        $param['fp_acc']=   ciConfig('fp_acc');
+        $param['fp_comments']=  'Deposit $'.$deposit_num;
+        $form['fp_cart']= array( 
+            array( 
+            'item'=>'Deposit',
+            'price'=>1,
+            'qty'=>$deposit_num
+            )
+        );
+        $param['fp_amnt']= trim(sprintf("%10.2f",$deposit_num));
+        $param['fp_currency']= ciConfig('fp_currency');
+        $param['fp_merchant_ref']='DE'.sprintf("%02s-%011s",$u_type,$id_trans);
+        
+        $param['fp_success_url']=site_url('partner/deposit_result/success/'.$id_trans);
+        $param['fp_success_method']='POST';
+        $param['fp_fail_url']=site_url('partner/deposit_result/failed/'.$id_trans);
+        $param['fp_fail_method']='POST';
+        $param['fp_status_url']=site_url('partner/deposit_status/'.$id_trans);
+        $param['fp_status_method']='POST';
+        $param['fp_resend_callback']=3;
+        $param['fp_item']="Deposit $".$deposit_num." to account_id {$account} ";
+        //$param['fp_sci_link']=TRUE;
+        //==============additional===============
+        $param['sal_acc']=$account;
+        $param['sal_email']=$email;
+        $param['sal_currency']=$currency;
+        $param['sal_type']=$data['types'];
+        $param['fp_fee_mode']='FiS';
+        
+        $form['params']=$param;
+        
+        $this->load->view('form_auto_post',$form);
+        
+        //echo '<pre>';print_r($form);print_r($data);
+        /*
+         * <form method="POST" action="https://sci.fasapay.com/"> 
+	<input type="hidden" name="fp_acc" value="FP0001">
+	<input type="hidden" name="fp_item" value="2 pieces of Clothes">
+	<input type="hidden" name="fp_amnt" value="2000">
+	<input type="hidden" name="fp_currency" value="IDR">
+	<input type="hidden" name="fp_comments" value="Purchase of 2 pieces of black clothes with white collar">
+	<input type="hidden" name="fp_merchant_ref" value="BL002883" /> 
+	<input type="hidden" name="fp_success_url" value="http://www.domain.com/merchant/result.php" />
+	<input type="hidden" name="fp_success_method" value="POST" />
+	<input type="hidden" name="fp_fail_url" value="http://www.domain.com/merchant/cancel.php" />
+	<input type="hidden" name="fp_fail_method" value="GET" />
+	<input type=”hidden” name=
+	<!-- additional fields -->
+	<input type="hidden" name="track_id" value="558421222">
+	<input type="hidden" name="order_id" value="BJ2993800-">
+	<input name="" type="submit">
+</form>
+         */
+    }
+    
+    function _deposit_result($status='NONE',$id_trans){
+        echo '<pre>stat='.$status."\tid:".$id_trans;
+        logCreate('deposit_result:'.$status);
+        logCreate($this->input->post(),'result:'.$status);
+        $post=$this->input->post();
+        print_r($post);
+        if($status=='failed'){
+            /*stat=failed	id:1709184286Array
+(
+    [fp_paidto] => FP217906
+    [fp_amnt] => 13.00
+    [fp_currency] => USD
+    [fp_store] => 
+    [fp_merchant_ref] => DE10-01709184286
+    [sal_acc] => 7000421
+    [sal_email] => 07adjie@gmail.com
+    [sal_currency] => IDR
+    [sal_type] => deposit
+    [fp_cart] => Array
+        (
+            [0] => Array
+                (
+                    [item] => Deposit
+                    [price] => 1
+                    [qty] => 13
+                )
+
+        )
+
+    [yt0] => Back to Merchant
+)
+*/
+            $aTrans=  explode("-", $post['fp_merchant_ref']);
+            $iTrans = $aTrans[1];
+            $data= $this->forex->flow_data($id_trans);
+            print_r($data);
+            $info = 'Failed Fasapay Payment';
+            $this->forex->flow_data_update($iTrans,false,$info);
+            $data= $this->forex->flow_data($id_trans);
+            print_r($data);
+            //exit;
+            $info=array(
+                'status'=>FALSE,
+                'message'=>'Please Deposit to Our Bank Account and Contact CS for further Information'
+            );
+            
+            $this->session->set_flashdata('messages', $info);
+            js_goto(site_url('partner/deposit/failed/?date=20171022223516&#info_message'  ), true);
+        }
+    }
+    
+    function _deposit_status( $id_trans){
+        echo '<pre>status'. $id_trans;
+        $post=$this->input->post();
+        print_r($post);
+        logCreate('deposit_status:'.$id_trans);
+        logCreate($this->input->post(),'trans:'.$id_trans);
+    }
+    
     public function widtdrawal($status44 = null) {
         $this->checkLogin();
         $notAllow = true;
@@ -679,7 +815,7 @@ class Partner extends MY_Controller {
         }
     }
 
-    function show_upload($id = null) {
+    function _show_upload($id = null) {
         $data = $this->users_model->document($userid, 'id');
         //echo'<pre>';var_dump($data);die();
         header('content-type:' . $data['type']);
@@ -703,7 +839,7 @@ class Partner extends MY_Controller {
         redirect(site_url('forex'), 1);
     }
 
-    public function logout() {
+    public function _logout() {
         foreach ($_SESSION as $name => $val) {
             $_SESSION[$name] = '';
             $_SESSION['password'] = '';
@@ -711,11 +847,11 @@ class Partner extends MY_Controller {
         redirect(site_url("login"));
     }
 
-    public function detail() {
+    public function _detail() {
         $this->profile();
     }
 
-    public function profile() {
+    public function _profile() {
         $this->checkLogin();
         $this->param['title'] = 'SECURE ACCOUNT | Profile';
         $this->param['content'] = array(
@@ -918,6 +1054,7 @@ class Partner extends MY_Controller {
             'css001/bootstrap.css',
             'css/ddaccordion.css'
         );
+        
         $this->param['fileJs'] = array(
             'js/jquery-1.7.min.js',
             'js/ddaccordion.js'
@@ -939,7 +1076,7 @@ class Partner extends MY_Controller {
     }
 
 //===============ACCOUNT=========
-    public function account_list($accountid = 0) {
+    public function _account_list($accountid = 0) {
         if ($accountid != 'all') {
             js_goto(site_url('partner/account_list/all'));
             exit;
@@ -955,7 +1092,7 @@ class Partner extends MY_Controller {
         $this->showView();
     }
 
-    public function account_id($accountid = 0) {
+    public function _account_id($accountid = 0) {
         $this->checkLogin();
         $get = $this->input->get();
         
@@ -1001,7 +1138,7 @@ class Partner extends MY_Controller {
         $this->showView();
     }
 
-    function account_password($accountid) {
+    function _account_password($accountid) {
         $this->checkLogin();
         if ($this->input->post('rand')) {
 
@@ -1051,8 +1188,22 @@ class Partner extends MY_Controller {
         $this->param['footerJS'][] = 'js/login.js';
         $this->showView();
     }
+    
+   function _list_member($type = null) {
+        $this->param['title'] = 'SECURE ACCOUNT | List Member';
+        $contents = array('partner_members');
 
-    function promotion($type = null) {
+        $this->checkLogin();
+        if (!isset($contents))
+            redirect('partner/detail');
+        //	$email = $this->param['userlogin']['email'];
+        //	$this->param['accounts']=  $this->account->gets($email );
+        $this->param['content'] = $contents;
+        $this->param['footerJS'][] = 'js/partner_listmember.js';
+        $this->showView();
+    }
+
+    function _promotion($type = null) {
         $this->checkLogin();
         $params = array('promotion', $type, $this->param['userlogin']);
         $params['debug'] = true;
@@ -1087,19 +1238,7 @@ class Partner extends MY_Controller {
         $this->load->view('javascript/' . $file . "_js", $data);
     }
 
-    function list_member($type = null) {
-        $this->param['title'] = 'SECURE ACCOUNT | List Member';
-        $contents = array('partner_members');
 
-        $this->checkLogin();
-        if (!isset($contents))
-            redirect('partner/detail');
-        //	$email = $this->param['userlogin']['email'];
-        //	$this->param['accounts']=  $this->account->gets($email );
-        $this->param['content'] = $contents;
-        $this->param['footerJS'][] = 'js/partner_listmember.js';
-        $this->showView();
-    }
 
     function register($type = null) {
         $this->param['title'] = 'SECURE ACCOUNT | Profile';

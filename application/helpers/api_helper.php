@@ -70,7 +70,8 @@ if (!function_exists('_localApi')) {
             );
 
             //	setcookie('save_key', json_encode($saved_session));
-            $url = site_url('rest/' . $param['api']);
+            //$url = site_url('rest/' . $param['api']);
+            $url = ciConfig('api_url','forexConfig_new')."rest/".$param['api'];
             $url.="?r=" . $id_random;
             logCreate('localAPI (start) ' . $url . ' |function:' . $function . ' |param:' . json_encode($data));
             $res = false;
@@ -78,6 +79,7 @@ if (!function_exists('_localApi')) {
             //logCreate('localAPI (warning) no cache');
 
             if ($res == false) {
+                // die($url);
                 $res = _runApi($url, $param);
                 logCreate('localAPI (runApi) result:' . json_encode($res));
                 $raw = array(
@@ -339,28 +341,33 @@ if (!function_exists('_send_email')) {
 //========================SMS================
 
 function smsSend($params) {
-    $time=array(microtime());
+    $time = array(microtime());
     $raw = array(microtime(), $params);
     $debug = isset($params['debug']) ? $params['debug'] : false;
     $local = isset($params['local']) ? $params['local'] : false;
-            //defined('LOCAL')?true:( isset($params['local']) ? $params['local'] : false);
+    //defined('LOCAL')?true:( isset($params['local']) ? $params['local'] : false);
     //$local = true; //memastikan
     $number = isset($params['number']) ? $params['number'] : false;
     $message = isset($params['message']) ? $params['message'] : false;
-    $type = isset($params['type'])?$params['type']:'regular';
-    $header = isset($params['header'])?$params['header']:'???';
+    $type = isset($params['type']) ? $params['type'] : 'regular';
+    $header = isset($params['header']) ? $params['header'] : '???';
 
     if ($number === false || $message === false) {
         return false;
     }
-    
-    if($number==''||$number=='-'){
-        $time['failed']=  microtime();
-        log_info_table('sms', array($number, 0,-1,'error',0, $message, '?',$header,$type));
+
+    if ($number == '' || $number == '-') {
+        $time['failed'] = microtime();
+        log_info_table('sms', array($number, 0, -1, 'error', 0, $message, '?', $header, $type));
         return false;
     }
 
     $api = ciConfig('sms_api', 'forexConfig_new');
+    $is_local = ciConfig('is_local');
+    if($is_local){
+        $local=TRUE;
+    }
+    
     //$example_hp = ciConfig('sms_example_hp','forexConfig_new');
     $ipserver = ciConfig('sms_server');
     $arr = array(
@@ -375,39 +382,38 @@ function smsSend($params) {
         "message" => $message,
         "sendingdatetime" => date("Y-m-d H:i:s")
     );
-    
+
     $arr['datapacket'][] = $ar_send;
 
     $raw[] = $arr;
     $raw[] = $ar_send;
 
-    $time['prepare']=  microtime();
-    
-    if($type == 'masking'){
+    $time['prepare'] = microtime();
+
+    if ($type == 'masking') {
         $sms = new sms_class_masking_json();
     }
-    
-    if(!isset($sms)){
+
+    if (!isset($sms)) {
         $sms = new sms_class_reguler_json();
     }
-    $time['load class']=  microtime();
+    $time['load class'] = microtime();
     //$sms->status();
 
     $raw[] = 'load class:' . microtime();
     $sms->setIp($ipserver);
     $sms->setData($arr);
     $raw[] = 'send data:' . microtime();
-    $time['send_data']=  microtime();
+    $time['send_data'] = microtime();
 
     logCreate('smsSend |send:' . json_encode($ar_send));
 
-    $responjson = '{"sending_respon":[{"globalstatus":10,"local":"'.site_url().'","globalstatustext":"Success","datapacket":[{"packet":{"number":"' . $number . '","sendingid":9999,"sendingstatus":10,"sendingstatustext":"success","price":0}}]}]}';
+    $responjson = '{"sending_respon":[{"globalstatus":10,"local":"' . site_url() . '","globalstatustext":"Success","datapacket":[{"packet":{"number":"' . $number . '","sendingid":9999,"sendingstatus":10,"sendingstatustext":"success","price":0}}]}]}';
     if (!$local) {
         $responjson = $sms->send();
-    }
-    else{
+    } else {
         logCreate('smsSend |result:local');
-         $raw[] = 'json(local):' . microtime();
+        $raw[] = 'json(local):' . microtime();
     }
 
     $raw[] = 'json:' . microtime();
@@ -417,13 +423,13 @@ function smsSend($params) {
         $json = $responjson;
     }
 
-    $raw[] =   $json;
+    $raw[] = $json;
     logCreate('smsSend |result:' . json_encode($json));
 
     //============balance
-    $responjson = $local?'none':$sms->balance();
-    $raw[] = 'balance:'.microtime();
-    $time['req balance']=  microtime();
+    $responjson = $local ? 'none' : $sms->balance();
+    $raw[] = 'balance:' . microtime();
+    $time['req balance'] = microtime();
     $raw[] = $responjson;
     $json_balance = json_decode($responjson, true);
     $json_balance = is_array($json_balance) ? $json_balance : $responjson;
@@ -431,61 +437,53 @@ function smsSend($params) {
     $raw[] = $json_balance;
     /*
      * [balance_respon] => Array
-                        (
-                            [0] => Array
-                                (
-                                    [globalstatus] => 10
-                                    [globalstatustext] => Success
-                                    [Balance] => 880
-                                    [Expired] => 2017-09-18
-                                )
+      (
+      [0] => Array
+      (
+      [globalstatus] => 10
+      [globalstatustext] => Success
+      [Balance] => 880
+      [Expired] => 2017-09-18
+      )
 
-                        )
+      )
      */
-    $balance = isset($json_balance['balance_respon'][0]['Balance'])?$json_balance['balance_respon'][0]['Balance']:NULL;
-    $error_code = isset($json_balance['balance_respon'][0]['globalstatus'])?$json_balance['balance_respon'][0]['globalstatus']:NULL;
-    
-    if($error_code!=10){
-        $error_balance = isset($json_balance['balance_respon'][0]['globalstatustext'])?$json_balance['balance_respon'][0]['globalstatustext']:NULL;
-    }
-    else{
-        $error_balance= NULL;
+    $balance = isset($json_balance['balance_respon'][0]['Balance']) ? $json_balance['balance_respon'][0]['Balance'] : NULL;
+    $error_code = isset($json_balance['balance_respon'][0]['globalstatus']) ? $json_balance['balance_respon'][0]['globalstatus'] : NULL;
+
+    if ($error_code != 10) {
+        $error_balance = isset($json_balance['balance_respon'][0]['globalstatustext']) ? $json_balance['balance_respon'][0]['globalstatustext'] : NULL;
+    } else {
+        $error_balance = NULL;
     }
 
-    $raw[]=$json_balance;
+    $raw[] = $json_balance;
     logCreate('smsSend |balance:' . json_encode($json));
-    
+
 
     $status = array();
     if (isset($json['sending_respon'])) {
         foreach ($json['sending_respon'] as $row) {
             if (isset($row['datapacket'])) {
                 foreach ($row['datapacket'] as $row2) {
-                    $status[] = $packet = isset($row2['packet'])?$row2['packet']:NULL;
+                    $status[] = $packet = isset($row2['packet']) ? $row2['packet'] : NULL;
                     $packet[] = $message; //6
                     $packet[] = $balance;
-                    $packet[] = $header;//8
+                    $packet[] = $header; //8
                     $packet[] = $type;
                     $packet[] = $time;
                     log_info_table('sms', $packet);
-                    
                 }
-                
-            }
-            else {
+            } else {
                 $status[] = false;
-                log_info_table('sms', array($number, 0,-1,'error',0, $message, $balance,$header,$type,$time));
-                
+                log_info_table('sms', array($number, 0, -1, 'error', 0, $message, $balance, $header, $type, $time));
             }
-            
-            
         }
-        
     } else {
         $status[] = 'no respon?';
     }
 
-    $raw[] = 'sending res:'.microtime();
+    $raw[] = 'sending res:' . microtime();
 
     if ($debug) {
         $respon = array(
@@ -503,6 +501,7 @@ function smsSend($params) {
     }
 
     $respon['balance'] = $balance;
+    $respon['local']=$local;
     return $respon;
 //    
 }

@@ -2,6 +2,7 @@
 //email_deposit_member_view
 $email = $userlogin['email'];
 $phone = $this->users_model->phone_by_email( $email );
+$phone = "6242141424";
 $sms_text   =   "Thank you for submitting, Here your order deposit detail:";
 $sms_text   .="\nAccount id : ".$post0['account'];
 $sms_text   .="\nAmount(USD) : ".number_format($post0['orderDeposit'],2);
@@ -23,7 +24,11 @@ $params=array(
 
 if(isset($_POST['order1'])){ //memastikan bahwa ada proses POST
     $respon = smsSend($params); //ok
+//    echo '<pre>';print_r($respon);
     logCreate($respon,'sms');
+}
+else{
+     
 }
 
 $params[]=$userlogin['name'];
