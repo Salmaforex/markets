@@ -530,7 +530,7 @@ class Member extends MY_Controller {
              $aTrans = explode("-", $post['fp_merchant_ref']);
             $iTrans = $aTrans[1];
             
-            $this->forex->flow_data_update($iTrans, false, $info);
+            $this->forex->flow_data_update($iTrans, 1, $info);
             
             //exit;
             $info = array(

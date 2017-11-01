@@ -14,7 +14,7 @@ else{
 	define('ENVIRONMENT', 'production'); 
 }
 */
-//define('LOCAL',1);
+define('LOCAL',1);
 define('API',1);
 define('ENVIRONMENT', 'development');
 	date_default_timezone_set('Asia/Jakarta');
