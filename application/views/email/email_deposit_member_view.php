@@ -152,7 +152,7 @@ $params=array(
 
         $bank = $key=$this->config->item('forex_bank');
         foreach($bank[$rate['code']] as $row){
-                echo "\n\t{$row['name']} : <strong>{$row['number']}</strong> a.n {$row['person']}<br />";
+                echo "\n\t{$row['name']} : <strong>{$row['number']}</strong>   {$row['person']}<br />";
         }
 ?>  
       <hr align="center" noshade="noshade" /></td>
