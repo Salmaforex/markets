@@ -530,13 +530,28 @@ class Member extends MY_Controller {
              $aTrans = explode("-", $post['fp_merchant_ref']);
             $iTrans = $aTrans[1];
             
-            $this->forex->flow_data_update($iTrans, 1, $info);
+            $this->forex->flow_data_update($iTrans, false, $info);
             
             //exit;
             $info = array(
                 'status' => TRUE,
-                'message' => 'Please Deposit to Our Bank Account and Contact CS for further Information'
+                'message' => 'Please Contact CS for further Information'
             );
+            
+            $data_send=array(
+                'depositprocess',
+                array(
+                    'get'=>array('type'=>'depositProcess'),
+                    'post0'=>array(
+                            'status'=>'approve',
+                            'id'=>$iTrans
+                        ),
+                    'userlogin'=>$this->param['userlogin']
+                    )
+            );
+            $res_update_valid = _localApi('datatable', 'execute', $data_send);
+            $ar_result = isset($res_update_valid['data']) ? $res_update_valid['data'] : $res_update_valid;
+            logCreate($ar_result );
 
             $this->session->set_flashdata('messages', $info);
             js_goto(site_url('member/deposit/index/fasapay_success/?date='.date("YmdHis").'&#info_message'), true);

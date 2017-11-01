@@ -166,6 +166,7 @@ class MY_Controller extends CI_Controller {
                 $aTime['run localApi'] = microtime();
                 $ar = isset($res['data']) ? $res['data'] : $res;
                 $ar[] = 'local api';
+                $ar[] = array('datatable', 'execute', $data );
                 $run = true;
                 logCreate('func data run: datatable => execute (done)');
             } else {
