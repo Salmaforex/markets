@@ -8,6 +8,9 @@ class Runonce extends CI_Controller {
     private $db_main;
 
     function index() {
+        
+        die;
+        
         echo "start";
         $params = array(
             'api' => 'users',
@@ -26,6 +29,17 @@ class Runonce extends CI_Controller {
         //die;
         //$this->send_msg_to_member();
         //$this->send_msg_to_agent();
+        
+    }
+    
+    function testing_email(){
+        $email="gundambison@gmail.com";
+        $str="ini adalah demo.. untuk testing email saja <br/>";
+        $acc = $this->account_model->all_member(' email ');
+        $str.="total ".count($acc);
+        
+        batchEmail($email, 'Account List for Agent', $str);
+        
     }
 
     function check_account($accountid) {
