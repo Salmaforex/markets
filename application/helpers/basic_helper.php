@@ -15,6 +15,8 @@ function config_site($name,$config_file='site_config'){
 }
 
 function is_local(){
+    //echo '<pre>';print_r($_SERVER);
+    return $_SERVER['HTTP_HOST']=='advance.forex'?TRUE:FALSE;
 	return is_file('default.php')?true:false;
 }
 

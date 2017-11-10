@@ -8,9 +8,9 @@ class Runonce extends CI_Controller {
     private $db_main;
 
     function index() {
-        
+
         die;
-        
+
         echo "start";
         $params = array(
             'api' => 'users',
@@ -29,17 +29,79 @@ class Runonce extends CI_Controller {
         //die;
         //$this->send_msg_to_member();
         //$this->send_msg_to_agent();
-        
     }
-    
-    function testing_email(){
-        $email="gundambison@gmail.com";
-        $str="ini adalah demo.. untuk testing email saja <br/>";
+
+    function testing_email() {
+        $this->load->library('session');
+        $hp_send = config_site('hp_report');
+        
+        $email = config_site('email_report');
+        $str = "ini adalah demo.. untuk testing email saja <br/>";
         $acc = $this->account_model->all_member(' email ');
-        $str.="total ".count($acc);
+        $str.="total account berdasarkan email:" . number_format(count($acc));
+        $message = "total account (email):" . number_format(count($acc));
+
+        $acc = $this->users_model->total();
+        $str.="\ntotal user:" . number_format($acc);
+        $message.="\ntotal account (email):" . ($acc);
+
+        $data = array('email', array('cek_only' => TRUE));
+        $res = _localApi('datatable', 'execute', $data);
+        $str.="\ntotal Email Send:" . $res['data']['recordsTotal'];
+
+        $data = array('email_logs', array('cek_only' => TRUE));
+        $res = driver_run($driver_core = 'advforex', $driver_name = 'email_logs', $func_name = 'total');
+        //$str.=print_r($res,1);//"\ntotal SMS Send:".$res['data']['recordsTotal'];
+        $str.="\ntotal Email:" . $res[0];
+        $str.="\nreport send<table border=2>"
+                . "<tr><th>jumlah</th><th>tanggal</th><th>waktu</th></tr>";
+        foreach ($res[1] as $row) {
+            $str.="<tr><td>" . implode("</td><td>", $row) . "</td></tr>";
+        }
+        $str.="</table>";
+
+
+        $data = array('sms', array('cek_only' => TRUE));
+        $res = _localApi('datatable', 'execute', $data);
+        $str.="\ntotal SMS Send:" . $res['data']['recordsTotal'];
+        //;print_r($res,1);//
+        $data = array('sms_logs', array('cek_only' => TRUE));
+        $res = driver_run($driver_core = 'advforex', $driver_name = 'sms_logs', $func_name = 'total');
+        //$str.=print_r($res,1);//"\ntotal SMS Send:".$res['data']['recordsTotal'];
+        $str.="\ntotal SMS:" . $res[0];
+        $str.="\nreport send<table border=2>"
+                . "<tr><th>jumlah</th><th>tanggal</th><th>kegiatan</th></tr>";
+        foreach ($res[1] as $row) {
+            $str.="<tr><td>" . implode("</td><td>", $row) . "</td></tr>";
+        }
+        $str.="</table>";
+
+        $str.="\nAkun terbaru:\n\n<table border=1>";
+        $acc = $this->account_model->all(10, 0, 'accountid, email,created,agent', 'id', 'desc');
+
+        //$str .=print_r($acc,1);
+        foreach ($acc as $row) {
+            $str.="<tr>";
+            $str.="<td>" . implode("</td><td>", $row) . "</td>";
+            $str.="</tr>";
+        }
+        $str.="</table>";
         
-        batchEmail($email, 'Account List for Agent', $str);
+        $run = is_local()?FALSE:batchEmail($email, 'Reporting Salmamarkets', $str);
+        logCreate($run, 'sms');
         
+        $params = array(
+            'debug' => true,
+            'number' => $hp_send,
+            'message' => $message,
+            'header' => "debug",
+                //    'local'=>true,
+                //    'type'=>'masking'
+        );
+        $respon = is_local()?array():smsSend($params);
+        //$time[]=  microtime();
+        logCreate($respon, 'sms');
+        echo is_local()?"$hp_send $email<pre>" . $str:die('done');
     }
 
     function check_account($accountid) {
@@ -297,6 +359,7 @@ class Runonce extends CI_Controller {
     function __CONSTRUCT() {
         parent::__construct();
         date_default_timezone_set('Asia/Jakarta');
+        $this->load->model('account_model');
     }
 
     function parse_account() {
@@ -343,25 +406,24 @@ class Runonce extends CI_Controller {
         }
         //INSERT INTO `mujur_account` (`id`, `username`, `email`, `created`, `modified`, `investorpassword`, `masterpassword`, `reg_id`, `accountid`, `status`, `agent`, `type`, `detail`) VALUES ('1610129069', '7902415', 'jamaludiny283@yahoo.com', '2017-10-01', CURRENT_TIMESTAMP, '', '', '1', '7902415', NULL, NULL, 'MEMBER', NULL);
     }
-    
-    function send_sms(){
-        $post= $this->input->post();
-        $hp_send ='628568132429';
-        $message ='hello ini test dari localhost';
+
+    function send_sms() {
+        $post = $this->input->post();
+        $hp_send = '628568132429';
+        $message = 'hello ini test dari localhost';
         $header = 'dari luar';
-        $params=array(
-                    'debug'=>true,
-                    'number'=>$hp_send,
-                    'message'=>$message,
-                    'header'=>$header,
+        $params = array(
+            'debug' => true,
+            'number' => $hp_send,
+            'message' => $message,
+            'header' => $header,
                 //    'local'=>true,
                 //    'type'=>'masking'
-
-                );
+        );
 
         $respon = smsSend($params);
-        $time[]=  microtime();
-        logCreate($respon,'sms');
+        $time[] = microtime();
+        logCreate($respon, 'sms');
         print_r($respon);
     }
 

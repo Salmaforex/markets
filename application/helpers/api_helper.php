@@ -261,7 +261,7 @@ if (!function_exists('batchEmail')) {
         log_info_table('batchmail', array($to, $subject));
         //$sql=$CI->db->insert_string($table, $data);
         //dbQuery($sql);
-        //return true;
+        return true;
     }
 
 } else {

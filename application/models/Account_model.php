@@ -848,8 +848,8 @@ class Account_model extends CI_Model {
         dbQuery($sql);
     }
 
-    function all($limit = 10, $offset = 0, $field = '*') {
-        $sql = "select {$field} from {$this->tableAccount} order by id asc limit $offset,$limit";
+    function all($limit = 10, $offset = 0, $field = '*',$field_sort='id',$field_order='asc') {
+        $sql = "select {$field} from {$this->tableAccount} order by {$field_sort} {$field_order} limit $offset,$limit";
         return dbFetch($sql);
     }
 

@@ -6,3 +6,6 @@ $config['drivers_parent_salma']=array(
     'login'
     
 );
+
+$config['hp_report']='628568132429';
+$config['email_report']='gundambison@gmail.com';
