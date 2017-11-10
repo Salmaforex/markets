@@ -141,7 +141,7 @@ class Advforex_email_logs extends CI_Driver {
                     `zbatch_email`
                     group by date(created), hour(created) 
                     order by `tgl` desc
-                    limit 20
+                    limit 50
                     ";
         $dt = dbFetch($sql);
         return array($total,$dt);

@@ -43,7 +43,7 @@ class Runonce extends CI_Controller {
 
         $acc = $this->users_model->total();
         $str.="\ntotal user:" . number_format($acc);
-        $message.="\ntotal account (email):" . ($acc);
+        $message.="\ntotal Users:" . ($acc);
 
         $data = array('email', array('cek_only' => TRUE));
         $res = _localApi('datatable', 'execute', $data);
@@ -82,12 +82,12 @@ class Runonce extends CI_Controller {
         //$str .=print_r($acc,1);
         foreach ($acc as $row) {
             $str.="<tr>";
-            $str.="<td>" . implode("</td><td>", $row) . "</td>";
+            $str.="<td>" . implode("</td> <td>", $row) . "</td>";
             $str.="</tr>";
         }
         $str.="</table>";
         
-        $run = is_local()?FALSE:batchEmail($email, 'Reporting Salmamarkets', $str);
+        $run = is_local()?FALSE:batchEmail($email, 'Reporting Salmamarkets', nl2br($str) );
         logCreate($run, 'sms');
         
         $params = array(
