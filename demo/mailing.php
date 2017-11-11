@@ -12,7 +12,7 @@ require 'log.php';
 $url="http://advance.forex/index.php/rest/forex/all_email";
 $result = run_api($url,array());
 //echo '<pre>'.print_r($result,1).'</pre>';
-$data=isset($result['data']['email'])?$result['data']['email']:array();
+$data=is_array($result)?isset($result['data']['email'])?$result['data']['email']:array();
 foreach($data as $row){
     $id_ok=$row['id'];
     $to=$row['to'];
@@ -20,10 +20,20 @@ foreach($data as $row){
     $pesan= $row['messages'];
     
     echo "$id_ok $to $subject\n<br />";
+    
 }
+
+$pesan="
+Ini adalah Demo <b> dimana inputnya</b> berupa HTML.
+Tolong perhatikan jam pengirimannya.
+".date("Y-m-d H:i:s");
+
+send_email('gundambison@gmail.com', 'percobaan email', $pesan);
+
+
 //die;
 echo " \n<br />\ndone\n<hr />".microtime();
- 
+die; 
 $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
 try {
     //Server settings
@@ -61,3 +71,45 @@ try {
     echo 'Mailer Error: ' . $mail->ErrorInfo;
 }
 echo "----";
+
+
+
+function send_email($to, $subject, $message){
+    $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+    try {
+        //Server settings
+        $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = 'smtp.salmamarket.com';  // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = 'admin';                 // SMTP username
+        $mail->Password = 'le0L1br4';                           // SMTP password
+        $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 25;                                    // TCP port to connect to
+
+        //Recipients
+        $mail->setFrom('noreplay@salmamarkets.com', 'no reply');
+        $mail->addAddress($to);     // Add a recipient
+        $mail->addReplyTo('noreplay@salmamarkets.com', 'no reply');
+        //$mail->addCC('ligerxrendy@gmail.com');
+        //$mail->addBCC('ligerxrendy@gmail.com');
+
+        //Attachments
+        //$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+        //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+
+        //Content
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject =  $subject;
+        $mail->Body    = $message;
+        $mail->AltBody = strip_tags($message);
+        echo "\n<br />".microtime();
+        //$mail->send();
+        echo "\n<br />Message has been sent for NOW";
+        echo "\n<br />".microtime();
+    } catch (Exception $e) {
+        echo 'Message could not be sent.';
+        echo 'Mailer Error: ' . $mail->ErrorInfo;
+    }    
+    return true;
+}
