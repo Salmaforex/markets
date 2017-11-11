@@ -169,6 +169,18 @@ class Forex extends REST_Controller {
         $result['email']=$data;
         save_and_send_rest($code, $result, $param);
     }
+    
+    function send_email_post(){
+        $code = 200;
+        $post=$this->post();
+        $id=$post['id'];
+        $param = array('post' => $this->post());
+        $data= $this->forex_model->emailHide( $id );
+        $result['email']=$data;
+        $result[]=$param;
+        $result[]=$id;
+        save_and_send_rest($code, $result, $param);
+    }
 
 }
 

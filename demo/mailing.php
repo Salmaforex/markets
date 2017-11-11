@@ -1,4 +1,5 @@
 <?php
+$site="bukan.advance.forex";
 // Import PHPMailer classes into the global namespace
 // These must be at the top of your script, not inside a function
 use PHPMailer\PHPMailer\PHPMailer;
@@ -8,27 +9,42 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php';
 require 'run_api.php';
 require 'log.php';
+require 'config.php';
 
-$url="http://advance.forex/index.php/rest/forex/all_email";
+$url="http://{$site}/index.php/rest/forex/all_email";
 $result = run_api($url,array());
+echo "\nrun:$url";
 //echo '<pre>'.print_r($result,1).'</pre>';
-$data=is_array($result)?isset($result['data']['email'])?$result['data']['email']:array();
-foreach($data as $row){
-    $id_ok=$row['id'];
-    $to=$row['to'];
-    $subject = $row['subject'];
-    $pesan= $row['messages'];
+$data=is_array($result)&&isset($result['data']['email'])?$result['data']['email']:FALSE;
+echo "\n".date("Y-m-d H:i:s ").microtime();
+if(!$data){
+    print_r($result);
     
-    echo "$id_ok $to $subject\n<br />";
-    
-}
+}else{
+    foreach($data as $row){
+        $id_ok=$row['id'];
+        $to=$row['to'];
+        $subject = $row['subject'];
+        $pesan= $row['messages'];
+        echo "\n".date("Y-m-d H:i:s ").microtime();
+        send_email($to, $subject, $pesan,$allow);
+        echo "\n".date("Y-m-d H:i:s ").microtime();
+        $url="http://{$site}/index.php/rest/forex/send_email";
+        $params=array('id'=>$id_ok);
+        $result = run_api($url,$params );
+        //print_r($result);
+        
+        echo "$id_ok $to $subject\n<br />";
 
+    }
+}
+echo "\n".date("Y-m-d H:i:s ").microtime();
 $pesan="
 Ini adalah Demo <b> dimana inputnya</b> berupa HTML.
 Tolong perhatikan jam pengirimannya.
 ".date("Y-m-d H:i:s");
 
-send_email('gundambison@gmail.com', 'percobaan email', $pesan);
+send_email('gundambison@gmail.com', 'percobaan email', $pesan,FALSE);
 
 
 //die;
@@ -74,7 +90,7 @@ echo "----";
 
 
 
-function send_email($to, $subject, $message){
+function send_email($to, $subject, $message,$allow=FALSE){
     $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
     try {
         //Server settings
@@ -88,9 +104,9 @@ function send_email($to, $subject, $message){
         $mail->Port = 25;                                    // TCP port to connect to
 
         //Recipients
-        $mail->setFrom('noreplay@salmamarkets.com', 'no reply');
+        $mail->setFrom('noreply@salmamarkets.com', 'no reply');
         $mail->addAddress($to);     // Add a recipient
-        $mail->addReplyTo('noreplay@salmamarkets.com', 'no reply');
+        $mail->addReplyTo('noreply@salmamarkets.com', 'no reply');
         //$mail->addCC('ligerxrendy@gmail.com');
         //$mail->addBCC('ligerxrendy@gmail.com');
 
@@ -104,7 +120,12 @@ function send_email($to, $subject, $message){
         $mail->Body    = $message;
         $mail->AltBody = strip_tags($message);
         echo "\n<br />".microtime();
-        //$mail->send();
+        if($allow){
+            $mail->send();
+        }
+        else{
+            echo "\nEmail not send because not ALLOW";   
+        }
         echo "\n<br />Message has been sent for NOW";
         echo "\n<br />".microtime();
     } catch (Exception $e) {
