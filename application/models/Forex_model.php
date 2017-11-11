@@ -1069,9 +1069,11 @@ from mujur_account a left join mujur_accountdocument ad on a.email=ad.email wher
     }
 
     function emailHide($id) {
+        $sql = "select * from `{$this->tableBatchEmail}`   where id='$id'";
+        $data = dbFetchOne($sql);
         $sql = "update `{$this->tableBatchEmail}` set status='-1' where id='$id'";
         dbQuery($sql);
-        return true;
+        return $data;
     }
 
 //=======================CURRENCRY

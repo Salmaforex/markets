@@ -11,7 +11,7 @@ require 'run_api.php';
 require 'log.php';
 require 'config.php';
 
-$url="{$site}/index.php/rest/forex/all_email";
+$url="{$site}/index.php/rest/email/index";
 $result = run_api($url,array());
 echo "\nrun:$url";
 //echo '<pre>'.print_r($result,1).'</pre>';
@@ -29,12 +29,12 @@ if(!$data){
         echo "\n".date("Y-m-d H:i:s ").microtime();
         send_email($to, $subject, $pesan,$allow);
         echo "\n".date("Y-m-d H:i:s ").microtime();
-        $url="{$site}/index.php/rest/forex/send_email";
+        $url="{$site}/index.php/rest/email/hide";
         $params=array('id'=>$id_ok);
         $result = run_api($url,$params );
         //print_r($result);
         
-        echo "$id_ok $to $subject\n<br />";
+        echo "\n\nparams:\n$id_ok\n$to\n$subject\n<br />";
 
     }
 }
@@ -91,6 +91,10 @@ echo "----";
 
 
 function send_email($to, $subject, $message,$allow=FALSE){
+    if(!$allow){
+        echo "\nEmail not send because not ALLOW";
+        return FALSE;
+    }
     $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
     try {
         //Server settings
