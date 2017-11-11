@@ -11,7 +11,7 @@ require 'run_api.php';
 require 'log.php';
 require 'config.php';
 
-$url="http://{$site}/index.php/rest/forex/all_email";
+$url="{$site}/index.php/rest/forex/all_email";
 $result = run_api($url,array());
 echo "\nrun:$url";
 //echo '<pre>'.print_r($result,1).'</pre>';
@@ -29,7 +29,7 @@ if(!$data){
         echo "\n".date("Y-m-d H:i:s ").microtime();
         send_email($to, $subject, $pesan,$allow);
         echo "\n".date("Y-m-d H:i:s ").microtime();
-        $url="http://{$site}/index.php/rest/forex/send_email";
+        $url="{$site}/index.php/rest/forex/send_email";
         $params=array('id'=>$id_ok);
         $result = run_api($url,$params );
         //print_r($result);
