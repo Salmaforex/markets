@@ -1062,7 +1062,7 @@ from mujur_account a left join mujur_accountdocument ad on a.email=ad.email wher
         return $data['c'];
     }
 
-    function emailData($limit) {
+    function emailData($limit=10) {
         $sql = "select * from `{$this->tableBatchEmail}` where status=1 limit $limit";
         $data = dbFetch($sql);
         return $data;

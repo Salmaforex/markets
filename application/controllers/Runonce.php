@@ -121,7 +121,8 @@ class Runonce extends CI_Controller {
        
         //$time[]=  microtime();
         logCreate($respon, 'sms');
-        echo is_local()?"$hp_send $email<pre>" . $str:die('done');
+        echo is_local()?"$hp_send $email<pre>" . $str:die('done'.$str);
+        
     }
 
     function check_account($accountid) {
