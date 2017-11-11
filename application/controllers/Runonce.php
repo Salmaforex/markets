@@ -87,6 +87,21 @@ class Runonce extends CI_Controller {
         }
         $str.="</table>";
         
+        $str.="\nUser terbaru:\n\n<table border=1>";
+        //$acc = $this->users_model->gets_all('gundambison@gmail.com');
+        //echo_r($acc);
+        $filter['show_fields']='u_id,u_email,ut_name,u_modified ';
+        $acc = $this->users_model->get_data($filter,30);//10, 0, 'accountid, email,created,agent', 'id', 'desc');
+        //echo_r($acc);
+
+        //$str .=print_r($acc,1);
+        foreach ($acc as $row) {
+            $str.="<tr>";
+            $str.="<td>" . implode("</td> <td>", $row) . "</td>";
+            $str.="</tr>";
+        }
+        $str.="</table>";
+        
         $run = is_local()?FALSE:batchEmail($email, 'Reporting Salmamarkets', nl2br($str) );
         logCreate($run, 'sms');
         

@@ -140,8 +140,9 @@ class Advforex_sms_logs extends CI_Driver {
         $sql = "select count(*) c from (SELECT count(*) c FROM $table group by date(modified),tmp8) as c";
         $total1 = dbFetchOne($sql)['c'];
          $sql = "select count(*) jumlah, date(modified) tgl, tmp8 status from 
-                $table
+                $table 
                 group by date(modified), tmp8
+                order by tgl desc
                 limit 30";
         $dt = dbFetch($sql);
         return array($total1,$dt);

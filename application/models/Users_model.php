@@ -13,6 +13,7 @@ class Users_model extends CI_Model {
     public $tableDetail = 'mujur_usersdetail';
     public $tabletype = 'mujur_userstype';
     public $table_erase_user = '';
+    public $table_register='mujur_register';
 
     function exist($search, $limit = 10, $field = 'u_email') {
         $sql = 'select u_id,u_password from `' . $this->table . '` where `' . $field . '` like \'' . $search . '\'
@@ -284,10 +285,47 @@ class Users_model extends CI_Model {
     }
 
     function gets_all($id, $field = 'u_email', $limit = 30, $start = 0) {
+        $filter=array(
+            'get_all'=>array( $field, $id)
+        );
+        //echo_r($filter);
+        return $this->get_data($filter, $limit, $start);
+        
         $sql = "select u.*, ut.ut_name `type_user` from {$this->table} u
 		left join {$this->tabletype} ut on u.u_type=ut.ut_id
 		where `$field`='$id' limit $start, $limit";
         return dbFetch($sql);
+    }
+    
+    //====================
+    function get_data($filter, $limit=10,$start=0){
+        $res=array();
+        $this->db->reset_query();
+        $this->db->join($this->tabletype." as ut",'u.u_type=ut.ut_id','left');
+        //$this->db->join($this->table_register." as reg",'reg.reg_email=u.u_email','left');//reg_email
+        
+        if(isset($filter['get_all'])){
+            $this->db->select('u.*, ut.ut_name `type_user`');
+            $this->db->where($filter['get_all'][0],$filter['get_all'][1]);
+        }
+        
+        if(isset($filter['show_fields'])){
+            $this->db->select($filter['show_fields']);
+        }
+        
+        if(!isset($filter['order_by'])){
+            $this->db->order_by('u_id','desc');
+        }
+        
+        $this->db->limit($limit, $start);
+      //  $this->db->table($this->table );
+        $sql = $this->db->get_compiled_select($this->table." as u",FALSE);
+        
+        
+        //$res[]=array(  $sql,json_encode($filter),$limit,$start);
+        $res = dbFetch($sql);
+        $this->db->reset_query();
+        return $res;
     }
 
     function total( ) {
