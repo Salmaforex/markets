@@ -7,5 +7,5 @@ echo this is devel not live_market
 git push origin devel
 echo this is devel not live_market -v
 echo ====
-
+git push github devel
 git status
