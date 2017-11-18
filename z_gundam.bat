@@ -1,3 +1,5 @@
+cp application/controllers/Test.php application/controllers/_Test.php
+
 @echo off
 git fetch
 git status

@@ -130,6 +130,16 @@ if (!function_exists('_localApi')) {
     }
 
 }
+
+if (!function_exists('data_api')){
+	function data_api($url, $param){
+		$url = ciConfig('data_api_url','forexConfig_new').$url;
+
+		$result = _runApi($url,$param);
+		
+		return $result;
+	}
+}
 if (!function_exists('_runApi')) {
 
     function _runApi($url, $parameter = array()) {
@@ -147,7 +157,14 @@ if (!function_exists('_runApi')) {
         } else {
             logCreate('runAPI: ' . json_encode($result0));
         }
-        return (array) $result0;
+        
+        $result = (array) $result0;
+        if(isset($parameter['debug'])&&$parameter['debug']==1){
+            $result['debug']=array(
+				$url,$parameter
+				);
+        }
+        return $result;
     }
 
     function _runApi_old($url, $parameter = array()) {

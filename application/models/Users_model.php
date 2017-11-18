@@ -260,7 +260,11 @@ class Users_model extends CI_Model {
 		and u_status=1";
 
         $res = dbFetchOne($sql, 1);
-        return $res['c'] == 1 ? true : false;
+        //return $res['c'] == 1 ? true : false;
+        if($res['c'] == 1) return TRUE;
+        
+        $result = password_verify($password, $data['u_password']);
+        return $result  ;
     }
 
     function loginCheck($username, $password) {
@@ -385,6 +389,15 @@ class Users_model extends CI_Model {
 
     function updatePass($email, $pass_sha1) {
         $data = array('u_password' => $pass_sha1);
+        $where = "u_email='" . addslashes($email) . "'";
+        $str = $this->db->update_string($this->table, $data, $where);
+        dbQuery($str);
+        return true;
+    }
+    
+    function update_password($email,$password){
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $data = array('u_password' => $password_hash); 
         $where = "u_email='" . addslashes($email) . "'";
         $str = $this->db->update_string($this->table, $data, $where);
         dbQuery($str);
