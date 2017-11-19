@@ -35,5 +35,6 @@ $config['drivers_mujur']=array(
     'user_login',
     'login',
     'account',
-    'fix_country'
+    'fix_country',
+    'forex_balance'
 );

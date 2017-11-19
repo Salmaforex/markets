@@ -97,7 +97,7 @@ $autoload['helper'] = array('log','db');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = array('forex_config');
 
 /*
 | -------------------------------------------------------------------
