@@ -68,7 +68,7 @@ class Users_model extends CI_Model {
         $data = $this->gets($username);
         if ($data == false)
             return false;
-        $tmp = explode("|", $data['u_password']);
+        $tmp = explode("|", $data['password']);
         logCreate(json_encode($tmp));
         $keys = isset($tmp[1]) ? $tmp[1] : null;
         $pass = sha1("{$password}|{$keys}") . "|" . $keys;
@@ -84,7 +84,7 @@ class Users_model extends CI_Model {
 
     function check_login_new($username, $password) {
         $user = $this->gets($username);
-        $password_hash = $user['u_password'];
+        $password_hash = $user['password'];
         $result = password_verify($password, $password_hash);
         return $result  ;
         
@@ -100,13 +100,17 @@ class Users_model extends CI_Model {
     }
     
     function gets($id, $field = 'u_email') {
+        $filter=array('get_all'=>array( $field, $id));
+        $result = $this->get_data( $filter);
+        return isset($result[0])?$result[0]:$result;
+        
         $table = $this->tables['main'];
         $result = $this->db->get_where($table, array($field => $id))
                 ->row_array();
         return $result;
     }
     
-    function getDetail($id, $field = 'ud_email', $simple = false) {
+    function getDetail($id, $simple = false,$field = 'ud_email') {
         return $this->get_detail($id, $field,$simple);
     }
 
@@ -176,7 +180,7 @@ class Users_model extends CI_Model {
 
         if (isset($filter['get_all'])) {
             $this->db->select('u_id id, u_email email,u_status status, ut.ut_name `type_user`');
-            $this->db->select('u_type type,u_mastercode mastercode, u_currency currency');
+            $this->db->select('u_type type,u_mastercode mastercode, u_currency currency, u_password password');
             $this->db->where($filter['get_all'][0], $filter['get_all'][1]);
         }
 

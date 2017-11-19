@@ -8,6 +8,15 @@ class Test extends CI_Controller {
         parent::__construct();
 		$list_api=array(
 			'user_detail'=>array( 'users/detail','melihat detail ', array('email'=>'gundambison@gmail.com' )),
+            'user_exist'=>array( 'users/exist','cek user ', array('email'=>'gundambison@gmail.com' )),
+            'user_exist2'=>array( 'users/exist','cek user (tidak ditemukan) ', array('email'=>'gundambisonxxx@gmail.com' )),
+            
+            'login1'=>array( 'users/login','login OK ', array('email'=>'Ade.yogi.putra@gmail.com','password'=>'1231234' )),
+            'login2'=>array( 'users/login','login Error (tidak ditemukan) ', array('email'=>'gundambisonxxx@gmail.com','password'=>'gundam1981' )),
+            'login3'=>array( 'users/login','login Error (password salah) ', array('email'=>'Ade.yogi.putra@gmail.com','password'=>'gundam1981' )),
+            
+            'user_detail2'=>array( 'users/detail','detail user (tidak ditemukan) ', array('email'=>'gundambisonxxx@gmail.com' )),
+            
 		);
 		$this->list_api=$list_api;
     }
@@ -35,7 +44,9 @@ class Test extends CI_Controller {
 		$id_random = (string) dbId('random');
 		$url = $api[0];
         $url.="?r=" . $id_random;
-		$result = data_api($url, $api[2]);
+        $param = $api[2];
+        $param['debug']=1;
+		$result = data_api($url, $param);
 		echo '<pre>'.print_r($result,1).'</pre>';
 		die($this->list_my_api());
 	}

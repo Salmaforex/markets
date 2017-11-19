@@ -25,7 +25,8 @@ class Users extends REST_Controller {
         
         $filter = array('get_all'=>array($fields, $target));
         $respon['exist'] = $exist;        
-        $respon['users'] = $exist? $this->users_model->get_data($filter,30 )[0]: FALSE;
+        $respon['user'] = $exist? $this->users_model->gets($target  ) : FALSE;
+        $respon['user_detail'] = $exist? $this->users_model->getDetail($target,TRUE ) : FALSE;
         
         unset($respon['raw']);
         $this->response($respon,200);
@@ -51,7 +52,9 @@ class Users extends REST_Controller {
         $respon=array(
             'login'=>FALSE,
             'err_code'=>NULL,
-            'message'=>NULL
+            'message'=>NULL,
+            'user'=>FALSE,
+            'user_detail'=>FALSE
         );
         
         $respon['raw']=array($param) ;
@@ -76,7 +79,9 @@ class Users extends REST_Controller {
         
         if($status){
             unset($respon['raw']);
-             $this->response($respon,200);
+            $respon['user']=$this->users_model->gets($username );
+            $respon['user_detail'] = $exist? $this->users_model->getDetail($username,TRUE ): FALSE;
+            $this->response($respon,200);
         }
         
         $respon['err_code']=2;
@@ -87,6 +92,7 @@ class Users extends REST_Controller {
         $respon['raw']['new']=$this->users_model->check_login_new($username, $password);
         $respon['raw'][]= $this->users_model->gets($username );
         unset($respon['raw']);
+        
         $this->response($respon,200);
     }
 /*----------*/
