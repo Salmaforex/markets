@@ -50,6 +50,10 @@ app_api/config/database.php
 app_api/config/config.php
 app_api/config/forexConfig_new.php
 
+restfull_api/applications/config/database.php
+restfull_api/applications/config/config.php
+restfull_api/applications/config/forexConfig_new.php
+
 *.tar.gz
 *.report
 
