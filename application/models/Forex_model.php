@@ -317,6 +317,7 @@ class Forex_model extends CI_Model {
         logCreate("register id:$id |detail:" . print_r($detail, 1));
         if (!isset($detail['detail']['statusMember']))
             $detail['detail']['statusMember'] = 'MEMBER';
+        
         logCreate("register id:$id |raw:" . print_r($raw, 1));
         $full_name = isset($detail['detail']['firstname']) ? $detail['detail']['firstname'] : '';
         $full_name.=" " . (isset($detail['detail']['lastname']) ? $detail['detail']['lastname'] : '');
