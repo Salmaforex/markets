@@ -15,7 +15,11 @@ class Test extends CI_Controller {
             'login2' => array('users/login', 'login Error (tidak ditemukan) ', array('email' => 'gundambisonxxx@gmail.com', 'password' => 'gundam1981')),
             'login3' => array('users/login', 'login Error (password salah) ', array('email' => 'Ade.yogi.putra@gmail.com', 'password' => 'gundam1981')),
             'user_detail2' => array('users/detail', 'detail user (tidak ditemukan) ', array('email' => 'gundambisonxxx@gmail.com')),
-            'user_balance' => array('account/balance', 'balance ', array('accountid' => 9999))
+            'user_balance' => array('account/balance', 'balance ', array('accountid' => 9999)),
+            'setting_duit'=>array('settings/currency', 'Data mata Uang (aktif)', array('action' => 'show_some')),
+            'setting_duit2'=>array('settings/currency', 'Data mata Uang (semua)', array('action' => 'show_all')),
+            'country'=>array('settings/country', 'Negara (semua)', array('action' => 'show_all')),
+            
         );
         $this->list_api = $list_api;
     }

@@ -269,6 +269,7 @@ if (!function_exists('batchEmail')) {
             'headers' => $headers,
             'status' => 1
         );
+        
         $data['messages'] = $message;
         //$sql="insert into mujur_email(`subject`,`to`,`headers`) values('".addslashes($subject)."','".addslashes($to)."','".addslashes(json_encode($headers))."')";
         //$sql="insert into mujur_email(`subject`,`to`,`header`) values('".addslashes($subject)."','".addslashes($to)."','".addslashes($json)."')";

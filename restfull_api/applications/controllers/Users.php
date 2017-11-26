@@ -19,7 +19,17 @@ class Users extends REST_Controller {
     function detail_post(){
         $param    = $this->post()  ;
         $respon['raw']=array($param) ;
-        $target = isset($param['email']) ? $param['email'] : '';
+        $respon['err_code']=FALSE; //wajib ada
+        $respon['message']=NULL; //wajib ada
+        
+        $target = isset($param['email']) ? $param['email'] : FALSE;
+        if($target==FALSE){
+            $respon['exist']=FALSE;
+            $respon['user']=FALSE;
+            $respon['user_detail']=FALSE;
+            $this->response($respon,200);
+        }
+        
         $fields = isset($param['field']) ? $param['field'] : 'u_email';
         $exist = $this->users_model->exist($target, $fields);
         
@@ -35,8 +45,16 @@ class Users extends REST_Controller {
     function exist_post(){
         $param    = $this->post()  ;
         $respon['raw']=array($param) ;
+        $respon['err_code']=FALSE; //wajib ada
+        $respon['message']=NULL; //wajib ada
         $target = isset($param['email']) ? $param['email'] : '';
         $fields = isset($param['field']) ? $param['field'] : 'u_email';
+        if($target==FALSE){
+            $respon['exist']=FALSE;
+            $respon['user']=FALSE;
+            $this->response($respon,200);
+        }
+        
         $exist = $this->users_model->exist($target, $fields);
         
         $filter = array('get_all'=>array($fields, $target));
@@ -58,6 +76,8 @@ class Users extends REST_Controller {
         );
         
         $respon['raw']=array($param) ;
+        $respon['err_code']=FALSE; //wajib ada
+        $respon['message']=NULL; //wajib ada
         $username = isset($param['email']) ? $param['email'] : '';
         $password = isset($param['password']) ? $param['password'] : 'u_email';
         

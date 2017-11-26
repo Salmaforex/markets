@@ -31,8 +31,8 @@ class Settings extends REST_Controller {
     function currency_post() {
         $input = $post = $this->post();
         $respon['raw'] = array($post);
-        $respon['error'] = 0;
-        $respon['message'] = FALSE;
+        $respon['err_code']=FALSE; //wajib ada
+        $respon['message']=NULL; //wajib ada
 
         if ($input) {
             $status=TRUE;
@@ -53,8 +53,8 @@ class Settings extends REST_Controller {
     function country_post() {
         $input = $post = $this->post();
         $respon['raw'] = array($post);
-        $respon['error'] = 0;
-        $respon['message'] = FALSE;
+        $respon['err_code']=FALSE; //wajib ada
+        $respon['message']=NULL; //wajib ada
 
         if ($input) {
             $status=TRUE;

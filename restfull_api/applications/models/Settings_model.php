@@ -22,7 +22,8 @@ public $tables;
         $this->load->database();
         $tables=array(
             'country'=>'country',
-            'currency'=>'currency'
+            'currency'=>'currency',
+            'batch_email'=>'zemail'
         //    'erase'=>'users_erase',
         //    'detail'=>'users_detail'
             
@@ -119,6 +120,50 @@ public $tables;
         $row = dbFetchOne($sql);
 
         return $row;
+    }
+    
+    //===================EMAIL
+    function email_get_all($filter, $limit=100, $start=0){
+        $res = array();
+         $table = $this->tables['batch_email'];
+         $this->db->reset_query();
+        if(isset($filter['where_simple'])){
+            $this->db->where($filter['where_simple'] );
+        }
+        
+        
+        if(isset($filter['id'])){
+            $this->db->where('id',$filter['id'] );
+        }
+
+        $this->db->limit($limit, $start);
+        //  $this->db->table($this->table );
+        $sql = $this->db->get_compiled_select($table. "", FALSE);
+
+
+        //$res[]=array(  $sql,json_encode($filter),$limit,$start);
+        $res = dbFetch($sql);
+        $this->db->reset_query();
+        return $res;
+    }
+    
+    function email_get_active(){
+        $filter['where_simple']= array('send_status'=>0);
+        return $this->email_get_all($filter); 
+    }
+    
+    function email_get_id($id){
+        $filter=array('id'=>$id);
+        $row= $this->email_get_all($filter);
+        
+        return isset($row[0])?$row[0]:$row;
+    }
+    
+    function email_send($id ){
+        $table = $this->tables['batch_email'];
+        $sql = "update `{$table}` set `send_status`='1' where id='$id'";
+        return dbQuery($sql);
+         
     }
 
 }

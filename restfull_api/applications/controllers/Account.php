@@ -20,7 +20,7 @@ class Account extends REST_Controller {
         $this->load->helper('api');
         $this->load->database();
         $this->load->helper('basic');
-        $this->load->library('session');
+       // $this->load->library('session');
         header('Access-Control-Allow-Origin: *');
         //logCreate('rest user : server'.print_r($_SERVER,1));
     }
@@ -28,12 +28,15 @@ class Account extends REST_Controller {
     function balance_post(){
         $post    = $this->post()  ;
         $respon['raw']=array($post) ;
+        $respon['err_code']=FALSE; //wajib ada
+        $respon['message']=NULL; //wajib ada
         $input=isset($post['accountid'])?$post['accountid']:FALSE;
         if($input){
             $respon['raw'][]=$balance=driver_run($driver_core='mujur', $driver_name='forex_balance', $func_name='executed',$input);
             $respon['summary']=isset($balance['summary'])?$balance['summary']:NULL;
             $respon['margin']=isset($balance['margin'])?$balance['margin']:NULL;
             $respon['account']=isset($balance['account'])?$balance['account']:NULL;
+            unset($respon['raw']);
             $this->response($respon,200);
         
         }
