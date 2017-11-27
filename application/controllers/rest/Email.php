@@ -1,4 +1,4 @@
-d<?php
+<?php
 
 require_once APPPATH . '/libraries/REST_Controller.php';
 defined('BASEPATH') OR exit('No direct script access allowed');
