@@ -28,9 +28,14 @@ class Email extends REST_Controller {
     }
 
     //put your code here
+    function batch_get() {
+        $respon='nothing here';
+        $this->response($respon, 200);
+    }
+    
     function batch_post() {
         $input = $post = $this->post();
-        $respon['raw'] = array($post);
+        $respon['raw'] = array( );
         $respon['err_code'] = FALSE; //wajib ada
         $respon['message'] = NULL; //wajib ada
 
@@ -55,8 +60,12 @@ class Email extends REST_Controller {
             $data['send_type'] = isset($post['type']) ? $post['type'] : 'Unknown';
 
             $table = $this->settings_model->tables['batch_email'];
+            $respon['raw'][]=$data;
+            $respon['raw'][]=$table;
+            
             $respon['raw'][] = dbInsert($table, $data);
-            unset($respon['raw']);
+            //unset($respon['raw']);
+            $respon['message'] = 'success';
             $this->response($respon, 200);
         } else {
             $respon['error'] = 1;

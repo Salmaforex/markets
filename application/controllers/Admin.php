@@ -10,13 +10,17 @@ class Admin extends MY_Controller {
 	}
         
     public function profile(){
-            $this->checkLogin();
-            $this->param['title']='SECURE ACCOUNT | Profile'; 
-            $this->param['content']=array(
-                    'detail', 
-            );
-            $this->param['footerJS'][]='js/login.js';
-            $this->showView(); 
+       $this->checkLogin(); //checklogin(); 
+		
+		
+		
+       $this->param['title']='SECURE ACCOUNT | Profile'; 
+       $this->param['content']=array(
+           'detail', 
+       );
+       
+		$this->param['footerJS'][]='js/login.js';
+       $this->showView(); 
 
     }
 

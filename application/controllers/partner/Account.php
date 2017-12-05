@@ -11,10 +11,9 @@ class Account extends MY_Partner { //MY_Controller
 
     function __CONSTRUCT() {
         parent::__construct();
-        
     }
 
-         public function account_list($accountid = 0) {
+    public function account_list($accountid = 0) {
         if ($accountid != 'all') {
             js_goto(site_url('partner/account_list/all'));
             exit;
@@ -33,7 +32,7 @@ class Account extends MY_Partner { //MY_Controller
     public function account_id($accountid = 0) {
         $this->checkLogin();
         $get = $this->input->get();
-        
+
 //======BALANCE
         $array = array('accountid' => $accountid);
         $account_detail = $this->account->detail($accountid, 'accountid');
@@ -126,8 +125,8 @@ class Account extends MY_Partner { //MY_Controller
         $this->param['footerJS'][] = 'js/login.js';
         $this->showView();
     }
-    
-   function list_member($type = null) {
+
+    function list_member($type = null) {
         $this->param['title'] = 'SECURE ACCOUNT | List Member';
         $contents = array('partner_members');
 
