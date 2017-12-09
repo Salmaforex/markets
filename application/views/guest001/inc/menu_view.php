@@ -5,7 +5,7 @@
   <div class="container">
     <div class="row">
       <div class="social col-md-6">
-        <ul class="list-inline">
+        <ul class="list-inline hide">
           <li><a href="<?=ciConfig('fb_link');?>#salma"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
           <li><a href="<?=ciConfig('twitter_link');?>#salma"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
           <li><a href="<?=ciConfig('ig_link');?>#salma"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>

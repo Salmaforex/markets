@@ -5,56 +5,103 @@ membutuhkan helper log
 work with basic db connection
 */
 if ( ! function_exists('dbId')){
-	function dbId($name="id",$start=10,$counter=1){
-	$CI =& get_instance();
-		$CI->load->dbforge();
-		if($name=='')$name='id';
-		if($name!='id'){
-			$name.="_id";
-		}else{}
-		if(!$CI->db->table_exists($name)){
-			$CI->dbforge->add_field('id');
-			$CI->dbforge->create_table($name,TRUE);
-			$str = $CI->db->last_query();			 
-			logConfig("create table:$str",'logDB');
+    function dbId($label="id",$start=10,$counter=1){
+    $CI =& get_instance();
+        $CI->load->dbforge();
+        /*
+        if($name=='')$name='id';
+        if($name!='id'){
+                $name.="_id";
+        }else{}
+        */
+        $name = 'my_id';
+        
+        if(!$CI->db->table_exists($name)){
+            $CI->dbforge->add_field('id');
+            $CI->dbforge->create_table($name,TRUE);
+            $str = $CI->db->last_query();
+            
+            logConfig("create table:$str",'logDB');
+            $sql="ALTER TABLE {$name} ENGINE='MyISAM'";
+            dbQuery($sql);
+            $sql="ALTER TABLE `$name` CHANGE `id` `id` BIGINT  NOT NULL AUTO_INCREMENT;";dbQuery($sql);
 
-		}else{}
-		$CI->db->reset_query();	
-		
-		$sql="select count(id) c, max(id) max from $name";
-		$data=dbFetchOne($sql);
+        }else{}
+        
+        if (!$CI->db->field_exists('created', $name)){
+            $sql="ALTER TABLE `{$name}` ADD `created` TIMESTAMP;";dbQuery($sql);
+        }
+        if (!$CI->db->field_exists('label', $name)){
+            $sql="ALTER TABLE `{$name}` ADD `label` varchar(255);";dbQuery($sql);
+        }
+        if (!$CI->db->field_exists('code', $name)){
+            $sql="ALTER TABLE `{$name}` ADD `code` varchar(30);";dbQuery($sql);
+            $sql="ALTER TABLE `{$name}` ADD index(`code`);";dbQuery($sql);
+        }
 
-		//	$sql="ALTER TABLE `$name` CHANGE `id` `id` BIGINT  NOT NULL AUTO_INCREMENT;";
-		//	dbQuery($sql);		
-		
-		if($data['c']==0){
-			$data=array('id'=>$start);
-			$sql = $CI->db->insert_string($name, $data);
-			dbQuery($sql);
-			$num=$start;
-		}
-		else{
-			$num=$data['max']+$counter+2;
-			$num_min = (int) date("ymd000");
-			if($num < $num_min){
-				$num=date("ymd001");
-			}
-			$where="id=".$data['max'];
-			$data=array('id'=>$num);			
-			$sql = $CI->db->update_string($name, $data, $where);
-			dbQuery($sql);
-		}
-		
-		$str = $CI->db->last_query();
-		logConfig("dbId sql:$str",'logDB');
-		
-		$CI->db->reset_query();
-		return $num;
-	}
+        $now=date("Y-m-d H:i",strtotime("-19 hours"));
+        $sql="delete from `{$name}` where `created` < '$now';";dbQuery($sql);
+        $sql="select count(id) c, max(id) max from $name";
+        $data=dbFetchOne($sql);
+        
+        $start=date("ymdH1");
+
+        //	$sql="ALTER TABLE `$name` CHANGE `id` `id` BIGINT  NOT NULL AUTO_INCREMENT;";
+        //	dbQuery($sql);		
+
+        if($data['c']==0){
+            $data=array('id'=>$start);
+            $data['label']= $label;
+            $data['code']= "-";
+            dbInsert($name, $data);
+            //$sql = $CI->db->insert_string($name, $data);
+            //dbQuery($sql);
+            $num=$start;
+        }
+        else{
+            $num= ceil(microtime(true)*10000000000);
+            /*
+            $num_min = (int) date("ymdHi");
+            if($num < $num_min){
+                $num=date("ymdHi");
+            }
+            */
+            $where="id=".$data['max'];
+            $data=array('id'=>NULL);
+            $data['code']='';
+            $data['label']= $label;
+            ////$sql = $CI->db->update_string($name, $data, $where);
+            //dbQuery($sql);
+            unset($data['id']);
+            $num = dbInsert($name, $data);
+            //die("n=".$num);
+        }
+
+        $code='';
+        $len = strlen($num);
+            
+            for($i=0;$i<=$len;$i+=6){
+                $str = substr($num, $i,6);
+                $code .=dechex($str);//."|".$str."-".$i;
+            }
+        //    die($name."xx".$num.print_r($data,1));
+        $data=array();
+        $data['code']= strtoupper($code);
+        $where="id=$num";
+        $sql = $CI->db->update_string($name, $data, $where);
+        dbQuery($sql);
+          
+        //$str = $CI->db->last_query();
+        //logConfig("dbId sql:$str",'logDB');
+
+        //$CI->db->reset_query();
+        return $num;
+    }
+    
 }else{}
 
 if ( ! function_exists('dbQuery')){
-  function dbQuery($sql,$debug=0){
+  function dbQuery($sql,$debug=0,$insert_id=false){
 	$CI =& get_instance(); 
 	$query=$CI->db->query($sql);
 	if (!$query){
@@ -64,12 +111,17 @@ if ( ! function_exists('dbQuery')){
 	}
 	else{ 
 		if($debug==1){ 	
-			logCreate('sql:'.$sql.'|affected:'. $CI->db->affected_rows(),'query');			
+                    logCreate('sql:'.$sql.'|affected:'. $CI->db->affected_rows(),'query');			
 		}else{}
+                
 		logConfig('sql:'.$sql.'|affected:'. $CI->db->affected_rows(),'logDB','query');
 	}	
 	
-	return $query;
+        if($insert_id){
+            logCreate('dbQuery id:'. $CI->db->insert_id(),'query');
+        }
+        
+	return  $insert_id?$CI->db->insert_id():$query;
   }
   
 }else{}
@@ -139,12 +191,32 @@ if ( ! function_exists('dbFetch')){
 }else{}
 
 if ( ! function_exists('dbInsert')){
-	function dbInsert($table, $data){
-	$CI =& get_instance();
-		$sql=$CI->db->insert_string($table,$data);
-	//	logCreate($sql,'query');
-		dbQuery($sql);
+    function dbInsert($table, $data){
+        $CI =& get_instance();
+        $sql=$CI->db->insert_string($table,$data);
+                //db_insert_ignore($table, $data); //
+    //	logCreate($sql,'query');
+        $id=dbQuery($sql, 1,true);
+        return $id;
+    }
+}
+
+function db_insert_ignore($table, $data){
+	$CI = & get_instance();
+	$table_name = $CI->db->dbprefix($table );
+        
+	foreach($data as $head=>$val ){
+            $header[]=trim($head);
+            $value[]=addslashes($val);
 	}
+        
+	$headers = "`".implode("`, `",$header)."`";
+	$values = "'".implode("', '",$value)."'";
+	$sql="Insert ignore into `{$table_name}` ({$headers}) values({$values});";
+	//$CI->db->query($sql);
+        logCreate($sql,'query');
+	return $sql;
+        
 }
 
 if ( ! function_exists('saveTableLog')){

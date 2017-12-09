@@ -27,7 +27,8 @@
     <tr>
       <td><p>Welcome to <br />
         <br />
-        Hello <?=$users['name'];?>,<br />
+        Hello <?=$users['name'];?>,
+        <br />
       </p>
         <table width="641" border="0">
           <tr>

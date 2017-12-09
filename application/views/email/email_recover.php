@@ -40,7 +40,8 @@ else{
         </table>
         <p>Thank you for submitting Recovery form, Here your detail:.<br />
     </p>
-        <p><a href="<?=site_url('guest/recover/'.$recoverid);?>" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=id&amp;q=https://secure.salmamarkets.com/recover/<?=$recoverid;?>&amp;source=gmail&amp;ust=1485588468725000&amp;usg=AFQjCNGbTlfjFeOSWSl3ARJN_yuMwl11LA">Click Here to Generate Your Recovery Password</a>. The link Expired Soon<br />
+        <p><a href="<?=site_url('guest/recover/'.$recoverid);?>" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=id&amp;q=https://secure.salmamarkets.com/recover/<?=$recoverid;?>&amp;source=gmail&amp;ust=1485588468725000&amp;usg=AFQjCNGbTlfjFeOSWSl3ARJN_yuMwl11LA">
+                Click Here to Generate Your Recovery Password</a>. The link Expired Soon<br />
           <br />
           Ignore if you not request this <br />
         </p>
@@ -71,39 +72,39 @@ else{
 
 <?php
 if(!isset($show_html)){
-	$message = ob_get_contents();
-	ob_end_clean(); 
-	$to = trim($email);
+    $message = ob_get_contents();
+    ob_end_clean(); 
+    $to = trim($email);
 
-	$subject = 'Confirmation to Recover Personal Area password  ' ;
+    $subject = 'Confirmation to Recover Personal Area password  ' ;
 
-	$headers = "From: noreply@$salmamarkets.com\r\n";
-	$headers .= "Reply-To: noreply@salmamarkets.com\r\n";
-	//$headers .= "CC: susan@example.com\r\n";
-	$headers .= "MIME-Version: 1.0\r\n";
+    $headers = "From: noreply@$salmamarkets.com\r\n";
+    $headers .= "Reply-To: noreply@salmamarkets.com\r\n";
+    //$headers .= "CC: susan@example.com\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
 
-	$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+    $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 
-	//if(isset($show_local))
-	//echo $message;
-	//===============================
+    //if(isset($show_local))
+    //echo $message;
+    //===============================
 
-		if(!is_array($to))$to=array($to);
-		foreach($to as $email){
-			batchEmail($email, $subject, $message, $headers);
-		}
-		$rawEmail=array(
-			$subject, $headers,$message,'send email'
-		);
-		$data=array( 'url'=>json_encode($to),
-			'parameter'=>json_encode($rawEmail),
-			'error'=>2
-		);
-		//$this->db->insert($this->forex_model->tableAPI,$data);
-		$subject = '[SalmaMarkets] Confirmation to Recover Personal Area password';
-		foreach($emailAdmin as $to){
-			batchEmail(trim($to), $subject, $message, $headers);
-		}
+    if(!is_array($to))$to=array($to);
+    foreach($to as $email){
+            batchEmail($email, $subject, $message, $headers);
+    }
+    $rawEmail=array(
+            $subject, $headers,$message,'send email'
+    );
+    $data=array( 'url'=>json_encode($to),
+            'parameter'=>json_encode($rawEmail),
+            'error'=>2
+    );
+    //$this->db->insert($this->forex_model->tableAPI,$data);
+    $subject = '[SalmaMarkets] Confirmation to Recover Personal Area password';
+    foreach($emailAdmin as $to){
+            batchEmail(trim($to), $subject, $message, $headers);
+    }
 
 }
 else{}

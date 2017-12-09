@@ -1,3 +1,4 @@
+
 application/config/database.php
 application/config/config.php
 application/config/forexConfig_new.php
@@ -49,4 +50,31 @@ app_api/config/database.php
 app_api/config/config.php
 app_api/config/forexConfig_new.php
 
+restfull_api/applications/config/database.php
+restfull_api/applications/config/config.php
+restfull_api/applications/config/forexConfig_new.php
+
 *.tar.gz
+*.report
+
+/demo/config.php
+
+
+*/config/development
+*/logs/log-*.php
+!*/logs/index.html
+*/cache/*
+!*/cache/index.html
+!*/cache/.htaccess
+
+user_guide_src/build/*
+user_guide_src/cilexer/build/*
+user_guide_src/cilexer/dist/*
+user_guide_src/cilexer/pycilexer.egg-info/*
+
+#codeigniter 3
+application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess
+/vendor/
+

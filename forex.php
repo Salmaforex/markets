@@ -1,18 +1,14 @@
 <?php
 /*
-if(isset($_SERVER['HTTP_HOST'])&&$_SERVER['HTTP_HOST']=='advance.forex'){
-//	define('_DEV_',1);
-	define('LOCAL',1);
-	ini_set('session.save_path',  dirname($_SERVER['DOCUMENT_ROOT']) . '/../session/'  );
-	define('ENVIRONMENT', 'development'); 
-}
-elseif(isset($_SERVER['HTTP_HOST'])&&$_SERVER['HTTP_HOST']=='devel.salmamarkets.com'){
-	define('ENVIRONMENT', 'development'); 
-}
-else{
-//	define('ENVIRONMENT', 'development');
-	define('ENVIRONMENT', 'production'); 
-}
+ //setting data
+	$system_path = '../secure.salmamarkets.com/public_html/vendorci';
+
+ 
+	$application_folder = '../secure.salmamarkets.com/public_html/restfull_api/applications';
+
+ 
+	$view_folder = '';//views';
+
 */
 define('LOCAL',1);
 define('API',1);
@@ -117,7 +113,7 @@ switch (ENVIRONMENT)
 $system_path = 'vendorci';
 
 
-$application_folder = 'app_api';
+$application_folder = 'restfull_api/applications';
 
  
 $view_folder = '';//views';

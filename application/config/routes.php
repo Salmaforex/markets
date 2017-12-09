@@ -90,12 +90,37 @@ $route['media/(:any)/(:any)/(:any:)'] = 'media/dirs_img/$1/$1/$1';
 $route['agent'] = 'guest/register_agent';
 $route['register_agent/(:any)'] = 'guest/home/$1';//'guest/register_agent/$1';
 $route['register_agent/(:any)/(:any)'] = 'guest/home/$1/$1';//'guest/register_agent/$1/$1';
-$route['register/(:any)'] = 'guest/home/$1';//'forex/register/$1/$1';
+$route['register/(:any)'] = 'guest/home/$1/partner';//'forex/register/$1/$1';
 $route['register/(:any)/(:any)'] = 'forex/register/$1/$1';
 
 /*
 https://secure.salmamarkets.com/register_agent/agent
 
 */
+//==================PARTNER / AGENT========================
+$route['patners'] = 'partner/dashboard/reload';
+$route['partner'] = 'partner/dashboard';
+$route['partner/list_member'] = 'partner/dashboard/list_member';
+$route['partner/history'] = 'partner/dashboard/history';
+$route['partner/logout'] = 'partner/dashboard/logout';
+$route['partner/promotion'] = 'partner/dashboard/promotion';
+$route['partner/promotion_html'] = 'partner/dashboard/promotion_html';
+$route['partner/promotion/(:any)'] = 'partner/dashboard/promotion/$1';
 
-$route['patners'] = 'partner/reload';
+$route['partner/detail'] = 'partner/profile/detail';
+$route['partner/edit'] = 'partner/profile/edit';
+$route['partner/edit/(:any)'] = 'partner/profile/edit/$1';
+$route['partner/uploads'] = 'partner/profile/uploads';
+$route['partner/editpassword'] = 'partner/profile/editpassword';
+$route['partner/edit_master_password'] = 'partner/profile/edit_master_password';
+$route['partner/show_upload/(:any)'] = 'partner/profile/show_upload/$1';
+$route['partner/show_profile/(:any)'] = 'partner/profile/show_profile/$1';
+
+$route['partner/withdrawal'] = 'partner/widtdrawal';
+
+$route['partner/account_id'] = 'partner/account/account_id';
+$route['partner/account_list'] = 'partner/account/account_list';
+$route['partner/account_password'] = 'partner/account/account_password';
+$route['partner/account_id/(:any)'] = 'partner/account/account_id/$1';
+$route['partner/account_list/(:any)'] = 'partner/account/account_list/$1';
+$route['partner/account_password/(:any)'] = 'partner/account/account_password/$1';

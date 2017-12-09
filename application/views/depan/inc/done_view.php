@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  
 ?>
 <div class="main col-md-8">
-			<div style='margin-top:30px;'>
-				<h3>Your Order Was Sent Successfully. Please Check Your Email. Thanks.</h3>
-			</div>
+    <div style='margin-top:30px;'>
+            <h3>Your Order Was Sent Successfully. Please Check Your Email. Thanks.</h3>
+    </div>
 </div>

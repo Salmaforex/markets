@@ -1,5 +1,36 @@
 <?php
 
+
+$phone = $this->users_model->phone_by_email( $email );
+$register_text =  "Welcome to Salmamarkets ";//"Hello {$name}, ";
+$register_text .="Trading Area Access\n";
+
+$register_text .="Account id : {$account['AccountID']}\n";
+$register_text .="Trading : {$account['MasterPassword']}\n";
+$register_text .="Investor : {$account['InvestorPassword']}\n";
+//====================SMS===================
+$params=array(
+   'debug'=>true,
+    'number'=>$phone,
+    'message'=>$register_text."Sincerely, Customer Service.",
+    'header'=>'Register Account',
+//    'local'=>true,
+  'type'=>'masking'
+
+);
+
+if(!isset($no_sms)){
+    $respon = smsSend($params);
+    logCreate($respon,'sms');
+}
+
+$params[]=$name;
+unset($params['message']);
+$params['email']=$email;
+$params[] = $account['AccountID'];
+$params[] = my_ip();
+
+log_info_table('regis_account', $params);
 ob_start();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -97,20 +128,21 @@ $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 //	echo $message;
 //===============================
 {
-	if(!is_array($to))$to=array($to);
-	foreach($to as $email){
-		batchEmail($email, $subject, $message, $headers);
-	}
-	$rawEmail=array(
-		$subject, $headers,$message,'send email'
-	);
-	$data=array( 'url'=>json_encode($to),
-		'parameter'=>json_encode($rawEmail),
-		'error'=>2
-	);
-	//$this->db->insert($this->forex_model->tableAPI,$data);
-	$subject = '[reminder] Register accountid '.$account['AccountID'];
-	if(is_array($emailAdmin))
+    if(!is_array($to))$to=array($to);
+    foreach($to as $email){
+        batchEmail($email, $subject, $message, $headers);
+    }
+    
+    $rawEmail=array(
+            $subject, $headers,$message,'send email'
+    );
+    $data=array( 'url'=>json_encode($to),
+            'parameter'=>json_encode($rawEmail),
+            'error'=>2
+    );
+    //$this->db->insert($this->forex_model->tableAPI,$data);
+    $subject = '[reminder] Register accountid '.$account['AccountID'];
+    if(is_array($emailAdmin))
 	foreach($emailAdmin as $to){
 		batchEmail(trim($to), $subject, $message, $headers);
 	}

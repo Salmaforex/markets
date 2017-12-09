@@ -3,9 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Log_libs {
 private $CI;
-	function config($txt,$config0='',$type='debug'){
+    function config($txt,$config0='',$type='debug'){
 	$CI =& get_instance();
 	$config = $CI->config->item($config0);
+        if($config0==''){
+            return false;
+        }
 	 
 	if($config){
 		$date=date("Ymd");

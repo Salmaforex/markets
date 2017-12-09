@@ -1,5 +1,6 @@
 <?php 
- 
+ $agent = isset($agent_code)?$agent_code:false;
+//var_dump($get);
 ?>
   <div class="container">
     <div class="row">

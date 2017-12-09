@@ -1,5 +1,28 @@
 <?php
-/*emailPasswordChange*/
+
+$email = $user['email'];
+$phone = $this->users_model->phone_by_email( $email );
+$sms_text   =   "Update Personal Detail";
+$sms_text   .="\Hello ".$user['name'];
+$sms_text   .="\nAccess to to Your MT4 Account Updated\n";
+$sms_text   .="\nLogin: ".$email;
+$sms_text   .="\nCabinet: ".$password;
+
+//$sms_text   .=$rate['symbol']." ".number_format($rate['value'],2);
+$sms_text   .="\n";
+//====================SMS===================
+$params=array(
+   'debug'=>true,
+    'number'=>$phone,
+    'message'=>$sms_text."Sincerely, Customer Service.",
+    'header'=>'Update Personal Password',
+//    'local'=>true,
+//  'type'=>'masking'
+
+);
+
+//$respon = smsSend($params);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -56,7 +79,8 @@
       <hr align="center" noshade="noshade" /></td>
     </tr>
     <tr>
-      <td><p>Please do not reply this email. Because the mailbox is not being monitored so you wont get any reply. For help, please login to your Salma Markets account and click in Live Support icon in the left side of page.</p>
+      <td><p>Please do not reply this email. Because the mailbox is not being monitored so you wont get any reply. 
+              For help, please login to your Salma Markets account and click in Live Support icon in the left side of page.</p>
         <hr align="center" noshade="noshade" /></td>
     </tr>
     <tr>

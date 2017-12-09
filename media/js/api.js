@@ -20,14 +20,14 @@ try{
             "url": urlAPI,
             "type": "POST"
         },
-		"lengthMenu": [
+        "lengthMenu": [
                 [5, 10,15, 20, 35],
                 [5, 10,15, 20, "max 35"] // change per page values here
             ],
         "columns": [			
-			{ "data": "created"},
+            { "data": "created"},
             { "data": "url" },
-            { "data": "param" },
+            { "data": "param" }
         ]
     } );
 }
@@ -48,8 +48,8 @@ try{
         },
 		"order": [[ 0, "desc" ]],
 		"lengthMenu": [
-                [3,5, 10,15, 20, 35],
-                [3,5, 10,15, 20, "max 35"] // change per page values here
+                [3,5, 10,15, 20, 35,50,100],
+                [3,5, 10,15, 20, "max 35",50,100] // change per page values here
             ],
         "columns": [
 			{ "data": "created"},
@@ -81,8 +81,8 @@ try{
         "processing": true,
         "serverSide": true,
 		"lengthMenu": [
-                [3,5, 10,15, 20, 35],
-                [3,5, 10,15, 20, "max 35"] // change per page values here
+                [3,5, 10,35,50,100],
+                [3,5, 10,35,50,100] // change per page values here
             ],
         "ajax": {
             "url": urlAPI,
@@ -91,9 +91,9 @@ try{
         "columns": [
 			{ "data": "created"},
 			{ "data": "accountid"},
-            { "data": "raw.username" },
-            { "data": "raw.name" },
-            { "data": "raw.orderWidtdrawal" },
+            { "data": "dt.username" },
+            { "data": "dt.name" },
+            { "data": "dt.orderWidtdrawal" },
             { "data": "detail" },
             { "data": "status" },
             { "data": "action" },             
@@ -360,6 +360,126 @@ catch(err){
  	 console.log('not table User?');
 	console.log(err);
 }
+
+try{	
+	tableTop=jQuery('#tableSms').DataTable( {
+		"columnDefs": [
+            { 
+			
+            }
+		],
+		"order": [[ 0, "desc" ]],
+        "processing": true,
+        "serverSide": true,
+		"lengthMenu": [
+                [2,3,5, 10,15, 20, 35],
+                [2,3,5, 10,15, 20, "max 35"] // change per page values here
+            ],
+        "ajax": {
+            "url": urlAPI,
+            "type": "POST"
+        },
+        "columns": [
+            { "data": "modified"},
+            { "data": "tmp8"},
+            { "orderable":      false,"data": "tmp1"},
+            { "orderable":      false,"data": "msg" },
+            { "orderable":      false,"data": "balance" },
+            { "data": "tmp9" }           
+        ]
+    } );
+
+    console.log('table SMS ready');
+        tableLogs=jQuery('#tableSmsLogs').DataTable( {
+		"columnDefs": [
+            { 
+			
+            }
+		],
+		"order": [[ 0, "desc" ]],
+        "processing": true,
+        "serverSide": true,
+		"lengthMenu": [
+                [ 3,5, 10,15, 20, 35],
+                [ 3,5, 10,15, 20, "max 35"] // change per page values here
+            ],
+        "ajax": {
+            "url": urlAPILogs,
+            "type": "POST"
+        },
+        "columns": [
+            { "data": "tgl"},
+            { "data": "status","orderable":      false},
+            { "data": "jumlah","orderable":      false},           
+        ],
+        "dom": '<"top"i>rt<"bottom"flp><"clear">'
+    } );
+
+}
+catch(err){
+//	 console.log('not table Widtdrawal');
+//	 console.log(err);
+}
+
+
+//====================BATCH EMAIL
+try{	
+    tableTop=jQuery('#tableEmail').DataTable( {
+		"columnDefs": [
+            { 
+			
+            }
+		],
+		"order": [[ 0, "desc" ]],
+        "processing": true,
+        "serverSide": true,
+		"lengthMenu": [
+                [2,3,5, 10,15, 20, 35],
+                [2,3,5, 10,15, 20, "max 35"] // change per page values here
+            ],
+        "ajax": {
+            "url": urlAPI,
+            "type": "POST"
+        },
+        "columns": [
+            { "data": "modified"},
+            { "data": "tmp1"},
+            { "data": "tmp2"},           
+        ]
+    } );
+    
+    tableLogs=jQuery('#tableEmailLogs').DataTable( {
+		"columnDefs": [
+            { 
+			
+            }
+		],
+		"order": [[ 0, "desc" ]],
+        "processing": true,
+        "serverSide": true,
+		"lengthMenu": [
+                [2,3,5, 10,15, 20, 35],
+                [2,3,5, 10,15, 20, "max 35"] // change per page values here
+            ],
+        "ajax": {
+            "url": urlAPILogs,
+            "type": "POST"
+        },
+        "columns": [
+            { "data": "tgl"},
+            { "orderable":      false,"data": "status"},
+            { "orderable":      false,"data": "jumlah"},           
+        ]
+    } );
+	//console.log('table widtdrawal ready');
+
+}
+catch(err){
+//	 console.log('not table Widtdrawal');
+//	 console.log(err);
+}
+
+
 try{
 //history-table
 tableUsers=jQuery('#history-table').DataTable({

@@ -85,3 +85,14 @@ $config['email_link']='http://www.salmaforex.com/contact/';
 
 /*=============URL API ====================*/
 $config['salma_api']='http://advance.forex/forex.php/api';
+//==========API_URL=================
+$config['api_url']='http://advance.forex/index.php/';
+
+
+//=============api_url==================
+$config['api_url']='';
+$config['is_local']=FALSE;
+//===============fasapay_url
+$config['fasapay_url']='';
+$config['fp_acc']='';
+$config['fp_currency']='';

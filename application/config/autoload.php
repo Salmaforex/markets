@@ -88,7 +88,7 @@ $autoload['drivers'] = array();
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url','log','db','date','basic');
+$autoload['helper'] = array('url','log','db','date','basic','api');
 
 
 /*
@@ -137,4 +137,8 @@ $autoload['language'] = array();
 |	$autoload['model'] = array('first_model' => 'first');
 */
 
-$autoload['model'] = array('country_model','forex_model','api_model','localapi_model');
+$autoload['model'] = array(
+    'basic_model'=>'basic',
+    'country_model','forex_model','api_model','localapi_model'
+    ,'account_model','users_model'
+    );

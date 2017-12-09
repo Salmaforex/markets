@@ -7,7 +7,8 @@ function execute($id){
 	$CI =& get_instance();
 	$CI->load->model('users_model');
 	$CI->load->model('password_model');
-	$detail=$CI->account->recoverId($id);
+	$CI->load->model('password_model');
+	$detail=$CI->account_model->recoverId($id);
 	if($detail===false) return false;
 	$email = $detail['u_email'];
 	$data=array($detail);
