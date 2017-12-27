@@ -24,6 +24,10 @@ class Email extends REST_Controller {
         save_and_send_rest($code, $result, $param);
     }
     
+    function index_get(){
+        $this->index_post();
+    }
+    
     function hide_post(){
         $code = 200;
         $post=$this->post();
